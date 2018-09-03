@@ -1,0 +1,22 @@
+{
+  "name": "pogoreport",
+  "version": "1.0.0",
+  "description": "pogo report",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joonluvschipotle/pogoreport.git"
+  },
+  "author": "joonluvschipotle",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joonluvschipotle/pogoreport/issues"
+  },
+  "homepage": "https://github.com/joonluvschipotle/pogoreport#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
