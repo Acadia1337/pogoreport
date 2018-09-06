@@ -147,6 +147,10 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
             replier.reply('아니에요ㅡㅡ매일매일 진화하고 있는걸요!')
         }
 
+        if(msg.includes('이쁜짓') || msg.includes('애교')){
+            replier.reply('(심각)')
+        }
+
     }
     msgDetermineKor = msg;
     msgDetermine = msg;
@@ -185,10 +189,11 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
 
     if(msg == '제보 리셋해줘'){
         report = reportDefault;
-        replier.reply("리셋되었습니다\n" + report + '\n');
+        replier.reply("리셋되었습니다\n" + report);
     }
     
     if(msg.includes('현황')){
+        currentTime = new Date();
         currentHour = currentTime.getHours();
         currentMinute = currentTime.getMinutes();
         var currentMinuteStringCheck = currentMinute +'';
