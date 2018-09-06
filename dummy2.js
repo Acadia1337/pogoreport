@@ -1,19 +1,11 @@
-var report = "도곡방 레이드 제보\n3:18~3:43 작은분수\n4:15~5:00 사과";
-
-
-var currentTime = new Date();
-var currentHour = currentTime.getHours();
-var currentMinute = currentTime.getMinutes();
-
-var withoutSen = report.split('\n');
-
-
-
+var ddd = '11시 45분 사과 제보'
+var checkLegitReport = msg.split(' ');
 
 var i;
-for (i = 1; i<withoutSen.length;i++){
-    if(withoutSen[i][1] == ':'){
-        
+for (i=0;i<checkLegitReport.length;i++){
+    if (checkLegitReport[i].includes('제보')){
+        checkLegitReport.splice(a.indexOf(checkLegitReport[i]),1);
+        if(checkLegitReport.length > 5){
+        }
     }
-    console.log(withoutSen[i])
 }

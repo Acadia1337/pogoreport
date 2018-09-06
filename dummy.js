@@ -3,12 +3,63 @@ var currentHour = currentTime.getHours();
 var currentMinute = currentTime.getMinutes();
 
 var report = "도곡방 레이드 제보";
-var reportDefault = "도곡방 레이드 제보"
+var reportDefault = "도곡방 레이드 제보";
 
-var msgDetermine = ''
-var msgCall = ''
-var msgDetermineKor = ''
+var msgDetermine = '';
+var msgCall = '';
 var verifyReport = 0;
+
+var quoteFind = {
+    "구구" : {
+        1 : 'ㅋㅋㅋ 이번학기 끗나고 자퇴할거에여!! - 구구',
+        2 : '구↗우↘ 비둘기야 먹자구구구구구(딱딱딱딱딱) 구우 구구구구구(딱딱딱) 구우우구우우구↗우우우우우↘(딱딱딱)마시쩡? 마시쩡!오.↗구구구구(딱딱딱딱) 구우우우우우 (헣헠) 구우우우↗우우우국물처머겅 (구우우↗으핳하핳하핳핳핳핳핳핳하하하핳핳)야!!! 구웃? 구↗구구구구구구구구구구 (으하하하핳)(어어얽!)(으헤하하핳하핳핳)(엇!) 구구구구구구(으하하핳하핳하하핳)',
+        3 : '치킨 쏩니다. 줄서세요 - 구구',
+        4 : '엑셀 한번 맞춰보시지? ;-) - 구구',
+        5 : '구구와 저는 일심동체란 말입니닷. - 피죤투',
+        6 : '피존투로 참여해야징 - 구구',
+        7 : '구구가 파이리를 공격하는 짤을 암만뒤졌으나 없으므로 조만간 합성할겁니다.. - 구구',
+        8 : '비둘기의 은총이 함께하시길...☆ - 구구',
+        9 : '피존투로 참여해야징 - 구구',
+        10 : '구구효과 라고하죠\n구구의 분노에 찬 날갯짓 한번이 지구에 재앙을 가져오는..'
+    },
+    "렌토" : {
+        1 : '호구....ㄹ - 렌토',
+        2 : 'ㅋㅋ그래도 다들 포고하시는 순간만큼은 행복하셨으면 해요~ - 빛 렌 토',
+        3 : '포고는 계정빨이다 - 렌토',
+        4 : '속토대장정 - 렌토',
+        5 : '술내이니용 - 왕왕취렌',
+        6 : '술 드실래요? - 취렌',
+        7 : '어니부기를 패보겠습니당!어니부기 -((◕ˇ﹏ˇ◕  - ))으으으으읏!얍! (╯°□°)╯︵ - 렌토',
+        8 : '캐논님!! - 렌토',
+        9 : '퍽 - 렌토',
+        10 : '취하셨군요... - 안취한 렌토'
+    },
+    "캐논" : {
+        1 : '네 제가 그런 헤비유저입니다! - 캐논 (만렙)',
+        2 : '어차피 오래 할 게임 현질은 제일 큰 단위로 하자. 빚은 미래의 내가 갚아줄 것이다. - 캐논',
+        3 : '술토 - 술논',
+        4 : '요새는 부캐도 본캐와 똑같이 현질합니다 - 캐논',
+        5 : '(아이폰6s를 자랑하며)네 사실 포고하려고 샀읍니다 - 캐논',
+        6 : '엌ㅋㅋㅋㅋ - 캐논, 뼈 맞으며',
+        7 : '저는아무것도아닌유저인데.. - 캐논 (만렙, 부캐도 곧 만렙)  ',
+        8 : 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ예??????? - 캐논, 팩트를 맞으며',
+        9 : '부캐는 022고.. 본캐는 정확히는 020입니다 - 캐논',
+        10 : '아 저 치코리타 cp표는 진짜 안만들겁니다 아무도 안보실듯... - 캐논, 엑셀 시트를 켜며'
+    },
+    "부기" : {
+        1 : '얼른 따라잡겠습니다! - 부기 (남들보다 2주 일찍 개강)',
+        2 : '저도 패겠습니다ㅎㅎ - 부기',
+        3 : '부기 투나잇! - 부기',
+        4 : '취하지 않았습니다! - 새벽부기',
+        5 : '놀토...그런게 있었다고만 알고 있어요~ ^~^ - 부기 (놀토세대)',
+        6 : '렌토님! - 부기',
+        7 : '띠꾸혀어어어엉 - 부기',
+        8 : '렌토계정은 빛-계정이다. - 부기',
+        9 : '포고는 끈기다 - 부기',
+        10 : '렌토잡는 부기! - 폭행부기'
+    }
+};
+var nestDict = "<9.6~9.19 둥지 정보>\n\n가산디지털단지 디폴리스 : 암나이트(소)\n국과수사거리 오솔길공원 : 쥬쥬\n난지천공원 : 잉어킹\n난지한강공원 : 네이티\n당산공원 : 나옹\n도림천공원 : 피카츄\n망원한강공원 : 블루\n문래공원 : 블루(소)\n보라매공원 : 갈모매\n상암가온공원 : 고라파덕(소)\n서서울호수공원 : 해골몽\n석촌호수 : 코일\n신도림푸르지오공원 : 왕자리(소)\n양재시민의숲 : 마그마\n양재 근린공원(언남고) : 꼬부기\n양재 더케이호텔 옆 공원 : 소곤룡\n양재 앨리스파크 : 볼비트\n양재 영동 2~3교 사이 : 블루\n어린이대공원 : 코코파스\n여의도공원 : 나옹\n여의도한강공원 : 파이리\n영등포공원 : 가재군\n올림픽공원 : 콘치\n올림픽공원 체조경기장 : 꼬부기\n우이솔밭근린공원 : 알통몬\n월드컵경기장 : 나옹\n일산호수공원: 슬리프\n평화의공원 : 쥬쥬\n푸른수목원: 푸린\n효창공원 : 깨비참";
 
 var raidBossDict = {
     
@@ -35,13 +86,114 @@ var raidBossDict = {
     
     "그란돈" : "LV20 : 2328\nLV25 : 2910",
     "가이오가" : "LV20 : 2328\nLV25 : 2910",
-    "레쿠자" : "LV20 : 2083\nLV25 : 2604",
+    "레쿠자" : "LV20 : 2083\nLV25 : 2604"
 };
+
+function raidReport(msgTwo) {
+    currentTime = new Date();
+    var splitMessage = msgTwo.split(' ');
+    var dummySplit=msgTwo.split(' ');
+
+    var msgTime = '';
+    var msgTime2;
+    var msgHour;
+    var msgMin;
+    var endHour;
+    var endMin;
+    var raidTime;
+    var raidSentence;
+
+    var i;
+
+    for (i=0; i<splitMessage.length; i++){
+        if (splitMessage[i].includes("제보")){
+            splitMessage.splice(i,1);
+        }
+    }
+
+
+    for (i=0; i<splitMessage.length; i++){
+        if (splitMessage[i].includes("시") && (splitMessage[i].slice(-1)!='시')){
+            msgTime = splitMessage[i];
+            var twoCheck = 0;
+            if (msgTime.slice(-1)=='분'){
+                msgTime = msgTime.replace('분','');
+                twoCheck++;
+            }
+            msgTime = msgTime.replace('시',':');
+            if (twoCheck!=0){
+                splitMessage.splice(i,1)
+            } else if(twoCheck==0){
+                splitMessage.splice(i,1);
+            }
+            splitMessage.push(msgTime);
+        } else if (splitMessage[i].includes("시") && !(splitMessage[i].includes("분"))){
+            splitMessage.push(msgTime);
+            msgTime=splitMessage[i]+splitMessage[i+1];
+            msgTime = msgTime.replace('시',':');
+            msgTime = msgTime.replace('분','');
+            splitMessage.splice(i,2);
+            splitMessage.push(msgTime);
+        } else if(splitMessage[i].includes(":")){
+            msgTime=splitMessage[i]
+            splitMessage.splice(i,1);
+            splitMessage.push(msgTime);
+        }
+    }
+
+    msgTime2 = splitMessage.splice(-1)[0];
+    msgHour = msgTime2.slice(0,msgTime.indexOf(':'));
+    msgMin = msgTime2.slice(msgTime.indexOf(':')+1,5)
+
+    if (msgHour > 12){
+        msgHour = parseInt(msgHour) - 12;
+    }
+
+    if (msgHour == 12){ // 12시
+        if (msgMin > 14){ // 12시15분 ~ 59분
+            endHour = 1;
+            endMin = parseInt(msgMin)-15;
+            if (endMin<10){
+                endMin = '0' + endMin;
+            }
+        } else if (msgMin < 15){
+            endHour = msgHour;
+            endMin = parseInt(msgMin)+45;
+        }
+    } else {
+        if (msgMin > 14){
+            endHour = parseInt(msgHour) + 1;
+            endMin = parseInt(msgMin)-15;
+            if (endMin<10){
+                endMin = '0' + endMin;
+            }
+        } else if (msgMin < 15){
+            endHour = msgHour;
+            endMin = parseInt(msgMin)+45;
+        }
+    }
+    if (parseInt(msgMin) < 10){
+        msgMin = '0' + parseInt(msgMin);
+    }
+
+    raidTime = msgHour+':'+msgMin+'~'+endHour+':'+endMin;
+    raidSentence = raidTime + ' ' + splitMessage.splice(0);
+    raidSentence = raidSentence.replace(',',' ');
+    raidSentence = raidSentence.replace(',',' ');
+
+    return raidSentence;
+}
 
 function response(room, msg, sender, isGroupChat, replier, imageDB) {
     msgCall = msg;
+    
     if (msgCall.slice(0,3)=='도리야'){
-        msg = msgCall.slice(4);
+        msg = msg.replace('도리야','도리')
+    }
+    msgCall = msg;
+
+    if (msgCall.slice(0,2)=='도리'){
+        msg = msgCall.slice(3);
 
         if(msg == '레쿠자 100% 개체가 뭐야?'){
             replier.reply('그건 렌토님한테 물어보세요')
@@ -75,7 +227,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
         }
         
         if(msg.includes('둥지')){
-            replier.reply('<9.6~9.19 둥지 정보>\n\n구의공원 : 쁘사이저\n가산디지털단지 디폴리스 : 암나이트(소)\n남산 : 깜지곰\n노들나루공원 : 치코리타\n노량진근린공원 : 이상해씨\n도림천공원 : 피카츄\n북서울꿈의숲 : 대굴레오\n서서울호수공원 : 해골몽\n서울숲 : 니드런♂\n여의도공원 : 나옹\n여의도한강공원 : 파이리\n영등포공원 : 가재군\n올림픽공원 : 콘치\n올림픽공원 체조경기장 : 꼬부기\n푸른수목원 : 푸린\n어린이대공원 : 코코파스\n우이솔밭근린공원 : 알통몬\n보라매공원 : 갈모매\n일산호수공원: 슬리프\n효창공원 : 깨비참')
+            replier.reply(nestDict)
         }
         
         if(msg.includes('경험치') && msg.includes('알려줘')){
@@ -107,15 +259,19 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
         }
         
         if(msg.includes('명언')){
-            if (msg.includes('렌토')){
-                replier.reply('포고는 계정빨이다 - 렌토')
+            var quoteGo = msg.split(' ');
+            var i;
+
+            for (i=0; i<quoteGo.length;i++){
+                if (!(quoteGo[i].includes('명언'))){
+                    msg = quoteGo[i];
+                }
             }
-            if (msg.includes('캐논')){
-                replier.reply('어차피 오래 할 게임 현질은 제일 큰 단위로 하자. 빚은 미래의 내가 갚아줄 것이다. - 캐논')
-            }
-            if (msg.includes('부기')){
-                replier.reply('부기 투나잇 - 부기')
-            }
+
+            var ranDict = Math.floor((Math.random() * 10) + 1);
+            replier.reply(quoteFind[msg][ranDict]);            
+            
+            
             if (msg.includes('띠꾸')){
                 replier.reply('저는 띠꾸가 아니라 하입인걸요 - 하입')
             }
@@ -134,9 +290,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
             if (msg.includes('식초')){
                 replier.reply('제가 바로 인싸 속초입니다 - 속초')
             }
-            if (msg.includes('구구')){
-                replier.reply('구↗우↘ 비둘기야 먹자구구구구구(딱딱딱딱딱) 구우 구구구구구(딱딱딱) 구우우구우우구↗우우우우우↘(딱딱딱)마시쩡? 마시쩡!오.↗구구구구(딱딱딱딱) 구우우우우우 (헣헠) 구우우우↗우우우국물처머겅 (구우우↗으핳하핳하핳핳핳핳핳핳하하하핳핳)야!!! 구웃? 구↗구구구구구구구구구구 (으하하하핳)(어어얽!)(으헤하하핳하핳핳)(엇!) 구구구구구구(으하하핳하핳하하핳)')
-            }
+
         }
         
         if(msg.includes('뭐하니') || msg.includes('뭐해')){
@@ -152,36 +306,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
         }
 
     }
-    msgDetermineKor = msg;
-    msgDetermine = msg;
-    
-    if (msgDetermine[1]==':'){
-        msgDetermine = '0' + msgDetermine;
-    }
-    
-    if (msgDetermineKor[1]=='시'){
-        msgDetermineKor = '0' +msgDetermineKor;
-        verifyReport = verifyReport + 1;
-    }
-    
-    if (msgDetermineKor[2]=='시'){
-        msgDetermineKor = msgDetermineKor.slice(0,2) + ':' + msgDetermineKor.slice(3);
-        verifyReport = verifyReport + 1;
-    }
-
-    if (msgDetermineKor[3]==' '){
-        msgDetermineKor = msgDetermineKor.slice(0,3) + msgDetermineKor.slice(4);
-        verifyReport = verifyReport + 1;
-    }
-
-    if (msgDetermineKor[4]=='분'){
-        msgDetermineKor = msgDetermineKor.slice(0,3) + '0' + msgDetermineKor.slice(3);
-        verifyReport = verifyReport + 1;
-    }
-    if (msgDetermineKor[5]=='분'){
-        msgDetermineKor = msgDetermineKor.slice(0,5) + msgDetermineKor.slice(6);
-        verifyReport = verifyReport + 1;
-    }
+    msgDetermine = msg.split(' ');
     
     if(msg == '테스트') {
         replier.reply('TEST');
@@ -243,89 +368,17 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
         }
     }
     
-    if ((!isNaN(msgDetermine.slice(0,2)) && msgDetermine[2]==':') && (!isNaN(msgDetermine.slice(3,5)) && (msgDetermine.slice(-2)=='제보'))){
-        if(verifyReport!==0){
-            msg = msgDetermineKor;
-        }
-        if(msg.includes('제보')){
-            msg = msg.replace('제보','');
+    var checkLegitReport = msg.split(' ');
 
-
-            var inputTime = msg;
-            var startTime = ''
-            var startMinute = 0
-            var finalMinute = ''
-
-            if (inputTime[4]==' '){
-                startTime = inputTime.slice(0,4);
-                if (parseInt(startTime.substr(2,2))>14){
-                    startMinute = parseInt(startTime.substr(2,2)) - 15;
-                    if (startMinute < 10){
-                        finalMinute = '0' + startMinute;
-                    } else{
-                        finalMinute = startMinute;
-                    }
-                    startTime = (parseInt(inputTime[0])+1) + startTime.slice(1,2) + finalMinute;
-
-                } else {
-                    startMinute = parseInt(startTime.substr(2,2)) + 45;
-                    finalMinute = startMinute;
-                    startTime = startTime.slice(0,2) + finalMinute;
-
-                }
-            } else if (inputTime[5]==' '){
-                startTime = inputTime.slice(0,5);
-                if (startTime[1]!=2){
-                    if (parseInt(startTime.substr(3,2))>14){
-                        startMinute = parseInt(startTime.substr(3,2)) - 15;
-                        if (startMinute < 10){
-                            finalMinute = '0' + startMinute;
-                        } else{
-                            finalMinute = startMinute;
-                        }
-                        startTime = '1' + (parseInt(inputTime[1])+1) + startTime.slice(2,3) + finalMinute;
-                    } else {
-                        startMinute = parseInt(startTime.substr(3,2)) + 45;
-                        finalMinute = startMinute;
-                        startTime = startTime.slice(0,3) + finalMinute;
-
-                    }
-
-                } else {
-                    if (parseInt(startTime.substr(3,2))>14){
-                        startMinute = parseInt(startTime.substr(3,2)) - 15;
-                        if (startMinute < 10){
-                            finalMinute = '0' + startMinute;
-                        } else{
-                            finalMinute = startMinute;
-                        }
-                        startTime = '1' + startTime.slice(2,3) + finalMinute;
-                    } else {
-                        startMinute = parseInt(startTime.substr(3,2)) + 45;
-                        finalMinute = startMinute;
-                        startTime = startTime.slice(0,3) + finalMinute;
-
-                    }
-                }
-
-
+    var i;
+    for (i=0;i<checkLegitReport.length;i++){
+        if (checkLegitReport[i].includes('제보')){
+            checkLegitReport.splice(checkLegitReport.indexOf(checkLegitReport[i]),1);
+            if(checkLegitReport.length < 7){
+                report = report + '\n' + raidReport(msg);
+                replier.reply(report);
             }
-            var endTime = startTime;
-
-            var startTime2 = '22';
-
-            if (msg[2]==':'){
-                startTime2 = msg.slice(0,5);
-                msg = msg.slice(6);
-            } else {
-                startTime2 = msg.slice(0,4);
-                msg = msg.slice(5);
-            }
-
-
-            report = (report + '\n' + startTime2 + '~' + endTime + ' ' + msg);
-            replier.reply(report);
         }
-
     }
+
 }
