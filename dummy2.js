@@ -1,27 +1,7 @@
-var msg = '12시 27분 사과 제보'
-var msgDetermineKor = ''
+var msg = "그란돈 백개체 알려줘"
 
-msgDetermineKor = msg;
-if (msgDetermineKor[1]=='시'){
-    msgDetermineKor = '0' +msgDetermineKor;
-}
-
-if (msgDetermineKor[2]=='시'){
-    msgDetermineKor = msgDetermineKor.slice(0,2) + ':' + msgDetermineKor.slice(3);
-}
-
-if (msgDetermineKor[3]==' '){
-    msgDetermineKor = msgDetermineKor.slice(0,3) + msgDetermineKor.slice(4);
-}
-
-if (msgDetermineKor[4]=='분'){
-    msgDetermineKor = msgDetermineKor.slice(0,3) + '0' + msgDetermineKor.slice(3);
-}
-if (msgDetermineKor[5]=='분'){
-    msgDetermineKor = msgDetermineKor.slice(0,5) + msgDetermineKor.slice(6);
-}
+console.log(msg.indexOf('백개체'));
 
 
-msg = msgDetermineKor;
-console.log(msgDetermineKor)
 
+console.log(msg.slice(0,msg.indexOf('백개체')-1));
