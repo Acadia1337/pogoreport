@@ -57,9 +57,141 @@ var quoteFind = {
         8 : '렌토계정은 빛-계정이다. - 부기',
         9 : '포고는 끈기다 - 부기',
         10 : '렌토잡는 부기! - 폭행부기'
+    },
+    "이리" : {
+        1 : '캐논뼈 - 이리',
+        2 : '캐뼈 - 이리',
+        3 : '캐뼈묻 - 이리',
+        4 : '좋은 단백질은 내가 섭취한 단백질뿐이다 - 파이리 (어깨깡패)',
+        5 : '파비장 - 이리',
+        6 : '정보) 캐논>>>>시코>이리>렌토>속초=피츄',
+        7 : '캐뼈',
+        8 : '캐뼈',
+        9 : '캐뼈',
+        10 : '캐뼈'
+    },
+    "호굴" : {
+        1 : '(신나)',
+        2 : '(하하)',
+        3 : '(우와)',
+        4 : '(심각)',
+        5 : '(흑흑)',
+        6 : '내적 친밀감',
+        7 : '(이모티콘)',
+        8 : '(신나)',
+        9 : '(신나)',
+        10 : '(신나)'
     }
 };
+
+var ttikku = {
+    1 : '띠꾸혀엉',
+    2 : '띠꾸혀어엉',
+    3 : '띠꾸혀어어엉',
+    4 : '띠꾸혀어어어엉',
+    5 : '띠꾸혀어어어어엉',
+    6 : '띠꾸혀어어어어어엉',
+    7 : '띠꾸혀엉...',
+    8 : '띠꾸혀어엉...',
+    9 : '노래도잘하는띠꾸혀엉',
+    10 : '띠꾸띠꾸씰',
+    11 : '원숭이띠꾸혀엉',
+    12 : '띠꾸혀어어어어어어어어어어어어어어어어어어엉',
+    13 : '딥-띠꾸',
+    14 : '빛-띠꾸',
+    15 : '띠꾸혀어엉이구나',
+    16 : '띠꾸혀어어엉!!',
+    17 : '원로띠꾸혀엉',
+    18 : '뉴발신는띠꾸혀어엉',
+    19 : '띠꾸혀어엉',
+    20 : '어디에나있는띠끄혀어엉...',
+    21 : '부기띠끄',
+    22 : '띠끄혀어엉',
+    23 : '부띠끄',
+    24 : '티꾸혀어엉',
+    25 : '티꾸',
+    26 : '티꾸혀어엉의',
+    27 : '티꾸티꾸씰ㅋㅋㅋㅋㅋㅋㅋ',
+    28 : '티꾸라파닭',
+    29 : '티꾸닭',
+    30 : '티꾸혀엉',
+    31 : '티꾸다',
+    32 : '띠꾸혀어어어어어엉',
+    33 : '띠꾸혀어어엉',
+    34 : '띠꾸혀어어어어어엉',
+    35 : '띠꾸혀어어엉',
+    36 : '띠꾸형!',
+    37 : '미스티꾸',
+    38 : '미스티꾸혀엉',
+    39 : '하입님.',
+    40 : '띠꾸혀어어어어어엉'
+};
+
+var manual = {
+    '레이드' : '포고봇 레이드 관련 설명\n제보 포맷: "12:30 사과 제보" or "사과 12시30분 제보" 등 시간과 장소(체육관명)과 제보 이 3가지가 충족이 되면 반응해요!\n만약 제보가 잘못되었다면, "사과 오보", "사과 삭제해줘" 등으로 말하시면 바로 지울게요!\n제가 알아서 시간이 지난 레이드는 지우지만, 만약 안지워졌다면 "사과 만료" 나 "사과 끝났어" 등으로 말해주세요! 제보 현황은 언제든지 "현황"을 치시면 알 수 있어요!',
+    '정보' : '"도리야 가이오가 백개체" 등 도리야를 붙여서 불러주세요! 파이어 이벤트나, 다가오는 커뮤니티데이, 마기라스 레이드 성공기준, 둥지 정보, 지역락 포켓몬, 미스틱 평가 대사 등 이것저것 알려드릴게요! 제가 만약 모르는 정보라면 기억 해두었다가 알아올게요!',
+    '명령어' : '레이드: __시__분 (체육관명) 제보\n레이드 삭제: (체육관명) 삭제\n그 외: 도리야 + 명령어 (백개체, 둥지, 이벤트, 커뮤니티데이, 지역락, 이브이, 진화도구, 경험치, 팀 평가, 도곡방 트레이너 코드)'
+};
+
 var nestDict = "<9.6~9.19 둥지 정보>\n\n가산디지털단지 디폴리스 : 암나이트(소)\n국과수사거리 오솔길공원 : 쥬쥬\n난지천공원 : 잉어킹\n난지한강공원 : 네이티\n당산공원 : 나옹\n도림천공원 : 피카츄\n망원한강공원 : 블루\n문래공원 : 블루(소)\n보라매공원 : 갈모매\n상암가온공원 : 고라파덕(소)\n서서울호수공원 : 해골몽\n석촌호수 : 코일\n신도림푸르지오공원 : 왕자리(소)\n양재시민의숲 : 마그마\n양재 근린공원(언남고) : 꼬부기\n양재 더케이호텔 옆 공원 : 소곤룡\n양재 앨리스파크 : 볼비트\n양재 영동 2~3교 사이 : 블루\n어린이대공원 : 코코파스\n여의도공원 : 나옹\n여의도한강공원 : 파이리\n영등포공원 : 가재군\n올림픽공원 : 콘치\n올림픽공원 체조경기장 : 꼬부기\n우이솔밭근린공원 : 알통몬\n월드컵경기장 : 나옹\n일산호수공원: 슬리프\n평화의공원 : 쥬쥬\n푸른수목원: 푸린\n효창공원 : 깨비참";
+
+function timeCheck (report){
+    var reportSplit = report.split('\n');
+    var currentMinuteFix;
+    var currentHourFix;
+
+    if (currentMinute < 10) {
+        currentMinuteFix = '0' + currentMinute;
+    } else{
+        currentMinuteFix = currentMinute;
+    }
+
+    if (currentHour > 12){
+        currentHour = currentHour-12
+    }
+
+
+    var endTime;
+    var endHour;
+    var endMinute;
+    var i;
+    var reportSplitDummy = reportSplit;
+
+    for (i=1;i<reportSplit.length;i++){
+        var deleteThis=0;
+        if (reportSplit[i].includes(":")){
+            var temporalTimeSplit = reportSplit[i].split("~")
+            var temporalTimeSplit2 = temporalTimeSplit[1];
+            var temporalTimeSplit3 = temporalTimeSplit2.split(" ");
+            endTime = temporalTimeSplit3[0];
+            var temporalTimeSplit4 = endTime.split(":");
+            endHour = parseInt(temporalTimeSplit4[0]);
+            endMinute = parseInt(temporalTimeSplit4[1]);
+            endTime = endHour + '' + temporalTimeSplit4[1];
+
+            if (endHour==currentHour && endMinute<currentMinute){
+                deleteThis = reportSplit[i];
+                reportSplitDummy.splice(reportSplitDummy.indexOf(deleteThis),1);
+            } else if (endHour==12 && currentHour==1) {//12:59 1:00
+                deleteThis = reportSplit[i];
+                reportSplitDummy.splice(reportSplitDummy.indexOf(deleteThis),1);
+            } else if ((endHour < currentHour) && (currentHour!=12)) {
+                deleteThis = reportSplit[i];
+                reportSplitDummy.splice(reportSplitDummy.indexOf(deleteThis),1);
+            }
+
+        }
+    }
+
+    report = reportSplitDummy[0];
+
+    for (i=1;i<reportSplitDummy.length;i++){
+        report = report + '\n' + reportSplitDummy[i];
+    }
+
+
+    return (report)
+}
 
 var raidBossDict = {
     
@@ -86,7 +218,8 @@ var raidBossDict = {
     
     "그란돈" : "LV20 : 2328\nLV25 : 2910",
     "가이오가" : "LV20 : 2328\nLV25 : 2910",
-    "레쿠자" : "LV20 : 2083\nLV25 : 2604"
+    "레쿠자" : "LV20 : 2083\nLV25 : 2604",
+    "레쿠쟈" : "LV20 : 2083\nLV25 : 2604"
 };
 
 function raidReport(msgTwo) {
@@ -167,14 +300,24 @@ function raidReport(msgTwo) {
             if (endMin<10){
                 endMin = '0' + endMin;
             }
-        } else if (msgMin < 15){
+        } else {
             endHour = msgHour;
-            endMin = parseInt(msgMin)+45;
+            endMin = parseInt(msgMin) + 45;
         }
     }
+    
+    if (isNaN(endMin)){
+        if(parseInt(msgMin)+45 == 53){
+            endMin = 52;
+        } else{
+            endMin = 52;
+        }
+    }
+    
     if (parseInt(msgMin) < 10){
         msgMin = '0' + parseInt(msgMin);
     }
+
 
     raidTime = msgHour+':'+msgMin+'~'+endHour+':'+endMin;
     raidSentence = raidTime + ' ' + splitMessage.splice(0);
@@ -185,7 +328,12 @@ function raidReport(msgTwo) {
 }
 
 function response(room, msg, sender, isGroupChat, replier, imageDB) {
+    report = timeCheck(report)
     msgCall = msg;
+    
+    if (msg=='도리야' || msg=='도리' || msg=='도리!'){
+        replier.reply("네! 부르셨나요?")
+    }
     
     if (msgCall.slice(0,3)=='도리야'){
         msg = msg.replace('도리야','도리')
@@ -242,7 +390,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
             replier.reply('이브이 진화는 샤미드/부스터/쥬피썬더 세개 중 랜덤으로 이루어지며, 에브이와 블래키는 각각 10km를 걷고 파트너 지정한 상태에서 파트너 화면을 통하여 낮과 밤에 진화를 시킬 수 있습니다. \n\n또한 이브이의 이름을 변경하여 1회 확정 진화 할 수 있습니다. 명칭은 아래와 같습니다.\n샤미드 : Rainder\n부스터 : Pyro\n쥬피썬더 : Sparky\n에브이 : Sakura\n블래키 : Tamao')
         }
         
-        if(msg.includes('팀') && msg.includes('평가')){
+        if(msg.includes('평가')){
             if(msg.includes('발러')){
                 replier.reply('발러 리더 칸델라의 평가 대사\n\nIV 총합\n82~100% 말할 게 없어. 아주 든든하겠어!\n67~80% 아주 강해. 자랑해도 되겠어!\n51~64% 보통의 강함이라고 생각해!\n0~49% 배틀이 적성은 아니지만 난 좋아해.\n\n가장 높은 IV\n15 최고야! 가슴이 뜨거워져!\n13~14 훌륭해! 두근거려!\n8~12 꽤 강하네. 배틀에서 활약할 것 같아!\n0~7 그럭저럭 강한거네.')
             }
@@ -270,27 +418,31 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
 
             var ranDict = Math.floor((Math.random() * 10) + 1);
             replier.reply(quoteFind[msg][ranDict]);            
-            
-            
-            if (msg.includes('띠꾸')){
-                replier.reply('저는 띠꾸가 아니라 하입인걸요 - 하입')
+        }
+        
+        if(msg.includes('사용법')){
+            if (msg.includes('레이드')){
+                replier.reply(manual['레이드']);
+            } else if (msg.includes('정보')){
+                replier.reply(manual['정보']);
+            } else if (msg.includes('명령어')){
+                replier.reply(manual['명령어']);
+            } else {
+                replier.reply("안녕하세요! 도리입니다.\n도곡방 레이드가 조금 더 쉽게 성사 될 수 있게 최선을 다할게요!\n기본적으로 도리야~로 불러주시면 돼요!매일매일 똑똑해지고 있답니다(아마도요)만약 제게 뭔가 문제가 생기신다면 그건 방장님 탓입니다!\n더 많은 설명은 도리야 사용법 - 레이드,명령어,정보 등으로 물어봐주세요!")
             }
-            if (msg.includes('하입')){
-                replier.reply('올해 안에는 솔로탈출 하겠죠?')
-            }
-            if (msg.includes('호굴')){
-                replier.reply('(심각)')
-            }
-            if (msg.includes('멍내니용')){
-                replier.reply('캐뼈 - 이리')
-            }
-            if (msg.includes('파이리')){
-                replier.reply('좋은 단백질은 내가 먹은 단백질뿐이다 - 이리')
-            }
-            if (msg.includes('식초')){
-                replier.reply('제가 바로 인싸 속초입니다 - 속초')
-            }
-
+        }
+        
+        if(msg.includes('도곡방') && msg.includes('이벤트')){
+            replier.reply('★도곡방☆이벤트★\n모래 180921 를 달성해라!\n길었던 레지아이스/레지스틸/레지락의 5성 레이드 기간이 끝나는 것을 기념하기 위해 이벤트를 합니다!\n9월 20일에서 9월 21일로 오전 0시0분부터 1시0분까지!! 보유 모래를 180921에 맞춰서 스크린샷을 올려주시는분께 소정의 상품을 드립니다~ 많은 참여 부탁드려요!!')
+        }
+        
+        if(msg.includes('트레이너코드') && msg.includes('트레이너 코드')){
+            replier.reply("도곡방 트레이너 코드 : https://goo.gl/z7ib37")
+        }
+        
+        if(msg.includes('띠꾸')){
+            var ranDict = Math.floor((Math.random() * 40) + 1);
+            replier.reply(ttikku[ranDict]);
         }
         
         if(msg.includes('뭐하니') || msg.includes('뭐해')){
@@ -312,10 +464,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
         replier.reply('TEST');
     }
 
-    if(msg == '제보 리셋해줘'){
-        report = reportDefault;
-        replier.reply("리셋되었습니다\n" + report);
-    }
+
     
     if(msg.includes('현황')){
         currentTime = new Date();
@@ -328,51 +477,76 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
         replier.reply(currentHour+ ':' +currentMinute+' 기준\n'+report);
     }
     
-    if(msg.includes('오보')){
+    if (msg.includes('삭제') || msg.includes('오보')){
+        msg = msg.replace('삭제해줘','');
+        msg = msg.replace('삭제','');
         msg = msg.replace('오보','');
-        if (msg[0]==' '){
-            msg = msg.slice(0,0) + msg.slice(1);
-        }
-        if (msg[msg.length-1]==' '){
-            msg = msg.slice(0,msg.length-1);
+        if(msg[msg.length-1] == ' '){
+            msg = msg.slice(0,-1);
         }
 
         if (report.includes(msg)){
-            var n = report.indexOf("\n",report.indexOf(msg)-15);
-            var firstHalf = report.slice(0,n);
-            var secondHalf = report.slice(report.indexOf(msg) + msg.length + 1);
+            var reportSplit = report.split('\n')
+            var i;
+            for (i=0;i<reportSplit.length;i++){
+                if(reportSplit[i].includes(msg)){
+                    reportSplit.splice(i,1)
+                    var j;
+                    report = reportSplit[0];
+                    for (j=1;j<reportSplit.length;j++){
+                        report = report + '\n' + reportSplit[j];
+                    }
+                    report.replace('\n','')
+                    break;
+                }
+            }
 
-            replier.reply(msg + ' 제보를 삭제합니다.')
-            report = firstHalf + secondHalf;
-            replier.reply(report)
-        }
+        } 
+        replier.reply(msg + ' 제보를 삭제합니다.');
+        replier.reply(report);
     }
 
-    if(msg.includes('시간만료')){
+
+    if (msg.includes('만료') || msg.includes('끝났어')){
         msg = msg.replace('시간만료','');
-        if (msg[0]==' '){
-            msg = msg.slice(0,0) + msg.slice(1);
+        msg = msg.replace('끝났어','');
+        msg = msg.replace('만료','');
+        if(msg[msg.length-1] == ' '){
+            msg = msg.slice(0,-1);
         }
-        if (msg[msg.length-1]==' '){
-            msg = msg.slice(0,msg.length-1);
-        }
-        
-        if (report.includes(msg)){
-            var n = report.indexOf("\n",report.indexOf(msg)-15);
-            var firstHalf = report.slice(0,n);
-            var secondHalf = report.slice(report.indexOf(msg) + msg.length + 1);
 
-            replier.reply(msg + ' 레이드가 시간이 만료되어 제보에서 삭제합니다.')
-            report = firstHalf + secondHalf;
-            replier.reply(report)
+        if (report.includes(msg)){
+            var reportSplit = report.split('\n')
+            var i;
+            for (i=0;i<reportSplit.length;i++){
+                if(reportSplit[i].includes(msg)){
+                    reportSplit.splice(i,1)
+                    var j;
+                    report = reportSplit[0];
+                    for (j=1;j<reportSplit.length;j++){
+                        report = report + '\n' + reportSplit[j];
+                    }
+                    break;
+                    report.replace('\n','')
+                }
+            }
+
         }
+        replier.reply(msg + ' 가 만료되어 사라집니다.');
+        replier.reply(report);
     }
+
     
     var checkLegitReport = msg.split(' ');
 
     var i;
     for (i=0;i<checkLegitReport.length;i++){
-        if (checkLegitReport[i].includes('제보')){
+        if (msg.includes('리셋해줘') || msg=='제보 리셋'){
+            report = reportDefault;
+            replier.reply("리셋되었습니다");
+            replier.reply(report + '\n현재 없음');
+            break;
+        } else if (checkLegitReport[i].includes('제보')){
             checkLegitReport.splice(checkLegitReport.indexOf(checkLegitReport[i]),1);
             if(checkLegitReport.length < 7){
                 report = report + '\n' + raidReport(msg);
