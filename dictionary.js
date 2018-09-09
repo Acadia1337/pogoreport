@@ -1,3 +1,4 @@
+
 var quoteFind = {
     "구구" : {
         key1 : 'ㅋㅋㅋ 이번학기 끗나고 자퇴할거에여!! - 구구',
@@ -50,10 +51,14 @@ var quoteFind = {
     "이리" : {
         key1 : '캐논뼈 - 이리',
         key2 : '캐뼈 - 이리',
+        key3 : '캐뼈묻 - 이리',
         key4 : '좋은 단백질은 내가 섭취한 단백질뿐이다 - 파이리 (어깨깡패)',
         key5 : '파비장 - 이리',
         key6 : '정보) 캐논>>>>시코>이리>렌토>속초=피츄',
         key7 : '저 같이 착한 사람한테 어떻게 그런 부탁을 하십니까???',
+        key8 : '캐뼈',
+        key9 : '캐뼈',
+        key10 : '캐뼈'
     },
     "호굴" : {
         key1 : '(신나)',
@@ -84,17 +89,85 @@ var quoteFind = {
         key2 : "으아아아아아 아빠 나 물짱이!!!! 으아아아아!!! -mon12",
         key3 : "오오..! (레바 이모티콘)",
         key4 : "엄지척 (레바 이모티콘)",
-        key5 : "(남이 선물 막 열다 울프되어버렸다는 말을 듣고) 괜찮습니다 허허 저는 원래 알 안키는 걸요. 오히려 님이 알을 못켜신것 같아 안타깝네요 - 몬 (생불)"
+        key5 : "(남이 선물 막 열다 울프되어버렸다는 말을 듣고) 괜찮습니다 허허 저는 원래 알 안키는 걸요. 오히려 님이 알을 못켜신것 같아 안타깝네요 - 몬 (생불)",
+        key6 : "덕분에 레이드 잘 했어요 - mon12",
+        key7 : "으아아아아아 아빠 나 물짱이!!!! 으아아아아!!! -mon12",
+        key8 : "오오..! (레바 이모티콘)",
+        key9 : "엄지척 (레바 이모티콘)",
+        key10 : "(남이 선물 막 열다 울프되어버렸다는 말을 듣고) 괜찮습니다 허허 저는 원래 알 안키는 걸요. 오히려 님이 알을 못켜신것 같아 안타깝네요 - 몬 (생불)"
+    },
+    "속초" : {
+        key1 : "이것은 첫번째 키",
+        key2 : "이것은 두번쨰 키"
     }
 };
 
-var newDict = '구구'
+var testDict = {
+    "one" : {
+    1 : "dodo",
+    2 : "eoeo"
+    }
+};
 
-var ahjom = {
-    1: "df",
-    2: "qw"
+// 1. 명언 속초 식초
+// 2. 명언 이후 두개 이상이라면, 첫번째가 아이디, 그 이후가 대사
+// 3. 만약 첫번째에 등록된 사전이 없다면, 등록
+// 4. 만약 등록된 사전이 있다면, 그 길이를 구하라
+// 5. 그 길이+1의 인덱스에 대사 등록
+// 6. 명언 배웠어요! 라는 답변 돌려줌
+
+var msg = "속초 식초 혀엉 강정 먹고 싶어요 이건 세번째 키";
+
+function quoteRegister (msgQuote){
+    msgQuote = msgQuote.split(" ");
+
+    var newDict = msgQuote[0];
+    var i;
+    var newQuote = '';
+
+    newQuote = msgQuote[1];
+    for (i=2;i<msgQuote.length;i++){
+        newQuote = newQuote + ' ' + msgQuote[i];
+    }
+
+    if (quoteFind[newDict] == undefined){
+        console.log("비었대");
+        quoteFind[newDict] = {
+            key1 : newQuote
+        }
+    } else{
+        console.log("있다 캬캬캬캬");
+        if (quoteFind[newDict].key3 == undefined){
+            quoteFind[newDict].key3 = newQuote;
+        } else if (quoteFind[newDict].key4 == undefined){
+            quoteFind[newDict].key4 = newQuote;
+        } else if (quoteFind[newDict].key5 == undefined){
+            quoteFind[newDict].key5 = newQuote;
+        } else if (quoteFind[newDict].key6 == undefined){
+            quoteFind[newDict].key6 = newQuote;
+        } else if (quoteFind[newDict].key7 == undefined){
+            quoteFind[newDict].key7 = newQuote;
+        } else if (quoteFind[newDict].key8 == undefined){
+            quoteFind[newDict].key8 = newQuote;
+        }
+    }
+    console.log(quoteFind[newDict]);
+
 }
+//var ranDict = Math.floor((Math.random() * Object.keys(quoteFind[newDict]).length+1));
 
-ahjom.key3 = "df"
 
-console.log(ahjom);
+
+
+
+
+//(quoteFind[msg[0]]) = {};
+
+//(quoteFind[msg[0]]).key1 = "dodo";
+
+
+
+// console.log(quoteFind[msg]['key' + ranDict]);  
+
+
+

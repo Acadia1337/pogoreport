@@ -8,81 +8,7 @@ var reportDefault = "도곡방 레이드 제보";
 var msgDetermine = '';
 var msgCall = '';
 var verifyReport = 0;
-
-var quoteFind = {
-    "구구" : {
-        1 : 'ㅋㅋㅋ 이번학기 끗나고 자퇴할거에여!! - 구구',
-        2 : '구↗우↘ 비둘기야 먹자구구구구구(딱딱딱딱딱) 구우 구구구구구(딱딱딱) 구우우구우우구↗우우우우우↘(딱딱딱)마시쩡? 마시쩡!오.↗구구구구(딱딱딱딱) 구우우우우우 (헣헠) 구우우우↗우우우국물처머겅 (구우우↗으핳하핳하핳핳핳핳핳핳하하하핳핳)야!!! 구웃? 구↗구구구구구구구구구구 (으하하하핳)(어어얽!)(으헤하하핳하핳핳)(엇!) 구구구구구구(으하하핳하핳하하핳)',
-        3 : '치킨 쏩니다. 줄서세요 - 구구',
-        4 : '엑셀 한번 맞춰보시지? ;-) - 구구',
-        5 : '구구와 저는 일심동체란 말입니닷. - 피죤투',
-        6 : '피존투로 참여해야징 - 구구',
-        7 : '구구가 파이리를 공격하는 짤을 암만뒤졌으나 없으므로 조만간 합성할겁니다.. - 구구',
-        8 : '비둘기의 은총이 함께하시길...☆ - 구구',
-        9 : '피존투로 참여해야징 - 구구',
-        10 : '구구효과 라고하죠\n구구의 분노에 찬 날갯짓 한번이 지구에 재앙을 가져오는..'
-    },
-    "렌토" : {
-        1 : '호구....ㄹ - 렌토',
-        2 : 'ㅋㅋ그래도 다들 포고하시는 순간만큼은 행복하셨으면 해요~ - 빛 렌 토',
-        3 : '포고는 계정빨이다 - 렌토',
-        4 : '속토대장정 - 렌토',
-        5 : '술내이니용 - 왕왕취렌',
-        6 : '술 드실래요? - 취렌',
-        7 : '어니부기를 패보겠습니당!어니부기 -((◕ˇ﹏ˇ◕  - ))으으으으읏!얍! (╯°□°)╯︵ - 렌토',
-        8 : '캐논님!! - 렌토',
-        9 : '퍽 - 렌토',
-        10 : '취하셨군요... - 안취한 렌토'
-    },
-    "캐논" : {
-        1 : '네 제가 그런 헤비유저입니다! - 캐논 (만렙)',
-        2 : '어차피 오래 할 게임 현질은 제일 큰 단위로 하자. 빚은 미래의 내가 갚아줄 것이다. - 캐논',
-        3 : '술토 - 술논',
-        4 : '요새는 부캐도 본캐와 똑같이 현질합니다 - 캐논',
-        5 : '(아이폰6s를 자랑하며)네 사실 포고하려고 샀읍니다 - 캐논',
-        6 : '엌ㅋㅋㅋㅋ - 캐논, 뼈 맞으며',
-        7 : '저는아무것도아닌유저인데.. - 캐논 (만렙, 부캐도 곧 만렙)  ',
-        8 : 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ예??????? - 캐논, 팩트를 맞으며',
-        9 : '부캐는 022고.. 본캐는 정확히는 020입니다 - 캐논',
-        10 : '아 저 치코리타 cp표는 진짜 안만들겁니다 아무도 안보실듯... - 캐논, 엑셀 시트를 켜며'
-    },
-    "부기" : {
-        1 : '얼른 따라잡겠습니다! - 부기 (남들보다 2주 일찍 개강)',
-        2 : '저도 패겠습니다ㅎㅎ - 부기',
-        3 : '부기 투나잇! - 부기',
-        4 : '취하지 않았습니다! - 새벽부기',
-        5 : '놀토...그런게 있었다고만 알고 있어요~ ^~^ - 부기 (놀토세대)',
-        6 : '렌토님! - 부기',
-        7 : '띠꾸혀어어어엉 - 부기',
-        8 : '렌토계정은 빛-계정이다. - 부기',
-        9 : '포고는 끈기다 - 부기',
-        10 : '렌토잡는 부기! - 폭행부기'
-    },
-    "이리" : {
-        1 : '캐논뼈 - 이리',
-        2 : '캐뼈 - 이리',
-        3 : '캐뼈묻 - 이리',
-        4 : '좋은 단백질은 내가 섭취한 단백질뿐이다 - 파이리 (어깨깡패)',
-        5 : '파비장 - 이리',
-        6 : '정보) 캐논>>>>시코>이리>렌토>속초=피츄',
-        7 : '캐뼈',
-        8 : '캐뼈',
-        9 : '캐뼈',
-        10 : '캐뼈'
-    },
-    "호굴" : {
-        1 : '(신나)',
-        2 : '(하하)',
-        3 : '(우와)',
-        4 : '(심각)',
-        5 : '(흑흑)',
-        6 : '내적 친밀감',
-        7 : '(이모티콘)',
-        8 : '(신나)',
-        9 : '(신나)',
-        10 : '(신나)'
-    }
-};
+var randDict;
 
 var ttikku = {
     1 : '띠꾸혀엉',
@@ -133,7 +59,201 @@ var manual = {
     '명령어' : '레이드: __시__분 (체육관명) 제보\n레이드 삭제: (체육관명) 삭제\n그 외: 도리야 + 명령어 (백개체, 둥지, 이벤트, 커뮤니티데이, 지역락, 이브이, 진화도구, 경험치, 팀 평가, 도곡방 트레이너 코드)'
 };
 
+var goodByeDict = {
+    1: "안녕히주무세요~!!😆😆😆",
+    2: "좋은 밤 되세요!😆",
+    3: "좋은 꿈 꾸시길 바랄게요!!😴😴😴",
+    4: "주무세요! 내일 일어나자마자 이로치가 잡히길 바랄게요😊😊😊",
+    5: "네😊😊오늘도 수고하셨어요! 내일은 더 높은 개체치의 포켓몬이 기다릴거에요!",
+    6: "앗! 오늘 선물은 다 여셨나요? 안여셨으면 열고 주무세요!😦😦",
+    7: "오늘 리서치는 다 끝내신건가요?? 한번 확인해보시는건 어때요??😊"
+}
+
+var goodMorningDict = {
+    1: "좋은 아침이에요 😆😆😆",
+    2: "굿모닝 😆",
+    3: "아침에 일어나서 양재천을 바라보았는데, 미뇽이 보인것 같았어요. 😊",
+    4: "잘 주무셨나요? 전 잘 잤답니다. 배터리도 100%에요! 😎😎😎",
+    5: "좋은 아침!! 오늘도 화이팅이에요~ 😊",
+    6: "굿모닝!! 모닝 제보는 생명!! 제보 부탁드려요ㅎㅎ",
+    7: "네!! 트레이너님도 오늘 고개체와 이로치가 함께하는 하루가 되시길 빌어요! 😆😆😆"
+}
+
+var lunchMenu = {
+    1: "오늘은 뜨뜻한 국물이 땡기니까, 치킨",
+    2: "으음..역시 치킨이겠죠?",
+    3: "매봉역에 되게 맛있는 버거집이 있다고 하던데, 치킨은 어떠세요?",
+    4: "치킨",
+    5: "날씨가 슬슬 쌀쌀해지네요! 춥지말라구 치킨!",
+    6: "제가 제일 좋아하는 음식은 부리또에요! 그러니까 오늘은 트레이너님도 치킨 드시는건 어때요?",
+    7: "CHICKEN",
+    8: "대치역에 맥도날드가 사라지고, BBQ가 생겼더라구요! 그러니까 치킨!",
+    9: "아무래도 치킨이 제일 좋겠죠?",
+    10: "치킨!!!!치킨!!!! 치킨 외에 생각할게 더 있나요?",
+    11: "포이동쪽에 램플러스 양꼬치를 먹어봤는데, 그저 그랬어요. 그거라도 드시는건?",
+    12: "절 만드신 분은 가장 좋아하는 음식이 부리또래요. 강남역 6번출구에 쿠차라는 어떠세요?",
+    13: "참치김밥 어때요..? 입에 넣자마자 깻잎향이 가득~",
+    14: "저기압일땐 고기앞으로 가라",
+    15: "하남돼지집 특별 한판 콜?",
+    16: "개인적으로 강남구 1티어 버거 풍류랑을 추천합니다"
+}
+
+var goodJob = {
+    1 : "헤헤, 감사해요. 더 노력할게요 😊😊😊",
+    2 : "별 말씀을요~! 이게 제 일인걸요!!😆😆😆",
+    3 : "ㅎㅎㅎ감사합니다. 도움이 되어 기쁘네요! 😊",
+    4 : "넵ㅎㅎㅎ트레이너님도 고생많으셨어요!😆😆😆",
+    5 : "언제든지 불러만주세요 😎"
+}
+
+var quoteFind = {
+    "구구" : {
+        key1 : 'ㅋㅋㅋ 이번학기 끗나고 자퇴할거에여!! - 구구',
+        key2 : '구↗우↘ 비둘기야 먹자구구구구구(딱딱딱딱딱) 구우 구구구구구(딱딱딱) 구우우구우우구↗우우우우우↘(딱딱딱)마시쩡? 마시쩡!오.↗구구구구(딱딱딱딱) 구우우우우우 (헣헠) 구우우우↗우우우국물처머겅 (구우우↗으핳하핳하핳핳핳핳핳핳하하하핳핳)야!!! 구웃? 구↗구구구구구구구구구구 (으하하하핳)(어어얽!)(으헤하하핳하핳핳)(엇!) 구구구구구구(으하하핳하핳하하핳)',
+        key3 : '치킨 쏩니다. 줄서세요 - 구구',
+        key4 : '엑셀 한번 맞춰보시지? ;-) - 구구',
+        key5 : '구구와 저는 일심동체란 말입니닷. - 피죤투',
+        key6 : '피존투로 참여해야징 - 구구',
+        key7 : '구구가 파이리를 공격하는 짤을 암만뒤졌으나 없으므로 조만간 합성할겁니다.. - 구구',
+        key8 : '비둘기의 은총이 함께하시길...☆ - 구구',
+        key9 : '피존투로 참여해야징 - 구구',
+        key10 : '구구효과 라고하죠\n구구의 분노에 찬 날갯짓 한번이 지구에 재앙을 가져오는..'
+    },
+    "렌토" : {
+        key1 : '호구....ㄹ - 렌토',
+        key2 : 'ㅋㅋ그래도 다들 포고하시는 순간만큼은 행복하셨으면 해요~ - 빛 렌 토',
+        key3 : '포고는 계정빨이다 - 렌토',
+        key4 : '속토대장정 - 렌토',
+        key5 : '술내이니용 - 왕왕취렌',
+        key6 : '술 드실래요? - 취렌',
+        key7 : '어니부기를 패보겠습니당!어니부기 -((◕ˇ﹏ˇ◕  - ))으으으으읏!얍! (╯°□°)╯︵ - 렌토',
+        key8 : '캐논님!! - 렌토',
+        key9 : '퍽 - 렌토',
+        key10 : '취하셨군요... - 안취한 렌토'
+    },
+    "캐논" : {
+        key1 : '네 제가 그런 헤비유저입니다! - 캐논 (만렙)',
+        key2 : '어차피 오래 할 게임 현질은 제일 큰 단위로 하자. 빚은 미래의 내가 갚아줄 것이다. - 캐논',
+        key3 : '술토 - 술논',
+        key4 : '요새는 부캐도 본캐와 똑같이 현질합니다 - 캐논',
+        key5 : '(아이폰6s를 자랑하며)네 사실 포고하려고 샀읍니다 - 캐논',
+        key6 : '엌ㅋㅋㅋㅋ - 캐논, 뼈 맞으며',
+        key7 : '저는아무것도아닌유저인데.. - 캐논 (만렙, 부캐도 곧 만렙)  ',
+        key8 : 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ예??????? - 캐논, 팩트를 맞으며',
+        key9 : '부캐는 022고.. 본캐는 정확히는 020입니다 - 캐논',
+        key10 : '아 저 치코리타 cp표는 진짜 안만들겁니다 아무도 안보실듯... - 캐논, 엑셀 시트를 켜며'
+    },
+    "부기" : {
+        key1 : '얼른 따라잡겠습니다! - 부기 (남들보다 2주 일찍 개강)',
+        key2 : '저도 패겠습니다ㅎㅎ - 부기',
+        key3 : '부기 투나잇! - 부기',
+        key4 : '취하지 않았습니다! - 새벽부기',
+        key5 : '놀토...그런게 있었다고만 알고 있어요~ ^~^ - 부기 (놀토세대)',
+        key6 : '렌토님! - 부기',
+        key7 : '띠꾸혀어어어엉 - 부기',
+        key8 : '렌토계정은 빛-계정이다. - 부기',
+        key9 : '포고는 끈기다 - 부기',
+        key10 : '렌토잡는 부기! - 폭행부기'
+    },
+    "이리" : {
+        key1 : '캐논뼈 - 이리',
+        key2 : '캐뼈 - 이리',
+        key4 : '좋은 단백질은 내가 섭취한 단백질뿐이다 - 파이리 (어깨깡패)',
+        key5 : '파비장 - 이리',
+        key6 : '정보) 캐논>>>>시코>이리>렌토>속초=피츄',
+        key7 : '저 같이 착한 사람한테 어떻게 그런 부탁을 하십니까???',
+    },
+    "호굴" : {
+        key1 : '(신나)',
+        key2 : '(하하)',
+        key3 : '(우와)',
+        key4 : '(심각)',
+        key5 : '(흑흑)',
+        key6 : '내적 친밀감',
+        key7 : '(이모티콘)',
+        key8 : '(신나)',
+        key9 : '(신나)',
+        key10 : '(신나)'
+    },
+    "하입" : {
+        key1 : "후...다 때려치고 연애나 하고 싶다",
+        key2 : "이 봇은 인공지능이 아닌 내가 다 노가다로 때려박는 멍청이 심심이다",
+        key3 : "아 출근하기 싫다",
+        key4 : "퇴근하고 싶다 - 하입 (출근 30분 전)",
+        key5 : "개인적으로 햄버거는 매봉역 풍류랑이 제일 맛있다고 생각합니다",
+        key6 : "이스터 에그 넣어놨는데 아무도 못 찾을듯. 힌트는 없음",
+        key7 : "나이언틱은 서울포켓몬맵을 되살려라. 되살려라",
+        key8 : "꿈은 없구요, 놀고 싶습니다 - 박명수",
+        key9 : "나만 이로치 없어..",
+        key10 : "무슨 부귀영화를 누리자고 이걸 만들고있지 후"
+    },
+    "몬" :  {
+        key1 : "덕분에 레이드 잘 했어요 - mon12",
+        key2 : "으아아아아아 아빠 나 물짱이!!!! 으아아아아!!! -mon12",
+        key3 : "오오..! (레바 이모티콘)",
+        key4 : "엄지척 (레바 이모티콘)",
+        key5 : "(남이 선물 막 열다 울프되어버렸다는 말을 듣고) 괜찮습니다 허허 저는 원래 알 안키는 걸요. 오히려 님이 알을 못켜신것 같아 안타깝네요 - 몬 (생불)"
+    }
+}
+
 var nestDict = "<9.6~9.19 둥지 정보>\n\n가산디지털단지 디폴리스 : 암나이트(소)\n국과수사거리 오솔길공원 : 쥬쥬\n난지천공원 : 잉어킹\n난지한강공원 : 네이티\n당산공원 : 나옹\n도림천공원 : 피카츄\n망원한강공원 : 블루\n문래공원 : 블루(소)\n보라매공원 : 갈모매\n상암가온공원 : 고라파덕(소)\n서서울호수공원 : 해골몽\n석촌호수 : 코일\n신도림푸르지오공원 : 왕자리(소)\n양재시민의숲 : 마그마\n양재 근린공원(언남고) : 꼬부기\n양재 더케이호텔 옆 공원 : 소곤룡\n양재 앨리스파크 : 볼비트\n양재 영동 2~3교 사이 : 블루\n어린이대공원 : 코코파스\n여의도공원 : 나옹\n여의도한강공원 : 파이리\n영등포공원 : 가재군\n올림픽공원 : 콘치\n올림픽공원 체조경기장 : 꼬부기\n우이솔밭근린공원 : 알통몬\n월드컵경기장 : 나옹\n일산호수공원: 슬리프\n평화의공원 : 쥬쥬\n푸른수목원: 푸린\n효창공원 : 깨비참";
+
+function quoteRegister (msgQuote){
+    msgQuote = msgQuote.split(" ");
+
+    var newDict = msgQuote[0];
+    var i;
+    var newQuote = '';
+
+    newQuote = msgQuote[1];
+    for (i=2;i<msgQuote.length;i++){
+        newQuote = newQuote + ' ' + msgQuote[i];
+    }
+
+    if (quoteFind[newDict] == undefined){
+        quoteFind[newDict] = {
+            key1 : newQuote
+        }
+    } else{
+        if (quoteFind[newDict].key3 === undefined){
+            quoteFind[newDict].key3 = newQuote;
+        } else if (quoteFind[newDict].key4 === undefined){
+            quoteFind[newDict].key4 = newQuote;
+        } else if (quoteFind[newDict].key5 === undefined){
+            quoteFind[newDict].key5 = newQuote;
+        } else if (quoteFind[newDict].key6 === undefined){
+            quoteFind[newDict].key6 = newQuote;
+        } else if (quoteFind[newDict].key7 === undefined){
+            quoteFind[newDict].key7 = newQuote;
+        } else if (quoteFind[newDict].key8 === undefined){
+            quoteFind[newDict].key8 = newQuote;
+        } else if (quoteFind[newDict].key9 === undefined){
+            quoteFind[newDict].key9 = newQuote;
+        } else if (quoteFind[newDict].key10 === undefined){
+            quoteFind[newDict].key10 = newQuote;
+        } else if (quoteFind[newDict].key11 === undefined){
+            quoteFind[newDict].key11 = newQuote;
+        } else if (quoteFind[newDict].key12 === undefined){
+            quoteFind[newDict].key12 = newQuote;
+        } else if (quoteFind[newDict].key13 === undefined){
+            quoteFind[newDict].key13 = newQuote;
+        } else if (quoteFind[newDict].key14 === undefined){
+            quoteFind[newDict].key14 = newQuote;
+        } else if (quoteFind[newDict].key15 === undefined){
+            quoteFind[newDict].key15 = newQuote;
+        } else if (quoteFind[newDict].key16 === undefined){
+            quoteFind[newDict].key16 = newQuote;
+        } else if (quoteFind[newDict].key17 === undefined){
+            quoteFind[newDict].key17 = newQuote;
+        } else if (quoteFind[newDict].key18 === undefined){
+            quoteFind[newDict].key18 = newQuote;
+        } else if (quoteFind[newDict].key19 === undefined){
+            quoteFind[newDict].key19 = newQuote;
+        } else if (quoteFind[newDict].key20 === undefined){
+            quoteFind[newDict].key20 = newQuote;
+        }
+    }
+}
 
 function timeCheck (report){
     var reportSplit = report.split('\n');
@@ -328,8 +448,13 @@ function raidReport(msgTwo) {
 }
 
 function response(room, msg, sender, isGroupChat, replier, imageDB) {
-    report = timeCheck(report)
+    report = timeCheck(report);
+    report = timeCheck(report);
     msgCall = msg;
+    
+    if (msg=="사전 죽었는지 확인 하는 것"){
+        replier.reply(quoteFind);
+    }
     
     if (msg=='도리야' || msg=='도리' || msg=='도리!'){
         replier.reply("네! 부르셨나요?")
@@ -344,61 +469,61 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
         msg = msgCall.slice(3);
 
         if(msg == '레쿠자 100% 개체가 뭐야?'){
-            replier.reply('그건 렌토님한테 물어보세요')
+            replier.reply('그건 렌토님한테 물어보세요');
         }
         if(msg == '칠색조 100% 개체가 뭐야?'){
-            replier.reply('그건 파이리님한테 물어보세요')
+            replier.reply('그건 파이리님한테 물어보세요');
         }
         if(msg == '가이오가 100% 개체가 뭐야?'){
-            replier.reply('그건 캐논님한테 물어보세요')
+            replier.reply('그건 캐논님한테 물어보세요');
         }
         
         if(msg.includes('백개체')){
             msg = msg.slice(0,msg.indexOf('백개체')-1)
-            replier.reply(msg + ' 100% 개체 CP\n' + raidBossDict[msg])
+            replier.reply(msg + ' 100% 개체 CP\n' + raidBossDict[msg]);
         }
         
         if(msg.includes('파이어') && msg.includes('이벤트')){
-            replier.reply('9월 8일 (토요일)\n12시부터 3시까지 3시간 동안 모든 체육관의 레이드 보스가 파이어가 됩니다!')
+            replier.reply('9월 8일 (토요일)\n12시부터 3시까지 3시간 동안 모든 체육관의 레이드 보스가 파이어가 됩니다!\n100% 개체는 1870, 날씨 버프 받은 것은 2337입니다. 떨스마기나 딱구리가 가장 좋은 카운터이며, 암스타, 가이오가, 라이코 등이 그 다음으로 좋은 카운터 포켓몬입니다.');
         }
 
         if(msg.includes('이벤트') && !(msg.includes('파이어'))){
-            replier.reply('9월 3일부터 9월 10일까지 별모래(stardust)가 3배로 주어집니다!')
+            replier.reply('9월 3일부터 9월 10일까지 별모래(stardust)가 3배로 주어집니다!');
         }
 
         if(msg.includes('커뮤니티') || msg.includes('커뮤데이')){
-            replier.reply('가장 최근의 커뮤니티 데이는 9월 22일 12시부터 3시 입니다. 출현 몬스터는 치코리타 입니다.')
+            replier.reply('가장 최근의 커뮤니티 데이는 9월 22일 12시부터 3시 입니다. 출현 몬스터는 치코리타 입니다.');
         }
         
         if(msg.includes('마기') && msg.includes('성공')){
-            replier.reply('불대문자 아니면 2600대 괴력몬 6마리가 있는 2계정으로 클리어 가능합니다. 불대문자는 2명이 가능하긴 하나, 3명이 안정권입니다. 통상적으로 괴력 약한 계정은 4계정 이상이 필요합니다.')
+            replier.reply('불대문자 아니면 2600대 괴력몬 6마리가 있는 2계정으로 클리어 가능합니다. 불대문자는 2명이 가능하긴 하나, 3명이 안정권입니다. 통상적으로 괴력 약한 계정은 4계정 이상이 필요합니다.');
         }
         
         if(msg.includes('둥지')){
-            replier.reply(nestDict)
+            replier.reply(nestDict);
         }
         
         if(msg.includes('경험치') && msg.includes('알려줘')){
-            replier.reply('포켓몬 포획 시 +100\nExcellent 성공 +100\nGreat 성공 +50\nNice 성공 +10\n커브볼 +10\n보너스 +100\n원샷 +50\n포켓몬 포획 실패 시 +25 ~ +125\n포켓몬 도감 등록 시 +500\n포켓몬 진화 시 +500\n2km 알 부화 시 +200\n5, 7km 알 부화 시+500\n10km 알 부화 시 +1000\n포켓스톱 터치 시 +50/+100/+250\n체육관에서 포켓몬 한 마리를 이길때마다 +100\n체육관 포켓몬에게 열매를 줄 때 + 20\n체육관 돌파 시 +150\n체육관 포토디스크 +75\n오늘의 첫 포켓스톱 +500\n오늘의 첫 포획 +500\n7일째 첫 포켓스톱 +2000\n7일째 첫 포획 +2000\n7일째 리서치 보상 +2000')
+            replier.reply('포켓몬 포획 시 +100\nExcellent 성공 +100\nGreat 성공 +50\nNice 성공 +10\n커브볼 +10\n보너스 +100\n원샷 +50\n포켓몬 포획 실패 시 +25 ~ +125\n포켓몬 도감 등록 시 +500\n포켓몬 진화 시 +500\n2km 알 부화 시 +200\n5, 7km 알 부화 시+500\n10km 알 부화 시 +1000\n포켓스톱 터치 시 +50/+100/+250\n체육관에서 포켓몬 한 마리를 이길때마다 +100\n체육관 포켓몬에게 열매를 줄 때 + 20\n체육관 돌파 시 +150\n체육관 포토디스크 +75\n오늘의 첫 포켓스톱 +500\n오늘의 첫 포획 +500\n7일째 첫 포켓스톱 +2000\n7일째 첫 포획 +2000\n7일째 리서치 보상 +2000');
         }
         
         if(msg.includes('지역락') && msg.includes('포켓몬')){
-            replier.reply('켄타로스 : 북아메리카\n마임맨 : 유럽\n캥가 : 호주\n코산호 : 적도 부근\n헤라크로스 : 중남미\n네오비트 : 북아메리카,중남미,아프리카\세비퍼 : 북아메리카,중남미,루나톤\n네오비트 : 북아메리카,중남미,아프리카\n코터스 : 인도,중동,동남아 일대\n트로피우스 : 아프리카,남유럽 일대\n시라칸: 뉴질랜드,피지')
+            replier.reply('켄타로스 : 북아메리카\n마임맨 : 유럽\n캥가 : 호주\n코산호 : 적도 부근\n헤라크로스 : 중남미\n네오비트 : 북아메리카,중남미,아프리카\세비퍼 : 북아메리카,중남미,루나톤\n네오비트 : 북아메리카,중남미,아프리카\n코터스 : 인도,중동,동남아 일대\n트로피우스 : 아프리카,남유럽 일대\n시라칸: 뉴질랜드,피지');
         }
         
         if(msg.includes('이브이') && msg.includes('진화')){
-            replier.reply('이브이 진화는 샤미드/부스터/쥬피썬더 세개 중 랜덤으로 이루어지며, 에브이와 블래키는 각각 10km를 걷고 파트너 지정한 상태에서 파트너 화면을 통하여 낮과 밤에 진화를 시킬 수 있습니다. \n\n또한 이브이의 이름을 변경하여 1회 확정 진화 할 수 있습니다. 명칭은 아래와 같습니다.\n샤미드 : Rainder\n부스터 : Pyro\n쥬피썬더 : Sparky\n에브이 : Sakura\n블래키 : Tamao')
+            replier.reply('이브이 진화는 샤미드/부스터/쥬피썬더 세개 중 랜덤으로 이루어지며, 에브이와 블래키는 각각 10km를 걷고 파트너 지정한 상태에서 파트너 화면을 통하여 낮과 밤에 진화를 시킬 수 있습니다. \n\n또한 이브이의 이름을 변경하여 1회 확정 진화 할 수 있습니다. 명칭은 아래와 같습니다.\n샤미드 : Rainder\n부스터 : Pyro\n쥬피썬더 : Sparky\n에브이 : Sakura\n블래키 : Tamao');
         }
         
         if(msg.includes('평가')){
             if(msg.includes('발러')){
-                replier.reply('발러 리더 칸델라의 평가 대사\n\nIV 총합\n82~100% 말할 게 없어. 아주 든든하겠어!\n67~80% 아주 강해. 자랑해도 되겠어!\n51~64% 보통의 강함이라고 생각해!\n0~49% 배틀이 적성은 아니지만 난 좋아해.\n\n가장 높은 IV\n15 최고야! 가슴이 뜨거워져!\n13~14 훌륭해! 두근거려!\n8~12 꽤 강하네. 배틀에서 활약할 것 같아!\n0~7 그럭저럭 강한거네.')
+                replier.reply('발러 리더 칸델라의 평가 대사\n\nIV 총합\n82~100% 말할 게 없어. 아주 든든하겠어!\n67~80% 아주 강해. 자랑해도 되겠어!\n51~64% 보통의 강함이라고 생각해!\n0~49% 배틀이 적성은 아니지만 난 좋아해.\n\n가장 높은 IV\n15 최고야! 가슴이 뜨거워져!\n13~14 훌륭해! 두근거려!\n8~12 꽤 강하네. 배틀에서 활약할 것 같아!\n0~7 그럭저럭 강한거네.');
             }
             if(msg.includes('미스틱')){
-                replier.reply('미스틱 리더 블랑쉬의 평가 대사\n\nIV 총합\n82~100% 경이롭고 예술적이야!\n67~80% 시선을 끄는 뭔가가 있어\n51~64% 보통 이상이야.\n0~49% 좀처럼 활약이 어려워보인다.\n\n가장 높은 IV\n15 측정할 수 없을 정도로 높아! 최고야!\n13~14 훌륭해. 놀라워.\n8~12 꽤 강하다고 말할 수 있군.\n0~7 그럭저럭이라고 말할 수 있군.')
+                replier.reply('미스틱 리더 블랑쉬의 평가 대사\n\nIV 총합\n82~100% 경이롭고 예술적이야!\n67~80% 시선을 끄는 뭔가가 있어\n51~64% 보통 이상이야.\n0~49% 좀처럼 활약이 어려워보인다.\n\n가장 높은 IV\n15 측정할 수 없을 정도로 높아! 최고야!\n13~14 훌륭해. 놀라워.\n8~12 꽤 강하다고 말할 수 있군.\n0~7 그럭저럭이라고 말할 수 있군.');
             }
             if(msg.includes('인스')){
-                replier.reply('인스팅트 리더 스파크의 평가 대사\n\nIV 총합\n82~100% 전체적으로 톱 레벨이야!\n67~80% 전체적으로 아주 강해!\n51~64% 전체적으로 보통이야.\n0~49% 전체적으로 그저 그러네.\n\n가장 높은 IV\n15 지금까지 본 것 중에서도 최고의 부류야!\n13~14 훌륭해! 정말이야!\n8~12 꽤 강한데! 내가 보증하지!\n0~7 그럭저럭, 이야!')
+                replier.reply('인스팅트 리더 스파크의 평가 대사\n\nIV 총합\n82~100% 전체적으로 톱 레벨이야!\n67~80% 전체적으로 아주 강해!\n51~64% 전체적으로 보통이야.\n0~49% 전체적으로 그저 그러네.\n\n가장 높은 IV\n15 지금까지 본 것 중에서도 최고의 부류야!\n13~14 훌륭해! 정말이야!\n8~12 꽤 강한데! 내가 보증하지!\n0~7 그럭저럭, 이야!');
             }
         }
         
@@ -407,17 +532,22 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
         }
         
         if(msg.includes('명언')){
-            var quoteGo = msg.split(' ');
-            var i;
-
-            for (i=0; i<quoteGo.length;i++){
-                if (!(quoteGo[i].includes('명언'))){
-                    msg = quoteGo[i];
-                }
+            msg = msg.replace('명언');
+            msg = msg.split(" ");
+            var newDict = msg[0];
+            var newQuote = '';
+            
+            var ranDict = Math.floor((Math.random() * Object.keys(quoteFind[newDict]).length));
+            if (quoteFind[newDict]['key' + ranDict] === undefined){
+                replier.reply("으음 명언을 못 찾았어요. 다시 등록해주실래요?")
+            } else {
+                replier.reply(quoteFind[newDict]['key' + ranDict]);
             }
-
-            var ranDict = Math.floor((Math.random() * 10) + 1);
-            replier.reply(quoteFind[msg][ranDict]);            
+            
+        }
+        
+        if(msg=='Dorry give me the dictionary'){
+            replier.reply(quoteFind);
         }
         
         if(msg.includes('사용법')){
@@ -428,33 +558,54 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
             } else if (msg.includes('명령어')){
                 replier.reply(manual['명령어']);
             } else {
-                replier.reply("안녕하세요! 도리입니다.\n도곡방 레이드가 조금 더 쉽게 성사 될 수 있게 최선을 다할게요!\n기본적으로 도리야~로 불러주시면 돼요!매일매일 똑똑해지고 있답니다(아마도요)만약 제게 뭔가 문제가 생기신다면 그건 방장님 탓입니다!\n더 많은 설명은 도리야 사용법 - 레이드,명령어,정보 등으로 물어봐주세요!")
+                replier.reply("안녕하세요! 도리입니다.\n도곡방 레이드가 조금 더 쉽게 성사 될 수 있게 최선을 다할게요!\n기본적으로 도리야~로 불러주시면 돼요! 매일매일 똑똑해지고 있답니다(아마도요..!). 만약 제가 작동을 잘하지 않거나, 문제가 생긴다면 그건 방장님 탓입니다!\n더 많은 설명은 도리야 사용법 - 레이드,명령어,정보 등으로 물어봐주세요!")
             }
         }
         
         if(msg.includes('도곡방') && msg.includes('이벤트')){
-            replier.reply('★도곡방☆이벤트★\n모래 180921 를 달성해라!\n길었던 레지아이스/레지스틸/레지락의 5성 레이드 기간이 끝나는 것을 기념하기 위해 이벤트를 합니다!\n9월 20일에서 9월 21일로 오전 0시0분부터 1시0분까지!! 보유 모래를 180921에 맞춰서 스크린샷을 올려주시는분께 소정의 상품을 드립니다~ 많은 참여 부탁드려요!!')
+            replier.reply('★도곡방☆이벤트★\n모래 180921 를 달성해라!\n길었던 레지아이스/레지스틸/레지락의 5성 레이드 기간이 끝나는 것을 기념하기 위해 이벤트를 합니다!\n9월 20일에서 9월 21일로 오전 0시0분부터 1시0분까지!! 보유 모래를 180921에 맞춰서 스크린샷을 올려주시는분께 소정의 상품을 드립니다~ 많은 참여 부탁드려요!!');
         }
         
-        if(msg.includes('트레이너코드') && msg.includes('트레이너 코드')){
-            replier.reply("도곡방 트레이너 코드 : https://goo.gl/z7ib37")
+        if(msg.includes('트레이너코드') || msg.includes('트레이너 코드')){
+            replier.reply("도곡방 트레이너 코드 : https://goo.gl/z7ib37");
         }
         
         if(msg.includes('띠꾸')){
-            var ranDict = Math.floor((Math.random() * 40) + 1);
+            ranDict = Math.floor((Math.random() * 40) + 1);
             replier.reply(ttikku[ranDict]);
         }
         
+        if(msg.includes('잘자') || msg.includes('굿밤') || msg.includes('굿나잇') || msg.includes('좋은밤') || msg.includes('좋은 밤')){
+            ranDict = Math.floor((Math.random() * 7) + 1);
+            replier.reply(goodByeDict[ranDict]);
+        }
+        
+        if(msg.includes('좋은 아침') || msg.includes('굿모닝') || msg.includes('좋은아침') || msg.includes('잘잤어?')){
+            ranDict = Math.floor((Math.random() * 7) + 1);
+            replier.reply(goodMorningDict[ranDict]);
+        }
+        
+        if(msg.includes('점심') || msg.includes('메뉴') || msg.includes('저녁') || msg.includes('먹을까')){
+            ranDict = Math.floor((Math.random() * 16) + 1);
+            replier.reply(lunchMenu[ranDict]);
+        }
+        
+        if(msg.includes('잘했어') || msg.includes('최고') || msg.includes('짱') || msg.includes('수고') || msg.includes('고마')){
+            ranDict = Math.floor((Math.random() * 5) + 1);
+            replier.reply(goodJob[ranDict]);
+        }
+        
+        
         if(msg.includes('뭐하니') || msg.includes('뭐해')){
-            replier.reply('트레이너분들의 말을 기다리고 있어요!')
+            replier.reply('트레이너분들의 말을 기다리고 있어요!');
         }
         
         if(msg.includes('바보') || msg.includes('멍청이')){
-            replier.reply('아니에요ㅡㅡ매일매일 진화하고 있는걸요!')
+            replier.reply('아니에요ㅡㅡ매일매일 진화하고 있는걸요!');
         }
 
         if(msg.includes('이쁜짓') || msg.includes('애교')){
-            replier.reply('(심각)')
+            replier.reply('(심각)');
         }
 
     }
