@@ -10,6 +10,9 @@ var msgCall = '';
 var verifyReport = 0;
 var randDict;
 
+var researchReport = "도곡방 리서치 제보";
+var reserachReportDefault = "도곡방 리서치 제보"
+
 var ttikku = {
     1 : '띠꾸혀엉',
     2 : '띠꾸혀어엉',
@@ -95,7 +98,21 @@ var lunchMenu = {
     13: "참치김밥 어때요..? 입에 넣자마자 깻잎향이 가득~",
     14: "저기압일땐 고기앞으로 가라",
     15: "하남돼지집 특별 한판 콜?",
-    16: "개인적으로 강남구 1티어 버거 풍류랑을 추천합니다"
+    16: "개인적으로 강남구 1티어 버거 풍류랑을 추천합니다",
+    17: "희래닭갈비라구 양재동에 있는건데, 수요미식회에도 나온거에요! 가격대비 양은 적지만 맛은 굳bb 추천해요!",
+    18: "아카데미 스위트 지하 1층에 있는 자연별곡 어때요?!...아...맞다 망했지",
+    19: "간편한 일본 가정식 어때요? 강남역에 오후정 본점 추천해요!",
+    20: "가끔은 동남아 음식도 좋은 것 같아요! 매봉역 포브라더스 굳굳bb",
+    21: "(물론 풍류랑이 최고지만) 양재역에 제레미 버거도 나쁘지 않더라구요! 그거라도?",
+    22: "김밥 천국",
+    23: "KFC 징거더블다운맥스 세트",
+    24: "굳이..저한테까지 추천을 받으셔야한다면 롯데리아 모짜렐라 인더버거 더블 추천드려요! 롯데리아에서 다른건 그닥...",
+    25: "매봉역에 평양면옥 어때요? 깔끔한 국물~ 따뜻한 온면도 있어요!",
+    26: "반트에 있는 그안의 카페산테가 상당히 맛있더라구요! 분위기도 있게 콜?",
+    27: "몸도 으슬으슬한데 김영모빵집 위에 국시집가서 국밥 한그릇 캬~",
+    28: "쿠이송82가서 삼겹살을 먹었는데, 맛있더라구요! 추천추천!",
+    29: "예전에 콜라겐 팩토리 가서 수육인가 뭔가를 먹었는데 별로였어요...그러니까 치킨 어때요?",
+    30: "음 갑자기 청양고추 송송 넣은 바지락 칼국수가 땡기네요. 칼국수!",
 }
 
 var goodJob = {
@@ -483,12 +500,9 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
             replier.reply(msg + ' 100% 개체 CP\n' + raidBossDict[msg]);
         }
         
-        if(msg.includes('파이어') && msg.includes('이벤트')){
-            replier.reply('9월 8일 (토요일)\n12시부터 3시까지 3시간 동안 모든 체육관의 레이드 보스가 파이어가 됩니다!\n100% 개체는 1870, 날씨 버프 받은 것은 2337입니다. 떨스마기나 딱구리가 가장 좋은 카운터이며, 암스타, 가이오가, 라이코 등이 그 다음으로 좋은 카운터 포켓몬입니다.');
-        }
 
-        if(msg.includes('이벤트') && !(msg.includes('파이어'))){
-            replier.reply('9월 3일부터 9월 10일까지 별모래(stardust)가 3배로 주어집니다!');
+        if ((msg.includes('이벤트')) || (msg.includes('글로벌 챌린지'))) {
+            replier.reply('<이벤트 요약>\n▶9월 14일(금) ~ 9월 20일(목)\n5성 레이드에 프리져/파이어/썬더가 이로치와 함께 등장\n\n▶9월 14일(금) ~ 9월 30일(일)\n관동지방 포켓몬 젠률 증가\n7km 알에서 파오리/캥가/마임맨/켄타로스 등장\n\n▶9월 17일(금) ~ 9월 25일(화) WEEK IN KOREA\n한국 전 지역 포켓몬 젠률 상승\n\n▶9월 21일(금) ~ 9월 23일(일)\n잠실에 트로피우스, 안농 등 포켓몬 등장\n\n▶9월 21일(금) ~ 10월 23일(화)\n5성 레이드에 뮤츠 등장\n\n▶9월 22일(토)\n치코리타 커뮤니티 데이');
         }
 
         if(msg.includes('커뮤니티') || msg.includes('커뮤데이')){
@@ -586,7 +600,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
         }
         
         if(msg.includes('점심') || msg.includes('메뉴') || msg.includes('저녁') || msg.includes('먹을까')){
-            ranDict = Math.floor((Math.random() * 16) + 1);
+            ranDict = Math.floor((Math.random() * 30) + 1);
             replier.reply(lunchMenu[ranDict]);
         }
         
@@ -692,7 +706,24 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
 
     var i;
     for (i=0;i<checkLegitReport.length;i++){
-        if (msg.includes('리셋해줘') || msg=='제보 리셋'){
+        if (msg=='리서치 목록') { 
+            currentTime = new Date();
+            replier.reply(currentTime.getMonth()+ '월' + currentTime.getDate()+'일 기준 도곡방 리서치\n'+ researchReport);
+            break;
+        } else if ((msg.includes('리셋해줘') && (msg.includes('리서치'))) || msg=='리서치 리셋'){
+            researchReport = reserachReportDefault;
+            replier.reply(researchReport);
+            break;
+        } else if ((msg.includes('스탑')) || (msg.includes('리서치'))){
+            msg = msg.replace('스탑','');
+            msg = msg.replace('리서치','');
+            var msgResearchSlice = msg.split(' ');
+            if (msgResearchSlice.length > 1){
+                researchReport = researchReport + '\n' + msg;
+                replier.reply(researchReport);
+            }
+            break;
+        } else if (msg.includes('리셋해줘') || msg=='제보 리셋'){
             report = reportDefault;
             replier.reply("리셋되었습니다");
             replier.reply(report + '\n현재 없음');
