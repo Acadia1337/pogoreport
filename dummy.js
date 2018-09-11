@@ -10,8 +10,8 @@ var msgCall = '';
 var verifyReport = 0;
 var randDict;
 
-var researchReport = "도곡방 리서치 제보";
-var reserachReportDefault = "도곡방 리서치 제보"
+var researchReport = "도곡방 리서치 목록";
+var reserachReportDefault = "도곡방 리서치 목록";
 
 var ttikku = {
     1 : '띠꾸혀엉',
@@ -53,7 +53,12 @@ var ttikku = {
     37 : '미스티꾸',
     38 : '미스티꾸혀엉',
     39 : '하입님.',
-    40 : '띠꾸혀어어어어어엉'
+    40 : '띠꾸혀어어어어어엉',
+    41 : '응띠꾸혀엉',
+    42 : '띠꾸르손',
+    43 : '내가 이구역의 티꾸형이다!',
+    44 : '골목대장 띠꾸혀어엉',
+    45 : '띠꾸혀엉월드 한티꾸혀엉역점'
 };
 
 var manual = {
@@ -108,11 +113,31 @@ var lunchMenu = {
     23: "KFC 징거더블다운맥스 세트",
     24: "굳이..저한테까지 추천을 받으셔야한다면 롯데리아 모짜렐라 인더버거 더블 추천드려요! 롯데리아에서 다른건 그닥...",
     25: "매봉역에 평양면옥 어때요? 깔끔한 국물~ 따뜻한 온면도 있어요!",
-    26: "반트에 있는 그안의 카페산테가 상당히 맛있더라구요! 분위기도 있게 콜?",
+    26: "반트에 있는 그안의 카페산테가 상당히 맛있더라구요! 분위기도 있게 콜?😎",
     27: "몸도 으슬으슬한데 김영모빵집 위에 국시집가서 국밥 한그릇 캬~",
-    28: "쿠이송82가서 삼겹살을 먹었는데, 맛있더라구요! 추천추천!",
+    28: "쿠이송82가서 삼겹살을 먹었는데, 맛있더라구요! 추천추천!😊",
     29: "예전에 콜라겐 팩토리 가서 수육인가 뭔가를 먹었는데 별로였어요...그러니까 치킨 어때요?",
     30: "음 갑자기 청양고추 송송 넣은 바지락 칼국수가 땡기네요. 칼국수!",
+    31: "두유노 김치? 스팸과 함께 김치를 싸서 드셔보세요",
+    32: "가로수길에 있던 제가 엄청 좋아하던 그릴5타코 라는 음식점이 결국 철수를 했는데요, 그 음식점을 기리면서 부리또는 어떨까요?",
+    33: "요즘 대기업들이 하는 분짜어때요?? 분짜라붐도 좋구 에머이도 좋구~",
+    34: "청담에 에크미 키친이라구 남부쪽 미국음식 하는곳이 있는데! 괜찮더라구요! 패스트푸드가 아닌 미국음식 어떤가요??",
+    35: "간장게장 간자아아아앙게장 간장게장 간장게장 간장게장 어때요~?",
+    36: "영양센터 대치점은 제가 초등학교때부터 많이 갔던 곳인데! 하나도 안바뀌어서 놀랐어요!! 물론 가격은 많이 바뀌었지만....오늘은 삼계탕 어떠세요!?😊",
+    37: "평.양.냉.면 1티어 우.래.옥",
+    38: "한번정도는 백종원의 푸드트럭 가보시는 것 어떤가요?? 강남역에 핫도그 아저씨 아직도 있어요!",
+    39: "고기 주는 냉면집이라는데, 그렇게 고기를 많이 주진 않더라구요. 그래도 오늘은 육쌈냉면 어떠세요?",
+    40: "아ㅡ치킨먹고싶다",
+    41: "국물이 깔끔한 돈코츠라멘 어떠세요? 마음까지 따뜻해질거에요.😊",
+    42: "짭조름한고 매콤한 마라탕! 저번에 먹고 물 2리터 마셨어요! 으악",
+    43: "밥은 대충 드시고, 꾸덕꾸덕한 치즈케이크 드시러 가는건 어때요!? 꾸덕꾸덕😆😆😆",
+    44: "원스타라고 햄버거집 가봤는데, 별로에요 맥날급임.😑 그래도 인테리어 때문에 한번쯤 가볼만해요.",
+    45: "완전 진짜 바베큐 어때요?! 바베쿡스나 빕스 레츠꼬꼬꼬",
+    46: "절 개발하신 분은 어릴때 이촌동에서 살았었어요! 이촌동에 일식집 미타니야가 있었는데, 도곡 왔는데 또 있지 뭐에요~ 나베를 자주 먹었었는데!! 오늘은 얼큰~한 나베 어때요??",
+    47: "진.대.감. 차.돌.삼.합 (홍어 없음)",
+    48: "몇년전에 수요미식회 극초반에 나왔던 대치 정육식당 어때요? 정육점에서 아주 아주 질 좋은 고기를 대충 어슷썰어서 먹는데 아주 신기한 경험이였어요😊",
+    49: "냄새가 나는 분들은 조금 힘들수도 있지만, 아주 깔끔한 순댓국 어때요?? 밥 말아서 뚝딱!😆",
+    50: "꾸덕한 치즈으으가 많이 들어간 시카고 피자!!! 아니면 피자헛 팬 치즈 피자에 치즈토핑 추가! 그것도 아니면 코스트코에서 치즈피자 한판! 피자피자 피자먹어요!"
 }
 
 var goodJob = {
@@ -158,7 +183,10 @@ var quoteFind = {
         key7 : '저는아무것도아닌유저인데.. - 캐논 (만렙, 부캐도 곧 만렙)  ',
         key8 : 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ예??????? - 캐논, 팩트를 맞으며',
         key9 : '부캐는 022고.. 본캐는 정확히는 020입니다 - 캐논',
-        key10 : '아 저 치코리타 cp표는 진짜 안만들겁니다 아무도 안보실듯... - 캐논, 엑셀 시트를 켜며'
+        key10 : '아 저 치코리타 cp표는 진짜 안만들겁니다 아무도 안보실듯... - 캐논, 엑셀 시트를 켜며',
+        key11 : '소주빼면 다뺀거져모 - 캐논',
+        key12 : '으르릉...으르릉컹컹왈왈쾅 - 캐논',
+        key13 : '여기는 음해와 왜곡으로 승부하는 고대방입니다 - 캐논'
     },
     "부기" : {
         key1 : '얼른 따라잡겠습니다! - 부기 (남들보다 2주 일찍 개강)',
@@ -210,13 +238,83 @@ var quoteFind = {
         key3 : "오오..! (레바 이모티콘)",
         key4 : "엄지척 (레바 이모티콘)",
         key5 : "(남이 선물 막 열다 울프되어버렸다는 말을 듣고) 괜찮습니다 허허 저는 원래 알 안키는 걸요. 오히려 님이 알을 못켜신것 같아 안타깝네요 - 몬 (생불)"
+    },
+    "속초" : {
+        key1 : "성공해서 신촌 땅을 전부 제가 사겠습니다 - 속초"
+    },
+    "가이오가고" : {
+        key1 : "죄송합니다 수람시는 중이라 - 가이오가고",
+        key2 : "월요일에 수람시는 내가 인싸다 이 아싸들아 - 가이오가고"
+    },
+    "피츄" : {
+        key1 : "진정한 인싸 - 피츄"
+    },
+    "파비" : {
+        key1 : "제가 '그' 파비코리입니다 뽑아주세요 - 파비",
+        key2 : "띠꾸혀어엉",
+        key3 : "파그네"
+    },
+    "에쇼" : {
+        key1 : "에쇼했다 - 에쇼(파괴왕)",
+        key2 : "엌 - 에쇼"
+    },
+    "복귀" : {
+        key1 : ""
+    },
+    "감자" : {
+        key1 : ""
+    },
+    "디그다" : {
+        key1 : ""
+    },
+    "해송" : {
+        key1 : ""
+    },
+    "멍내" : {
+        key1 : ""
+    },
+    "보만다" : {
+        key1 : ""
+    },
+    "소닉" : {
+        key1 : ""
+    },
+    "시코님" : {
+        key1 : ""
+    },
+    "아스" : {
+        key1 : ""
+    },
+    "애러드" :{
+        key1 : ""
+    },
+    "윤재당" : {
+        key1 : ""
+    },
+    "집둥" : {
+        key1 : ""
+    },
+    "카론" : {
+        key1 : "집에가고싶ㅠ론",
+        key2 : "빛-론",
+        key3 : "갓-론",
+        key4 : "흑염-론",
+    },
+    "파도타기" : {
+        key1 : ""
+    },
+    "퍄" : {
+        key1 : ""
+    },
+    "퍄퍄" : {
+        key1 : ""
     }
 }
 
 var nestDict = "<9.6~9.19 둥지 정보>\n\n가산디지털단지 디폴리스 : 암나이트(소)\n국과수사거리 오솔길공원 : 쥬쥬\n난지천공원 : 잉어킹\n난지한강공원 : 네이티\n당산공원 : 나옹\n도림천공원 : 피카츄\n망원한강공원 : 블루\n문래공원 : 블루(소)\n보라매공원 : 갈모매\n상암가온공원 : 고라파덕(소)\n서서울호수공원 : 해골몽\n석촌호수 : 코일\n신도림푸르지오공원 : 왕자리(소)\n양재시민의숲 : 마그마\n양재 근린공원(언남고) : 꼬부기\n양재 더케이호텔 옆 공원 : 소곤룡\n양재 앨리스파크 : 볼비트\n양재 영동 2~3교 사이 : 블루\n어린이대공원 : 코코파스\n여의도공원 : 나옹\n여의도한강공원 : 파이리\n영등포공원 : 가재군\n올림픽공원 : 콘치\n올림픽공원 체조경기장 : 꼬부기\n우이솔밭근린공원 : 알통몬\n월드컵경기장 : 나옹\n일산호수공원: 슬리프\n평화의공원 : 쥬쥬\n푸른수목원: 푸린\n효창공원 : 깨비참";
 
-function quoteRegister (msgQuote){
-    msgQuote = msgQuote.split(" ");
+function quoteRegister (msgInput){
+    var msgQuote = msgInput.split(" ");
 
     var newDict = msgQuote[0];
     var i;
@@ -226,49 +324,46 @@ function quoteRegister (msgQuote){
     for (i=2;i<msgQuote.length;i++){
         newQuote = newQuote + ' ' + msgQuote[i];
     }
-
-    if (quoteFind[newDict] == undefined){
-        quoteFind[newDict] = {
-            key1 : newQuote
-        }
-    } else{
-        if (quoteFind[newDict].key3 === undefined){
-            quoteFind[newDict].key3 = newQuote;
-        } else if (quoteFind[newDict].key4 === undefined){
-            quoteFind[newDict].key4 = newQuote;
-        } else if (quoteFind[newDict].key5 === undefined){
-            quoteFind[newDict].key5 = newQuote;
-        } else if (quoteFind[newDict].key6 === undefined){
-            quoteFind[newDict].key6 = newQuote;
-        } else if (quoteFind[newDict].key7 === undefined){
-            quoteFind[newDict].key7 = newQuote;
-        } else if (quoteFind[newDict].key8 === undefined){
-            quoteFind[newDict].key8 = newQuote;
-        } else if (quoteFind[newDict].key9 === undefined){
-            quoteFind[newDict].key9 = newQuote;
-        } else if (quoteFind[newDict].key10 === undefined){
-            quoteFind[newDict].key10 = newQuote;
-        } else if (quoteFind[newDict].key11 === undefined){
-            quoteFind[newDict].key11 = newQuote;
-        } else if (quoteFind[newDict].key12 === undefined){
-            quoteFind[newDict].key12 = newQuote;
-        } else if (quoteFind[newDict].key13 === undefined){
-            quoteFind[newDict].key13 = newQuote;
-        } else if (quoteFind[newDict].key14 === undefined){
-            quoteFind[newDict].key14 = newQuote;
-        } else if (quoteFind[newDict].key15 === undefined){
-            quoteFind[newDict].key15 = newQuote;
-        } else if (quoteFind[newDict].key16 === undefined){
-            quoteFind[newDict].key16 = newQuote;
-        } else if (quoteFind[newDict].key17 === undefined){
-            quoteFind[newDict].key17 = newQuote;
-        } else if (quoteFind[newDict].key18 === undefined){
-            quoteFind[newDict].key18 = newQuote;
-        } else if (quoteFind[newDict].key19 === undefined){
-            quoteFind[newDict].key19 = newQuote;
-        } else if (quoteFind[newDict].key20 === undefined){
-            quoteFind[newDict].key20 = newQuote;
-        }
+    if (quoteFind[newDict].key1 === ''){
+        quoteFind[newDict].key1 = newQuote;
+    } else if (quoteFind[newDict].key2 === undefined){
+        quoteFind[newDict].key2 = newQuote;
+    } else if (quoteFind[newDict].key3 === undefined){
+        quoteFind[newDict].key3 = newQuote;
+    } else if (quoteFind[newDict].key4 === undefined){
+        quoteFind[newDict].key4 = newQuote;
+    } else if (quoteFind[newDict].key5 === undefined){
+        quoteFind[newDict].key5 = newQuote;
+    } else if (quoteFind[newDict].key6 === undefined){
+        quoteFind[newDict].key6 = newQuote;
+    } else if (quoteFind[newDict].key7 === undefined){
+        quoteFind[newDict].key7 = newQuote;
+    } else if (quoteFind[newDict].key8 === undefined){
+        quoteFind[newDict].key8 = newQuote;
+    } else if (quoteFind[newDict].key9 === undefined){
+        quoteFind[newDict].key9 = newQuote;
+    } else if (quoteFind[newDict].key10 === undefined){
+        quoteFind[newDict].key10 = newQuote;
+    } else if (quoteFind[newDict].key11 === undefined){
+        quoteFind[newDict].key11 = newQuote;
+    } else if (quoteFind[newDict].key12 === undefined){
+        quoteFind[newDict].key12 = newQuote;
+    } else if (quoteFind[newDict].key13 === undefined){
+        quoteFind[newDict].key13 = newQuote;
+    } else if (quoteFind[newDict].key14 === undefined){
+        quoteFind[newDict].key14 = newQuote;
+    } else if (quoteFind[newDict].key15 === undefined){
+        quoteFind[newDict].key15 = newQuote;
+    } else if (quoteFind[newDict].key16 === undefined){
+        quoteFind[newDict].key16 = newQuote;
+    } else if (quoteFind[newDict].key17 === undefined){
+        quoteFind[newDict].key17 = newQuote;
+    } else if (quoteFind[newDict].key18 === undefined){
+        quoteFind[newDict].key18 = newQuote;
+    } else if (quoteFind[newDict].key19 === undefined){
+        quoteFind[newDict].key19 = newQuote;
+    } else if (quoteFind[newDict].key20 === undefined){
+        quoteFind[newDict].key20 = newQuote;
     }
 }
 
@@ -563,7 +658,10 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
             var newDict = msg[0];
             var newQuote = '';
             
-            var ranDict = Math.floor((Math.random() * Object.keys(quoteFind[newDict]).length));
+            if (msg.length > 1){
+                quoteRegister(msg);            
+            }
+            var ranDict = Math.floor((Math.random() * (Object.keys(quoteFind[newDict]).length +1)));
             if (quoteFind[newDict]['key' + ranDict] === undefined){
                 replier.reply("으음 명언을 못 찾았어요. 다시 등록해주실래요?")
             } else {
@@ -612,13 +710,34 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
         }
         
         if(msg.includes('점심') || msg.includes('메뉴') || msg.includes('저녁') || msg.includes('먹을까')){
-            ranDict = Math.floor((Math.random() * 30) + 1);
+            ranDict = Math.floor((Math.random() * 50) + 1);
             replier.reply(lunchMenu[ranDict]);
+        }
+        
+        if (msg.includes('안녕')){
+            var nowHour = currentTime.getHours();
+            if (nowHour > 11 && nowHour < 18){
+                replier.reply("네 안녕하세요 트레이너님! 오늘도 좋은 하루 되세요😊😊😊");
+            } else if (nowHour > 17 && nowHour < 20) {
+                replier.reply("네 트레이너님! 좋은 저녁이에요ㅎㅎ 저녁 맛있게 드세요~!😋😋😋");
+            } else if (nowHour > 19 || nowHour < 2){
+                replier.reply("네 트레이너님! 좋은 밤 되세요~!!😴😴😴");
+            } else if (nowHour > 1 && nowHour < 5){
+                replier.reply("헉 트레이너님! 안주무세요!?!? 어서 주무세요!!😱😱😱");
+            } else if (nowHour < 11){
+                replier.reply("안녕하세요 트레이너님! 좋은 아침이에요😊😊😊");
+            } else {
+                replier.reply("안녕하세요 트레이너님!☺️")
+            }
         }
         
         if(msg.includes('잘했어') || msg.includes('최고') || msg.includes('짱') || msg.includes('수고') || msg.includes('고마')){
             ranDict = Math.floor((Math.random() * 5) + 1);
             replier.reply(goodJob[ranDict]);
+        }
+        
+        if(msg.includes('방') || (msg.includes('코드'))){
+            replier.reply('현재 도곡방 입장 코드는 2018이에요! 매달 새로 바뀝니다!');
         }
         
         
@@ -720,7 +839,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
     for (i=0;i<checkLegitReport.length;i++){
         if (msg=='리서치 목록') { 
             currentTime = new Date();
-            replier.reply(currentTime.getMonth()+ '월' + currentTime.getDate()+'일 기준 도곡방 리서치\n'+ researchReport);
+            replier.reply(currentTime.getMonth()+ '월' + currentTime.getDate()+'일 기준 '+ researchReport);
             break;
         } else if ((msg.includes('리셋해줘') && (msg.includes('리서치'))) || msg=='리서치 리셋'){
             researchReport = reserachReportDefault;
