@@ -513,6 +513,18 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
             replier.reply('불대문자 아니면 2600대 괴력몬 6마리가 있는 2계정으로 클리어 가능합니다. 불대문자는 2명이 가능하긴 하나, 3명이 안정권입니다. 통상적으로 괴력 약한 계정은 4계정 이상이 필요합니다.');
         }
         
+        if(msg.includes('프리져') && msg.includes('성공')){
+            replier.reply('프리져 데이의 CP 3만대 프리져는 3300대 떨스마기로 2계정 가능합니다. 날씨여부 상관 없습니다.');
+        }
+        
+        if(msg.includes('썬더') && msg.includes('성공')){
+            replier.reply('작년에 30렙 딱구리로 3계정 가능했었습니다. 동일 기준 딱구리보다 떨스마기가 더 강력합니다.');
+        }
+        
+        if(msg.includes('파이어') && msg.includes('성공')){
+            replier.reply('파이어 데이의 CP 3만대 파이어는 3300대 떨스마기로 2계정 가능합니다. 날씨여부 상관 없습니다.');
+        }
+        
         if(msg.includes('둥지')){
             replier.reply(nestDict);
         }
