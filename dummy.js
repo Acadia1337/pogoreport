@@ -560,6 +560,7 @@ function raidReport(msgTwo) {
 function response(room, msg, sender, isGroupChat, replier, imageDB) {
     report = timeCheck(report);
     report = timeCheck(report);
+
     msgCall = msg;
     
     if (msg=="사전 죽었는지 확인 하는 것"){
@@ -783,6 +784,10 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
 
     
     if(msg.includes('현황')){
+        report = timeCheck(report);
+        report = timeCheck(report);
+        report = timeCheck(report);
+
         currentTime = new Date();
         currentHour = currentTime.getHours();
         currentMinute = currentTime.getMinutes();
