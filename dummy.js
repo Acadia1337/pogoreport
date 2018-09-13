@@ -186,7 +186,8 @@ var quoteFind = {
         key10 : '아 저 치코리타 cp표는 진짜 안만들겁니다 아무도 안보실듯... - 캐논, 엑셀 시트를 켜며',
         key11 : '소주빼면 다뺀거져모 - 캐논',
         key12 : '으르릉...으르릉컹컹왈왈쾅 - 캐논',
-        key13 : '여기는 음해와 왜곡으로 승부하는 고대방입니다 - 캐논'
+        key13 : '여기는 음해와 왜곡으로 승부하는 고대방입니다 - 캐논',
+        key14 : '저는 포켓몬 master가 될거에요!! - 캐논'
     },
     "부기" : {
         key1 : '얼른 따라잡겠습니다! - 부기 (남들보다 2주 일찍 개강)',
@@ -206,7 +207,8 @@ var quoteFind = {
         key4 : '좋은 단백질은 내가 섭취한 단백질뿐이다 - 파이리 (어깨깡패)',
         key5 : '파비장 - 이리',
         key6 : '정보) 캐논>>>>시코>이리>렌토>속초=피츄',
-        key7 : '저 같이 착한 사람한테 어떻게 그런 부탁을 하십니까???',
+        key7 : '저 같이 착한 사람한테 어떻게 그런 부탁을 하십니까??? - 이리',
+        key9 : '도대체 뭔 짓을 해야 씨쁠을 받지? - 이리'
     },
     "호굴" : {
         key1 : '(신나)',
@@ -244,7 +246,8 @@ var quoteFind = {
     },
     "가이오가고" : {
         key1 : "죄송합니다 수람시는 중이라 - 가이오가고",
-        key2 : "월요일에 수람시는 내가 인싸다 이 아싸들아 - 가이오가고"
+        key2 : "월요일에 수람시는 내가 인싸다 이 아싸들아 - 가이오가고",
+        key3 : "내가 해피가 없지!! 소주가 없냐!! - 취이오가고"
     },
     "피츄" : {
         key1 : "진정한 인싸 - 피츄"
@@ -313,57 +316,52 @@ var quoteFind = {
 
 var nestDict = "<9.6~9.19 둥지 정보>\n\n가산디지털단지 디폴리스 : 암나이트(소)\n국과수사거리 오솔길공원 : 쥬쥬\n난지천공원 : 잉어킹\n난지한강공원 : 네이티\n당산공원 : 나옹\n도림천공원 : 피카츄\n망원한강공원 : 블루\n문래공원 : 블루(소)\n보라매공원 : 갈모매\n상암가온공원 : 고라파덕(소)\n서서울호수공원 : 해골몽\n석촌호수 : 코일\n신도림푸르지오공원 : 왕자리(소)\n양재시민의숲 : 마그마\n양재 근린공원(언남고) : 꼬부기\n양재 더케이호텔 옆 공원 : 소곤룡\n양재 앨리스파크 : 볼비트\n양재 영동 2~3교 사이 : 블루\n어린이대공원 : 코코파스\n여의도공원 : 나옹\n여의도한강공원 : 파이리\n영등포공원 : 가재군\n올림픽공원 : 콘치\n올림픽공원 체조경기장 : 꼬부기\n우이솔밭근린공원 : 알통몬\n월드컵경기장 : 나옹\n일산호수공원: 슬리프\n평화의공원 : 쥬쥬\n푸른수목원: 푸린\n효창공원 : 깨비참";
 
-function quoteRegister (msgInput){
-    var msgQuote = msgInput.split(" ");
+function quoteRegister (msgWord, msgInput){
+    var msgQuote = msgInput;
 
-    var newDict = msgQuote[0];
+    var newDict = msgWord;
     var i;
-    var newQuote = '';
 
-    newQuote = msgQuote[1];
-    for (i=2;i<msgQuote.length;i++){
-        newQuote = newQuote + ' ' + msgQuote[i];
-    }
     if (quoteFind[newDict].key1 === ''){
-        quoteFind[newDict].key1 = newQuote;
+        quoteFind[newDict].key1 = msgQuote;
     } else if (quoteFind[newDict].key2 === undefined){
-        quoteFind[newDict].key2 = newQuote;
+        quoteFind[newDict].key2 = msgQuote;
     } else if (quoteFind[newDict].key3 === undefined){
-        quoteFind[newDict].key3 = newQuote;
+        quoteFind[newDict].key3 = msgQuote;
     } else if (quoteFind[newDict].key4 === undefined){
-        quoteFind[newDict].key4 = newQuote;
+        quoteFind[newDict].key4 = msgQuote;
     } else if (quoteFind[newDict].key5 === undefined){
-        quoteFind[newDict].key5 = newQuote;
+        quoteFind[newDict].key5 = msgQuote;
     } else if (quoteFind[newDict].key6 === undefined){
-        quoteFind[newDict].key6 = newQuote;
+        quoteFind[newDict].key6 = msgQuote;
     } else if (quoteFind[newDict].key7 === undefined){
-        quoteFind[newDict].key7 = newQuote;
+        quoteFind[newDict].key7 = msgQuote;
     } else if (quoteFind[newDict].key8 === undefined){
-        quoteFind[newDict].key8 = newQuote;
+        quoteFind[newDict].key8 = msgQuote;
     } else if (quoteFind[newDict].key9 === undefined){
-        quoteFind[newDict].key9 = newQuote;
+        quoteFind[newDict].key9 = msgQuote;
     } else if (quoteFind[newDict].key10 === undefined){
-        quoteFind[newDict].key10 = newQuote;
+        quoteFind[newDict].key10 = msgQuote;
     } else if (quoteFind[newDict].key11 === undefined){
-        quoteFind[newDict].key11 = newQuote;
+        quoteFind[newDict].key11 = msgQuote;
     } else if (quoteFind[newDict].key12 === undefined){
-        quoteFind[newDict].key12 = newQuote;
+        quoteFind[newDict].key12 = msgQuote;
     } else if (quoteFind[newDict].key13 === undefined){
-        quoteFind[newDict].key13 = newQuote;
+        quoteFind[newDict].key13 = msgQuote;
     } else if (quoteFind[newDict].key14 === undefined){
-        quoteFind[newDict].key14 = newQuote;
+        quoteFind[newDict].key14 = msgQuote;
     } else if (quoteFind[newDict].key15 === undefined){
-        quoteFind[newDict].key15 = newQuote;
+        quoteFind[newDict].key15 = msgQuote;
     } else if (quoteFind[newDict].key16 === undefined){
-        quoteFind[newDict].key16 = newQuote;
+        quoteFind[newDict].key16 = msgQuote;
     } else if (quoteFind[newDict].key17 === undefined){
-        quoteFind[newDict].key17 = newQuote;
+        quoteFind[newDict].key17 = msgQuote;
     } else if (quoteFind[newDict].key18 === undefined){
-        quoteFind[newDict].key18 = newQuote;
+        quoteFind[newDict].key18 = msgQuote;
     } else if (quoteFind[newDict].key19 === undefined){
-        quoteFind[newDict].key19 = newQuote;
+        quoteFind[newDict].key19 = msgQuote;
     } else if (quoteFind[newDict].key20 === undefined){
-        quoteFind[newDict].key20 = newQuote;
+        quoteFind[newDict].key20 = msgQuote;
     }
 }
 
@@ -652,22 +650,44 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
             replier.reply('진화도구를 사용하여 포켓몬을 진화시킬 수 있습니다.\n\n업그레이드 : 폴리곤\n왕의 징표석 : 야돈, 슈륙챙이\n태양의 돌: 냄새꼬, 해너츠\n용의 비늘 : 시드라\n금속코트 : 롱스톤,스라크')
         }
         
-        if(msg.includes('명언')){
-            msg = msg.replace('명언');
+        if(msg.includes('명언') && (!msg.includes('등록'))){
+            msg = msg.replace('명언','');
             msg = msg.split(" ");
             var newDict = msg[0];
-            var newQuote = '';
-            
-            if (msg.length > 1){
-                quoteRegister(msg);            
-            }
+
             var ranDict = Math.floor((Math.random() * (Object.keys(quoteFind[newDict]).length +1)));
             if (quoteFind[newDict]['key' + ranDict] === undefined){
                 replier.reply("으음 명언을 못 찾았어요. 다시 등록해주실래요?")
             } else {
                 replier.reply(quoteFind[newDict]['key' + ranDict]);
             }
-            
+        }
+        
+        if(msg.includes('명언등록')){
+            msg = msg.replace('명언등록','');
+            msg = msg.split(" ");
+            var newDict = msg[0];
+            var newQuote = msg.slice(1 + '');
+            var newQuoteSentence = newQuote[0];
+            if (newQuote.length > 1){
+                for (var i = 1; i < newQuote.length; i++){
+                    newQuoteSentence = newQuoteSentence + ' ' + newQuote[i];
+                }
+
+                if (newQuoteSentence[0] == ' '){
+                    newQuoteSentence.replace(' ','');
+                }
+                if (newQuoteSentence.includes == '  '){
+                    newQuoteSentence = newQuoteSentence.replace('  ',' ');
+                }
+                if (newQuote == 'undefined'){
+                    newQuote.replace('undefined','');
+                }
+                if (newQuote.isUndefined){
+                    newQuote = 'it was empty';
+                }
+            }
+            quoteRegister(newDict,newQuoteSentence);
         }
         
         if(msg=='Dorry give me the dictionary'){
@@ -837,21 +857,24 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
 
     var i;
     for (i=0;i<checkLegitReport.length;i++){
-        if (msg=='리서치 목록') { 
+                if (msg=='리서치 목록') { 
             currentTime = new Date();
-            replier.reply(currentTime.getMonth()+ '월' + currentTime.getDate()+'일 기준 '+ researchReport);
+            replier.reply(currentTime.getMonth()+ '월' + currentTime.getDate()+'일 기준 도곡방 리서치\n'+ researchReport);
             break;
         } else if ((msg.includes('리셋해줘') && (msg.includes('리서치'))) || msg=='리서치 리셋'){
             researchReport = reserachReportDefault;
             replier.reply(researchReport);
             break;
         } else if ((msg.includes('스탑')) || (msg.includes('리서치'))){
-            msg = msg.replace('스탑','');
-            msg = msg.replace('리서치','');
-            var msgResearchSlice = msg.split(' ');
-            if (msgResearchSlice.length > 1){
-                researchReport = researchReport + '\n' + msg;
-                replier.reply(researchReport);
+            if (msg.includes('미뇽') || msg.includes('얼루기') || msg.includes('럭키') || msg.includes('에버') || msg.includes('루주라') || msg.includes('가디') || msg.includes('앱솔') || msg.includes('이브이')){
+                msg = msg.replace('스탑','');
+                msg = msg.replace('리서치','');
+                var msgResearchSlice = msg.split(' ');
+                if (msgResearchSlice.length > 1){
+                    researchReport = researchReport + '\n' + msg;
+                    replier.reply(researchReport);    
+                }
+            
             }
             break;
         } else if (msg.includes('리셋해줘') || msg=='제보 리셋'){
