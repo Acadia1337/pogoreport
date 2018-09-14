@@ -511,36 +511,32 @@ function raidReport(msgTwo) {
     if (msgHour > 12){
         msgHour = parseInt(msgHour) - 12;
     }
-
-    if (msgHour == 12){ // 12시
-        if (msgMin > 14){ // 12시15분 ~ 59분
-            endHour = 1;
-            endMin = parseInt(msgMin)-15;
-            if (endMin<10){
-                endMin = '0' + endMin;
-            }
-        } else if (msgMin < 15){
-            endHour = msgHour;
-            endMin = parseInt(msgMin)+45;
+    
+    if (msgHour == 11 && msgMin > 29){ //11:30~11:59 -> 1:00 ~ 1:29
+        endHour = 1;
+        endMin = parseInt(msgMin) - 30;
+        if (endMin < 10){
+            endMin = '0' + endMin;
+        }
+    } else if (msgHour == 12 && msgMin < 30){ // 12:00~12:29 -> 1:30~1:59
+        endHour = 1;
+        endMin = parseInt(msgMin) + 30;
+    } else if (msgHour == 12 && msgMin > 29){ // 12:30~12:59 ->2:00~2:29
+        endHour = 2;
+        endMin = parseInt(msgMin) - 30;
+        if (endMin < 10){
+            endMin = '0' + endMin;
         }
     } else {
-        if (msgMin > 14){
-            endHour = parseInt(msgHour) + 1;
-            endMin = parseInt(msgMin)-15;
+        if (msgMin > 29){ // msgMin > 29
+            endHour = parseInt(msgHour) + 2;
+            endMin = parseInt(msgMin) - 30;
             if (endMin<10){
                 endMin = '0' + endMin;
             }
-        } else {
-            endHour = msgHour;
-            endMin = parseInt(msgMin) + 45;
-        }
-    }
-    
-    if (isNaN(endMin)){
-        if(parseInt(msgMin)+45 == 53){
-            endMin = 52;
-        } else{
-            endMin = 52;
+        } else { // msgMin < 30
+            endHour = parseInt(msgHour) + 1;
+            endMin = parseInt(msgMin) + 30;
         }
     }
     
@@ -596,7 +592,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
         
 
         if ((msg.includes('이벤트')) || (msg.includes('글로벌 챌린지'))) {
-            replier.reply('<이벤트 요약>\n▶9월 14일(금) ~ 9월 20일(목)\n5성 레이드에 프리져/파이어/썬더가 이로치와 함께 등장\n\n▶9월 14일(금) ~ 9월 30일(일)\n관동지방 포켓몬 젠률 증가\n7km 알에서 파오리/캥가/마임맨/켄타로스 등장\n\n▶9월 17일(금) ~ 9월 25일(화) WEEK IN KOREA\n한국 전 지역 포켓몬 젠률 상승\n\n▶9월 21일(금) ~ 9월 23일(일)\n잠실에 트로피우스, 안농 등 포켓몬 등장\n\n▶9월 21일(금) ~ 10월 23일(화)\n5성 레이드에 뮤츠 등장\n\n▶9월 22일(토)\n치코리타 커뮤니티 데이');
+            replier.reply('<이벤트 요약>\n▶9월 14일(금) ~ 9월 20일(목)\n5성 레이드에 프리져/파이어/썬더가 이로치와 함께 등장\n90분의 레이드 시간\n\n▶9월 14일(금) ~ 9월 30일(일)\n관동지방 포켓몬 젠률 증가\n7km 알에서 파오리/캥가/마임맨/켄타로스 등장\n\n▶9월 17일(금) ~ 9월 25일(화) WEEK IN KOREA\n한국 전 지역 포켓몬 젠률 상승\n\n▶9월 21일(금) ~ 9월 23일(일)\n잠실에 트로피우스, 안농 등 포켓몬 등장\n\n▶9월 21일(금) ~ 10월 23일(화)\n5성 레이드에 뮤츠 등장\n\n▶9월 22일(토)\n치코리타 커뮤니티 데이');
         }
 
         if(msg.includes('커뮤니티') || msg.includes('커뮤데이')){
