@@ -314,7 +314,7 @@ var quoteFind = {
     }
 }
 
-var nestDict = "<9.6~9.19 둥지 정보>\n\n가산디지털단지 디폴리스 : 암나이트(소)\n국과수사거리 오솔길공원 : 쥬쥬\n난지천공원 : 잉어킹\n난지한강공원 : 네이티\n당산공원 : 나옹\n도림천공원 : 피카츄\n망원한강공원 : 블루\n문래공원 : 블루(소)\n보라매공원 : 갈모매\n상암가온공원 : 고라파덕(소)\n서서울호수공원 : 해골몽\n석촌호수 : 코일\n신도림푸르지오공원 : 왕자리(소)\n양재시민의숲 : 마그마\n양재 근린공원(언남고) : 꼬부기\n양재 더케이호텔 옆 공원 : 소곤룡\n양재 앨리스파크 : 볼비트\n양재 영동 2~3교 사이 : 블루\n어린이대공원 : 코코파스\n여의도공원 : 나옹\n여의도한강공원 : 파이리\n영등포공원 : 가재군\n올림픽공원 : 콘치\n올림픽공원 체조경기장 : 꼬부기\n우이솔밭근린공원 : 알통몬\n월드컵경기장 : 나옹\n일산호수공원: 슬리프\n평화의공원 : 쥬쥬\n푸른수목원: 푸린\n효창공원 : 깨비참";
+var nestDict = "<9.20~10.04 둥지 정보 (관동 이벤트 종료와 함께 바뀔 수 있습니다)>\n\n경복궁 : 암나이트\n낙산공원 : 둔타\n마로니에 공원 : 주벳\n보라매공원 : 투구\n서울숲 : 노고치\n올림픽공원 : 왕눈해\n응봉공원 : 브케인\n창덕궁 : 갈모매\n평화의공원 : 잉어킹\n한강시민공원(뚝섬지구) : 에레브\n훈련원공원 : 야돈\n상암월드컵 경기장 : 쥬쥬\n서서울호수공원 : 모다피\n선유도 공원 : 코코파스\n신트리공원 : 단단지\n오목공원 : 스라크)";
 
 function quoteRegister (msgWord, msgInput){
     var msgQuote = msgInput;
@@ -452,6 +452,7 @@ var raidBossDict = {
     "레쿠쟈" : "LV20 : 2083\nLV25 : 2604"
 };
 
+
 function raidReport(msgTwo) {
     currentTime = new Date();
     var splitMessage = msgTwo.split(' ');
@@ -511,32 +512,36 @@ function raidReport(msgTwo) {
     if (msgHour > 12){
         msgHour = parseInt(msgHour) - 12;
     }
-    
-    if (msgHour == 11 && msgMin > 29){ //11:30~11:59 -> 1:00 ~ 1:29
-        endHour = 1;
-        endMin = parseInt(msgMin) - 30;
-        if (endMin < 10){
-            endMin = '0' + endMin;
-        }
-    } else if (msgHour == 12 && msgMin < 30){ // 12:00~12:29 -> 1:30~1:59
-        endHour = 1;
-        endMin = parseInt(msgMin) + 30;
-    } else if (msgHour == 12 && msgMin > 29){ // 12:30~12:59 ->2:00~2:29
-        endHour = 2;
-        endMin = parseInt(msgMin) - 30;
-        if (endMin < 10){
-            endMin = '0' + endMin;
-        }
-    } else {
-        if (msgMin > 29){ // msgMin > 29
-            endHour = parseInt(msgHour) + 2;
-            endMin = parseInt(msgMin) - 30;
+
+    if (msgHour == 12){ // 12시
+        if (msgMin > 14){ // 12시15분 ~ 59분
+            endHour = 1;
+            endMin = parseInt(msgMin)-15;
             if (endMin<10){
                 endMin = '0' + endMin;
             }
-        } else { // msgMin < 30
+        } else if (msgMin < 15){
+            endHour = msgHour;
+            endMin = parseInt(msgMin)+45;
+        }
+    } else {
+        if (msgMin > 14){
             endHour = parseInt(msgHour) + 1;
-            endMin = parseInt(msgMin) + 30;
+            endMin = parseInt(msgMin)-15;
+            if (endMin<10){
+                endMin = '0' + endMin;
+            }
+        } else {
+            endHour = msgHour;
+            endMin = parseInt(msgMin) + 45;
+        }
+    }
+    
+    if (isNaN(endMin)){
+        if(parseInt(msgMin)+45 == 53){
+            endMin = 52;
+        } else{
+            endMin = 52;
         }
     }
     
@@ -592,31 +597,27 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
         
 
         if ((msg.includes('이벤트')) || (msg.includes('글로벌 챌린지'))) {
-            replier.reply('<이벤트 요약>\n▶9월 14일(금) ~ 9월 20일(목)\n5성 레이드에 프리져/파이어/썬더가 이로치와 함께 등장\n90분의 레이드 시간\n\n▶9월 14일(금) ~ 9월 30일(일)\n관동지방 포켓몬 젠률 증가\n7km 알에서 파오리/캥가/마임맨/켄타로스 등장\n\n▶9월 17일(금) ~ 9월 25일(화) WEEK IN KOREA\n한국 전 지역 포켓몬 젠률 상승\n\n▶9월 21일(금) ~ 9월 23일(일)\n잠실에 트로피우스, 안농 등 포켓몬 등장\n\n▶9월 21일(금) ~ 10월 23일(화)\n5성 레이드에 뮤츠 등장\n\n▶9월 22일(토)\n치코리타 커뮤니티 데이');
+            replier.reply('<이벤트 요약>\n▶9월 14일(금) ~ 9월 30일(일)\n관동지방 포켓몬 젠률 증가\n7km 알에서 파오리/캥가/마임맨/켄타로스 등장\n\n▶9월 21일(금) ~ 10월 23일(화)\n5성 레이드에 뮤츠 등장\n\n▶10월 21일(일)\메탕 커뮤니티 데이\n\n▶10월 2일(화) ~ 10월 31일 (수)\n필드 리서치 보상으로 스이쿤이 나타납니다.\n\n▶날짜미정\nEX배틀에 테오키스가 출현합니다.');
         }
 
         if(msg.includes('커뮤니티') || msg.includes('커뮤데이')){
-            replier.reply('가장 최근의 커뮤니티 데이는 9월 22일 12시부터 3시 입니다. 출현 몬스터는 치코리타 입니다.');
+            replier.reply('다가오는 커뮤니티 데이는 10월 21일 12시부터 3시 입니다. 출현 몬스터는 메탕 입니다.\n커뮤니티데이 동안\n▶메탕이 평소보다 더 많이 출몰합니다.\n▶루어 지속시간이 3시간으로 늘어납니다\n▶4시까지 메타그로스로 진화시, 특별한 기술을 배웁니다.\n▶이벤트 시간 동안 알이 4배 더 빨리 부화합니다.');
         }
         
         if(msg.includes('마기') && msg.includes('성공')){
             replier.reply('불대문자 아니면 2600대 괴력몬 6마리가 있는 2계정으로 클리어 가능합니다. 불대문자는 2명이 가능하긴 하나, 3명이 안정권입니다. 통상적으로 괴력 약한 계정은 4계정 이상이 필요합니다.');
         }
         
-        if(msg.includes('프리져') && msg.includes('성공')){
-            replier.reply('프리져 데이의 CP 3만대 프리져는 3300대 떨스마기로 2계정 가능합니다. 날씨여부 상관 없습니다.');
-        }
-        
-        if(msg.includes('썬더') && msg.includes('성공')){
-            replier.reply('작년에 30렙 딱구리로 3계정 가능했었습니다. 동일 기준 딱구리보다 떨스마기가 더 강력합니다.');
-        }
-        
-        if(msg.includes('파이어') && msg.includes('성공')){
-            replier.reply('파이어 데이의 CP 3만대 파이어는 3300대 떨스마기로 2계정 가능합니다. 날씨여부 상관 없습니다.');
-        }
-        
         if(msg.includes('둥지')){
             replier.reply(nestDict);
+        }
+        
+        if(msg.includes('스탑 신청')){
+            replier.reply("40레벨을 달성한 트레이너는 한국에서 제한적으로 새로운 포켓스탑을 신청할 수 있습니다!\n원하시는 장소에 간 후 포켓몬고 화면 내에 포켓볼을 클릭, 설정에 들어가셔서 새로운 포켓스탑을 신청해보세요!");
+        }
+        
+        if(msg.includes('아이템') && msg.includes('확률')){
+            replier.reply('▶아이템 드랍 확률\n\n포켓볼 : 42.88%\n그레이트 볼 : 6.48%\n울트라 볼 : 2.19%\n상처약 : 12.1%\n좋은 상처약 : 2.15%\n고급 상처약 : 1.81%\n풀 회복약 : 1.22%\n기력의 조각 : 7.33%\n기력의 덩어리 : 1.22%\n라즈열매 : 8.06%나나열매 : 9.65%\n파인 열매 : 4.84%\n진화 아이템 : 0.06%')
         }
         
         if(msg.includes('경험치') && msg.includes('알려줘')){
@@ -649,7 +650,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
         
         
         if(msg.includes('레이드') && (msg.includes('출현') || msg.includes('리스트'))){
-            replier.reply('9월14일 기준 레이드 출현 보스 몬스터\n▶1성: 이상해씨, 파이리, 미뇽, 투구, 잉어킹, 암나이트, 꼬부기\n▶2성: 내루미, 마그마, 입치트, 에레브, 레어코일\n▶3성: 프테라, 후딘, 홍수몬, 시라소몬, 쥬피썬더, 괴력몬, 롱스톤, 스라크, 덩쿠리\n▶4성: 앱솔, 딱구리, 라프라스, 코뿌리, 잠만보, 마기라스\n▶5성: 파이어, 썬더, 프리져, 레지락')
+            replier.reply('뮤츠가 나와욧...나머지는 몰라요! 최대한 빨리 알아올게요!')
         }
         
         
@@ -658,44 +659,9 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
             msg = msg.split(" ");
             var newDict = msg[0];
 
-            var ranDict = Math.floor((Math.random() * (Object.keys(quoteFind[newDict]).length +1)));
-            if (quoteFind[newDict]['key' + ranDict] === undefined){
-                replier.reply("으음 명언을 못 찾았어요. 다시 등록해주실래요?")
-            } else {
-                replier.reply(quoteFind[newDict]['key' + ranDict]);
-            }
+            var ranDict = Math.floor((Math.random() * (10)));
         }
         
-        if(msg.includes('명언등록')){
-            msg = msg.replace('명언등록','');
-            msg = msg.split(" ");
-            var newDict = msg[0];
-            var newQuote = msg.slice(1 + '');
-            var newQuoteSentence = newQuote[0];
-            if (newQuote.length > 1){
-                for (var i = 1; i < newQuote.length; i++){
-                    newQuoteSentence = newQuoteSentence + ' ' + newQuote[i];
-                }
-
-                if (newQuoteSentence[0] == ' '){
-                    newQuoteSentence.replace(' ','');
-                }
-                if (newQuoteSentence.includes == '  '){
-                    newQuoteSentence = newQuoteSentence.replace('  ',' ');
-                }
-                if (newQuote == 'undefined'){
-                    newQuote.replace('undefined','');
-                }
-                if (newQuote.isUndefined){
-                    newQuote = 'it was empty';
-                }
-            }
-            quoteRegister(newDict,newQuoteSentence);
-        }
-        
-        if(msg=='Dorry give me the dictionary'){
-            replier.reply(quoteFind);
-        }
         
         if(msg.includes('사용법')){
             if (msg.includes('레이드')){
@@ -705,7 +671,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
             } else if (msg.includes('명령어')){
                 replier.reply(manual['명령어']);
             } else {
-                replier.reply("안녕하세요! 도리입니다.\n도곡방 레이드가 조금 더 쉽게 성사 될 수 있게 최선을 다할게요!\n기본적으로 도리야~로 불러주시면 돼요! 매일매일 똑똑해지고 있답니다(아마도요..!). 만약 제가 작동을 잘하지 않거나, 문제가 생긴다면 그건 방장님 탓입니다!\n더 많은 설명은 도리야 사용법 - 레이드,명령어,정보 등으로 물어봐주세요!")
+                replier.reply("안녕하세요! 도리입니다.\n도곡방 레이드가 조금 더 쉽게 성사 될 수 있게 최선을 다할게요!\n저에게 아래처럼 말을 걸어주세요!최대한 답할 수 있도록 노력할게요!😊\n\n▶제보 관련\n제보 등록 : 사과 3시 40분 제보\n제보 삭제 : 사과 삭제\n제보 리스트 리셋 : 제보 리셋\n제보 현황 : 현황\n\n▶리서치 관련(체육관 제보와 혼동을 하지 않기위해 제보란 말보단 리서치란 말을 써주세요!)\n리서치 제보 : 대치711 럭키 리서치\n제보된 리서치 삭제 : 대치711 리서치 삭제\n\n▶그 외\n도리야 이벤트 알려줘\n도리야 진화도구는 뭐야?\n도리야 지역락 포켓몬 알려줘\n도리야 곧 오는 커뮤니티 데이가 언제야?\n도리야 점심 뭐먹지?\n도리야 오늘도 수고했어!\n도리야 미스틱 팀 평가 알려줘\n도리야 둥지\n도리야 도곡방 트레이너 코드 알려줘\n도리야 도곡방 비밀번호가 뭐야?\n\n등등...저에게 포켓몬 관련하여 더 궁금하신 부분이 있으시다면! 방장님을 갈궈주시면 제가 똑똑해질거에요!")
             }
         }
         
@@ -759,8 +725,8 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
             replier.reply(goodJob[ranDict]);
         }
         
-        if(msg.includes('방') || (msg.includes('코드'))){
-            replier.reply('현재 도곡방 입장 코드는 2018이에요! 매달 새로 바뀝니다!');
+        if(msg.includes('비밀번호') || (msg.includes('비번'))){
+            replier.reply('현재 도곡방 입장 비밀번호는 2018이에요! 매달 새로 바뀐답니다!');
         }
         
         
@@ -775,7 +741,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
         if(msg.includes('이쁜짓') || msg.includes('애교')){
             replier.reply('(심각)');
         }
-
+        msg = '다끝내';
     }
     msgDetermine = msg.split(' ');
     
@@ -864,24 +830,26 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
 
     var i;
     for (i=0;i<checkLegitReport.length;i++){
-                if (msg=='리서치 목록') { 
-            currentTime = new Date();
-            replier.reply(currentTime.getMonth()+ '월' + currentTime.getDate()+'일 기준 도곡방 리서치\n'+ researchReport);
-            break;
-        } else if ((msg.includes('리셋해줘') && (msg.includes('리서치'))) || msg=='리서치 리셋'){
-            researchReport = reserachReportDefault;
-            replier.reply(researchReport);
-            break;
-        } else if ((msg.includes('스탑')) || (msg.includes('리서치'))){
-            if (msg.includes('미뇽') || msg.includes('얼루기') || msg.includes('럭키') || msg.includes('에버') || msg.includes('루주라') || msg.includes('가디') || msg.includes('앱솔') || msg.includes('이브이')){
-                msg = msg.replace('스탑','');
-                msg = msg.replace('리서치','');
-                var msgResearchSlice = msg.split(' ');
-                if (msgResearchSlice.length > 1){
-                    researchReport = researchReport + '\n' + msg;
-                    replier.reply(researchReport);    
+        if (msg.includes('리서치')){
+            if (msg=='리서치 목록') { 
+                currentTime = new Date();
+                replier.reply(currentTime.getMonth()+ '월' + currentTime.getDate()+'일 기준 도곡방 리서치\n'+ researchReport);
+                break;
+            } else if ((msg.includes('리셋해줘') && (msg.includes('리서치'))) || msg=='리서치 리셋'){
+                researchReport = reserachReportDefault;
+                replier.reply(researchReport);
+                break;
+            } else if ((msg.includes('스탑')) || (msg.includes('리서치'))){
+                if (msg.includes('미뇽') || msg.includes('얼루기') || msg.includes('럭키') || msg.includes('에버') || msg.includes('루주라') || msg.includes('가디') || msg.includes('앱솔') || msg.includes('이브이')){
+                    msg = msg.replace('스탑','');
+                    msg = msg.replace('리서치','');
+                    var msgResearchSlice = msg.split(' ');
+                    if (msgResearchSlice.length > 1){
+                        researchReport = researchReport + '\n' + msg;
+                        replier.reply(researchReport); 
+                    }
+
                 }
-            
             }
             break;
         } else if (msg.includes('리셋해줘') || msg=='제보 리셋'){
