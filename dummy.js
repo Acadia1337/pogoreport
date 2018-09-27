@@ -647,6 +647,12 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
             replier.reply('진화도구를 사용하여 포켓몬을 진화시킬 수 있습니다.\n\n업그레이드 : 폴리곤\n왕의 징표석 : 야돈, 슈륙챙이\n태양의 돌: 냄새꼬, 해너츠\n용의 비늘 : 시드라\n금속코트 : 롱스톤,스라크')
         }
         
+        
+        if(msg.includes('레이드') && (msg.includes('출현') || msg.includes('리스트'))){
+            replier.reply('9월14일 기준 레이드 출현 보스 몬스터\n▶1성: 이상해씨, 파이리, 미뇽, 투구, 잉어킹, 암나이트, 꼬부기\n▶2성: 내루미, 마그마, 입치트, 에레브, 레어코일\n▶3성: 프테라, 후딘, 홍수몬, 시라소몬, 쥬피썬더, 괴력몬, 롱스톤, 스라크, 덩쿠리\n▶4성: 앱솔, 딱구리, 라프라스, 코뿌리, 잠만보, 마기라스\n▶5성: 파이어, 썬더, 프리져, 레지락')
+        }
+        
+        
         if(msg.includes('명언') && (!msg.includes('등록'))){
             msg = msg.replace('명언','');
             msg = msg.split(" ");
