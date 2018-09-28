@@ -116,7 +116,7 @@ var testDict = {
 // 5. 그 길이+1의 인덱스에 대사 등록
 // 6. 명언 배웠어요! 라는 답변 돌려줌
 
-var msg = "속초 식초 혀엉 강정 먹고 싶어요 이건 세번째 키";
+var msg = "속초";
 
 function quoteRegister (msgQuote){
     msgQuote = msgQuote.split(" ");
@@ -151,7 +151,7 @@ function quoteRegister (msgQuote){
             quoteFind[newDict].key8 = newQuote;
         }
     }
-    console.log(quoteFind[newDict]);
+    console.log(quoteFind["구구"].key2);
 
 }
 //var ranDict = Math.floor((Math.random() * Object.keys(quoteFind[newDict]).length+1));
