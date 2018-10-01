@@ -645,7 +645,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
         if (msg.includes('리서치')){
             if (msg=='리서치 목록') { 
                 currentTime = new Date();
-                replier.reply(currentTime.getMonth()+ '월' + currentTime.getDate()+'일 기준\n'+ researchReport);
+                replier.reply(currentTime.getMonth()+ '월' + currentTime.getDate()+'일 기준 '+ researchReport);
                 break;
             } else if ((msg.includes('리셋해줘') && (msg.includes('리서치'))) || msg=='리서치 리셋'){
                 researchReport = reserachReportDefault;
