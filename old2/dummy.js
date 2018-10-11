@@ -1,5 +1,5 @@
-function bringTest(){
-    const myModule = require('./bring');
+function bringTest(inputData1) {
+    const myModule = require('bring.js');
     let val = myModule.hello(); // val is "Hello"   
     return ("ohoh");
 }
@@ -19,6 +19,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
     }
     
     if (msg=='브링 테스트'){
-        replier.reply(bringTest);
+        replier.reply(bringTest(1));
     }
 }
+
