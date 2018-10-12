@@ -1,3 +1,0 @@
-function did (){
-    return "hoho";
-}

@@ -1,12 +1,8 @@
 const sdcard = android.os.Environment.getExternalStorageDirectory().getAbsolutePath(); //내장메모리 최상위 경로
 
 /*상수 (객체) 선언*/
-const Pokemon = {}; //포켓몬 관련 객체
-const DoriDB = {}; //파일 입/출력용 객제인데, 이름이 DoriDB인건 기분탓
-const preChat = {}; //도배 방지 구현용
-const lastSender = {}; //보낸 사람 구분용
-const botOn = {}; //봇 on/off 관련 객체
-const basicDB = "basic"
+const Pokemon = {}; const DoriDB = {}; const preChat = {}; const lastSender = {}; const botOn = {}; const basicDB = "basic"
+var currentTime = new Date(); var currentHour = currentTime.getHours(); var currentMinute = currentTime.getMinutes();
 
 /*Pokemon 객체*/
 Pokemon.checkWord = function(que, msg) { //적당히 비슷한 말인지 비교
@@ -130,6 +126,15 @@ Utils.getTextFromWeb = function(url) {
 
 DoriDB.createDir(); //폴더 생성
 
+function keyToText (textKey, dbName){
+    var dbToUse = DoriDB.readData(dbName);
+    var divideTalk = dbToUse.split(",");
+    var randTextNum = Math.floor((Math.random() * (divideTalk.length - 1)))+1;
+    if (textKey == divideTalk[0]){
+        return divideTalk[randTextNum]
+    } else {return "something went wrong"}
+}
+
 function procCmd(room, cmd, sender, replier) {
     if (cmd == "/on") { //봇을 켜는 명령어는 꺼진 상태에서도 작동
         replier.reply("도리 활성화");
@@ -185,12 +190,7 @@ function procCmd(room, cmd, sender, replier) {
 
 function response(room, msg, sender, isGroupChat, replier) {
     if (msg == "이건 테스트야"){replier.reply("테스트테스트");}
-    
-    msg = msg.trim();
-    sender = sender.trim();
-    room = room.trim();
-    preChat[room] = msg;
-
+    msg = msg.trim();sender = sender.trim();room = room.trim();preChat[room] = msg;
     procCmd(room, msg, sender, replier); //명령어
 
     if (botOn[room] == undefined) { // 해당 채팅방의 on/off 여부가 결정되어있지 않으면 on으로 설정
@@ -206,19 +206,19 @@ function response(room, msg, sender, isGroupChat, replier) {
     }
 
     if (["도리", "도리야", "도리야!", "도리야아", "Dori"].indexOf(msg) != -1) { //도리에 반응
-        switch (Math.floor(Math.random() * 9)) {
+        switch (Math.floor(Math.random() * 7)) {
             case 0:
             case 1:
             case 2:
-                replier.reply("왜?");
+                replier.reply("네! 무슨 일이신가요?");
                 break;
             case 3:
             case 4:
+            case 5:
                 replier.reply("네! 부르셨나요!?");
                 break;
-            case 5:
             case 6:
-                replier.reply("네! 무슨 일이신가요?");
+                replier.reply("왜?");
                 break;
         }
     }
@@ -230,7 +230,7 @@ function response(room, msg, sender, isGroupChat, replier) {
             replier.reply("띠꾸혀어엉");
         }
     }
-
+    
     var chat = Pokemon.getReply(basicDB, msg); //채팅 가져와서 답장
     if (chat != null) replier.reply(chat);
 
@@ -243,4 +243,12 @@ function response(room, msg, sender, isGroupChat, replier) {
         }
     }
     lastSender[room] = sender;
+    
+    //이 아래부터는 기본 정보 주는 곳
+    var returnText = "none"; //마지막 답장
+    if (msg == "잘자"){
+        returnText = keyToText("GOODBYE","goodnight");
+    }
+    
+    if (returnText != "none"){replier.reply(returnText);}
 }
