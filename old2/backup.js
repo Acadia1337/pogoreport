@@ -661,7 +661,6 @@ function response(room, msg, sender, isGroupChat, replier, imageDB) {
                         break;
                     }
                 }
-
             }
             replier.reply(msg + ' 제보를 삭제합니다.');
             replier.reply(report);
