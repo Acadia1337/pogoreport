@@ -2,42 +2,59 @@
 const sdcard = android.os.Environment.getExternalStorageDirectory().getAbsolutePath(); //내장메모리 최상위 경로
 
 /*상수 (객체) 선언*/
-const Pokemon = {}; const DoriDB = {}; const preChat = {}; const lastSender = {}; const botOn = {}; const basicDB = "basic";
+const DoriDB = {}; const preChat = {}; const lastSender = {}; const botOn = {}; const basicDB = "basic";
 var currentTime = new Date(); var currentHour = currentTime.getHours(); var currentMinute = currentTime.getMinutes();
 
 /*Pokemon 객체*/
-Pokemon.checkWord = function(que, msg) { //적당히 비슷한 말인지 비교
-    var data = msg.split(" "); //수신된 채팅의 어절들 중
-    var flag = false;
-    if (Math.floor(Math.random() * 2) == 0) flag = true; //50% 확률로 이미 한 개가 포함되어 있다고 가정
-    for (var n = 0; n < data.length; n++) { //두 개 이상이 저장된 채팅들에 포함되어 있다면,
-        if (que.indexOf(data[n]) != -1) {
-            if (flag) return true; //대강 비슷하다고 판단
-            else flag = true;
+/*
+Pokemon.getDustData = function() { //전국 미세먼지 정보 가져오는 함수
+    try {
+        var data = Utils.getTextFromWeb("https://m.search.naver.com/search.naver?query=미세먼지");
+        data = data.split("미세먼지</strong>")[1].split("예측영상")[0].replace(/(<([^>]+)>)/g, "");
+        data = data.split("단위")[0].trim().split("   ");
+        for (var n = 0; n < data.length; n++) {
+            var cc = data[n].trim().split(" ");
+            data[n] = cc[0] + " : " + Utils.dustLevel(Number(cc[1])) + " (" + cc[1] + "μg/m³)";
         }
+        var data2 = data.shift();
+        data.sort();
+        data.unshift(data2);
+        return data.join("\n");
+    } catch (e) {
+        Log.debug("미세먼지 정보 불러오기 실패\n오류: " + e + "\n위치: " + e.lineNumber);
+        return "미세먼지 정보 불러오기 실패\n오류: " + e;
     }
-    return false; //아님 말고
 };
-Pokemon.getReply = function(basicDB, msg) { //수신된 채팅에 대한 적당한 답변 반환
-    var data = DoriDB.readData(basicDB); //저장된 채팅들을 불러옴
-    if (data != null && Math.floor(Math.random() * 20) == 0) { //저장된 채팅이 없거나, 5% 확률이 터진게 아니면, 작동 안함
-        data = data.split("\n"); //냥
-        var result = []; //비슷한 말들이 들어갈 배열
-        for (var n = 0; n < data.length - 1; n++) { //적당하다 싶은 녀석들을
-            if (Pokemon.checkWord(data[n], msg)) result.push(data[n + 1]); //배열에 추가
+Pokemon.dustLevel = function(value) {
+    if (value <= 30) return "좋음";
+    if (value <= 80) return "보통";
+    if (value <= 150) return "나쁨";
+    return "매우나쁨";
+};
+Pokemon.getTextFromWeb = function(url) {
+    try {
+        var url = new java.net.URL(url);
+        var con = url.openConnection();
+        if (con != null) {
+            con.setConnectTimeout(5000);
+            con.setUseCaches(false);
+            var isr = new java.io.InputStreamReader(con.getInputStream());
+            var br = new java.io.BufferedReader(isr);
+            var str = br.readLine();
+            var line = "";
+            while ((line = br.readLine()) != null) {
+                str += "\n" + line;
+            }
+            isr.close();
+            br.close();
+            con.disconnect();
         }
-        if (result[0] != null) return result[Math.floor(Math.random() * result.length)]; //배열이 빈게 아니라면 아무거나 하나 반환
+        return str.toString();
+    } catch (e) {
+        Log.debug(e);
     }
-    return null; //일치하는게 없거나, 저장된 채팅이 없거나, 발동할 확률(?)이 아니면, null 반환
 };
-Pokemon.isValidData = function(msg) { //배울 만한 채팅인지 구분하는 함수
-    if (msg.charAt(0) == "#") return; //해시태그(#으로 시작)는 학습 X.
-    var noStudy = ["\n"]; //엔터가 포함된건 학습 X. 비속어 필터링 등도 여기다가 넣으면 이상한 말은 안배움
-    for (var n = 0; n < noStudy.length; n++) {
-        if (msg.indexOf(noStudy[n]) != -1) return false;
-    }
-    return true;
-};
+*/
 
 /*DoriDB 객체*/
 DoriDB.createDir = function() { //배운 채팅들이 저장될 폴더를 만드는 함수
@@ -79,7 +96,8 @@ DoriDB.readData = function(name) { //파일에 저장된 내용을 불러오는 
 /*Utils 객체 확장*/
 Utils.getDustData = function() { //전국 미세먼지 정보 가져오는 함수
     try {
-        var data = Utils.getTextFromWeb("https://m.search.naver.com/search.naver?query=미세먼지");
+        //var data = Utils.getTextFromWeb("https://m.search.naver.com/search.naver?query=미세먼지");
+        var data = Utils.getTextFromWeb("https://m.search.naver.com/search.naver?query=서울%20미세먼지");
         data = data.split("미세먼지</strong>")[1].split("예측영상")[0].replace(/(<([^>]+)>)/g, "");
         data = data.split("단위")[0].trim().split("   ");
         for (var n = 0; n < data.length; n++) {
@@ -280,23 +298,24 @@ function timeCheck (reportDum){
 
 function keyToText (textKey, dbName){
     var dbToUse = DoriDB.readData(dbName);
-    var keyNumber;
-    var divideCategory = dbToUse.split("\n"); //첫 줄 빼기용
-    var keySelect = divideCategory[0].split(",");
-    if (divideCategory[0].includes(textKey)){
-        keyNumber = keySelect.indexOf(textKey);
-    } else {return "그런 단어는 제 사전에 없는 것 같아요!"}
-    dbToUse = divideCategory[keyNumber];
-    var divideTalk = dbToUse.split(","); //줄에서 쓸말을 각각 나눔
-    var randTextNum = Math.floor((Math.random() * (divideTalk.length - 1)))+1;
-    if (textKey == divideTalk[0]){
-        return divideTalk[randTextNum]
-    } else {return "something went wrong"}
-}
-function keyToWholeText (dbName){
-    return DoriDB.readData(dbName);
-}
+    if (textKey == null){
+        return DoriDB.readData(dbName);
+    } else {
+        var keyNumber;
+        var divideCategory = dbToUse.split("\n"); //첫 줄 빼기용
+        var keySelect = divideCategory[0].split(",");
+        if (divideCategory[0].includes(textKey)){
+            keyNumber = keySelect.indexOf(textKey);
+        } else {return "그런 단어는 제 사전에 없는 것 같아요!"}
+        dbToUse = divideCategory[keyNumber];
+        var divideTalk = dbToUse.split(","); //줄에서 쓸말을 각각 나눔
+        var randTextNum = Math.floor((Math.random() * (divideTalk.length - 1)))+1;
+        if (textKey == divideTalk[0]){
+            return divideTalk[randTextNum]
+        } else {return "something went wrong"}
+    }
 
+}
 
 function reportDelete (raidInfo, delReport){
     if (raidInfo.includes(delReport)){
@@ -322,20 +341,21 @@ function quoteRegister (personName, newQuote){
     var keyNumber; var quoteToUse;
     var divideCategory = quoteInfo.split("\n"); //첫 줄 빼기용
     var keySelect = divideCategory[0].split(",");
-    if (divideCategory[0].includes(personName)){
+    if (divideCategory[0].includes(personName)){ //이미 명언에 사람이 등록되어있다면
         keyNumber = keySelect.indexOf(personName);
-    } else {
+        divideCategory[keyNumber] = divideCategory[keyNumber] + "," + newQuote;
+    } else { // 등록되어있지 않다면 새로 등록
         keySelect = keySelect + "," + personName;
-        keyNumber = keySelect.indexOf(personName);
         quoteInfo = quoteInfo + "\n" + personName;
+        divideCategory.push(personName + "," + newQuote);
     }
-    divideCategory[keyNumber] = divideCategory + "," + newQuote;
-    var newQuoteInfo = divideCategory[0];
-    for (var i=1;i<divideCategory.length;i++){
+    var newQuoteInfo = keySelect;
+    for (var i=1; i<divideCategory.length; i++){
         newQuoteInfo = newQuoteInfo + "\n" + divideCategory[i];
     }
+    newQuoteInfo = newQuoteInfo.trim();
     DoriDB.saveData("quote", newQuoteInfo);
-    return "명언이 등록되었습니다."
+    return personName + "님의 명언이 등록되었습니다.";
 }
 
 function raidReportReturn (dbName, newReport, delReport){
@@ -376,37 +396,6 @@ function procCmd(room, cmd, sender, replier) {
         replier.reply("도리 비활성화");
         botOn[room] = false;
     }
-    if (cmd == "/DoriDB") { // 배운 채팅 수를 확인하는 명령어
-        var data = DoriDB.readData(basicDB);
-        if (data == null) replier.reply("0개");
-        else replier.reply(data.split("\n").length + "개");
-        replier.reply(data); // 다 뽑아보자
-    }
-    if (cmd == "/도리") {
-        replier.reply("봇 이름 : 도리\n제작자 : 도곡방/고대방 HypeTrain08\n라이선스 : GPL 3.0");
-    }
-    if (cmd == "/도움말") {
-        replier.reply("봇 이름 : 도리\n제작자 : 도곡방/고대방 HypeTrain08\n라이선스 : GPL 3.0" + "\n\n 포켓몬고 레이드 제보의 활성화를 위해 만든 봇입니다. 명령어 목록은 '/도리 명령어'로 확인하실 수 있습니다.");
-    }
-    if (cmd == "/도리 명령어") {
-        replier.reply("[도리 명령어 목록]" + "\n\n" +
-            "/도리 - 생존 확인용 명령어(?)입니다.\n" +
-            "/도움말 - 도움말 같은걸 띄웁니다.\n" +
-            "/on - 해당 채팅방에서 도리를 활성화시킵니다.\n" +
-            "/off - 해당 채팅방에서 도리를 비활성화시킵니다.\n" +
-            "/DoriDB - 해당 채팅방에서 도리가 학습한 말들의 수를 불러옵니다.\n" +
-            "/도리 명령어 - 도리의 명령어 목록을 띄웁니다.\n" +
-            "/미세먼지 - 현재 전국 미세먼지 현황을 띄웁니다.\n" +
-            "/주사위 - 주사위를 던집니다.\n"
-            );
-    }
-    if (cmd == "/미세먼지") {
-        replier.reply("[미세먼지 정보]\n" + Utils.getDustData());
-    }
-    if (cmd == "/주사위") {
-        var icon = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
-        replier.reply(icon[Math.floor(Math.random() * 6)]);
-    }
 }
 
 function response(room, msg, sender, isGroupChat, replier) {
@@ -437,18 +426,6 @@ function response(room, msg, sender, isGroupChat, replier) {
                 break;
         }
     }
-    
-    var chat = Pokemon.getReply(basicDB, msg); //채팅 가져와서 답장
-    if (chat != null) replier.reply(chat);
-
-    if (Pokemon.isValidData(msg)) { //학습 - 배울 만한 채팅인 경우,
-        var data = DoriDB.readData(basicDB); //배운 채팅 목록을 가져옴
-        if (data == null) { //이미 배운게 있다면
-            DoriDB.saveData(basicDB, msg); //새로 저장
-        } else { //아니면,
-            DoriDB.saveData(basicDB, data + " " + msg); 
-        }
-    }
     lastSender[room] = sender;
     
     //이 아래부터는 기본 정보 주는 곳
@@ -465,6 +442,46 @@ function response(room, msg, sender, isGroupChat, replier) {
                 replier.reply("띠꾸혀어엉");
             }
         }
+        
+        if (msg == "사용법"){
+            returnText = keyToText(null,"doriguide");
+        } else if (msg.includes("둥지")){
+            returnText = keyToText(null,"nest")
+        } else if ((msg.includes('이벤트')) || (msg.includes('글로벌 챌린지'))) {
+            returnText = keyToText(null,"event");
+        } else if(msg.includes('커뮤니티') || msg.includes('커뮤데이')){
+            returnText = keyToText(null,"community");
+        } else if(msg.includes('성공') && msg.includes('조건')){
+            msg = msg.replace('성공'); msg = msg.replace('조건'); msg = msg.trim();
+            returnText = keyToText(msg,"raidGuide");
+        } else if(msg.includes('아이템') && msg.includes('확률')){
+            returnText = keyToText(null,"item");
+        } else if(msg.includes('경험치') && msg.includes('알려줘')){
+            returnText = keyToText(null,"experience");
+        } else if(msg.includes('지역락') && msg.includes('포켓몬')){
+            returnText = keyToText(null,"regionLock");
+        }
+        
+        if(msg.includes('평가')){
+            if(msg.includes('발러')){
+                returnText = keyToText(null,"valorAppraise");
+            }
+            if(msg.includes('미스틱')){
+               returnText = keyToText(null,"mysticAppraise");
+            }
+            if(msg.includes('인스')){
+                returnText = keyToText(null,"instinctAppraise");
+            }
+        }
+        if (msg.includes("미세먼지")) {
+            returnText = "[미세먼지 정보]\n" + Utils.getDustData();
+        }
+        if (msg.includes("주사위")) {
+            var icon = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+            returnText = icon[Math.floor(Math.random() * 6)];
+        }
+
+        
         if (msg.includes('잘자') || msg.includes('굿밤') || msg.includes('굿나잇') || msg.includes('좋은밤') || msg.includes('좋은 밤')){
             returnText = keyToText("GOODBYE","hello");
         } else if (msg.includes('좋은 아침') || msg.includes('굿모닝') || msg.includes('좋은아침') || msg.includes('잘잤어?')){
@@ -472,6 +489,15 @@ function response(room, msg, sender, isGroupChat, replier) {
         } else if (msg.includes('잘했어') || msg.includes('최고') || msg.includes('짱') || msg.includes('수고') || msg.includes('고마')){
             returnText = keyToText("GOODJOB","hello");
         }
+        
+        if (msg.includes('아침')){returnText = keyToText("BREAKFAST","food");
+        } else if (msg.includes('점심')){returnText = keyToText("LUNCH","food");
+        } else if (msg.includes('저녁')){returnText = keyToText("DINNER","food");
+        } else if (msg.includes('간식')){returnText = keyToText("SNACK","food");
+        } else if (msg.includes('야식')){returnText = keyToText("LATENIGHT","food");
+        } else if (msg.includes('술') || msg.includes('안주')){returnText = keyToText("ALCOHOL","food");
+        } else if (msg.includes('밥')){returnText = keyToText("FOOD","food");
+        } 
         
         if (msg.includes('명언등록') || msg.includes('명언 등록')){
             msg = msg.replace('명언등록',''); msg = msg.replace('명언 등록',''); msg = msg.trim();
@@ -481,16 +507,21 @@ function response(room, msg, sender, isGroupChat, replier) {
                 quoteQuote = quoteQuote + " " + msg[i];
             }
             quoteQuote = quoteQuote.trim();
-            returnText = (quoteRegister(quoteName, quoteQuote));
+            returnText = quoteRegister(quoteName, quoteQuote);
+            msg = "none";
         } else if (msg.includes('명언')){
             msg = msg.replace('명언',''); msg = msg.trim();
-            returnText = keyToText("quote",msg);
-        }
-        if (msg.includes("둥지")){
-            returnText = keyToWholeText("nest")
+            returnText = keyToText(msg,"quote");
         }
         
-        if((msg.includes('비밀번호') || (msg.includes('비번'))) && room.includes("도곡")){returnText = "현재 도곡방 입장 비밀번호는 2018이에요! 가끔 새로 바뀐답니다!";}
+        if((msg.includes('비밀번호') || (msg.includes('비번'))) && room.includes("도곡")){returnText = "현재 도곡방 입장 비밀번호는 2018이에요! 가끔 새로 바뀐답니다!";} else if(room.includes("고려대학교")){
+            returnText = "방 번호는 그렇게 쉽게 알려줄 수 없지 후후";
+        }
+        if (msg.includes("트레이너") && msg.includes("코드")){
+            if (room.includes("도곡")){
+                returnText = "도곡방 트레이너코드 : https://goo.gl/z7ib37\n\n친구 필요하시면 방장님꺼 등록하세요!!\n하입 부캐 : 0293 2668 5480\n하입 부부캐 : 1255 9840 5201";
+            } else if (room.includes("고려대")){returnText = "고대방 트레이너코드 : https://goo.gl/dHSwSW";}
+        }
         if(msg.includes('뭐하니') || msg.includes('뭐해')){returnText = '트레이너분들의 말을 기다리고 있어요!';}
         if(msg.includes('바보') || msg.includes('멍청이')){returnText = '아니에요ㅡㅡ매일매일 진화하고 있는걸요!';}
         if(msg.includes('이쁜짓') || msg.includes('애교')){returnText = '(심각)';}

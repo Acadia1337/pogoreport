@@ -1,23 +1,15 @@
-function bringTest(inputData1) {
-    const myModule = require('./bring');
-    let val = myModule.hello(); // val is "Hello"   
-    return ("ohoh");
+var msg = "구구 감자감자 오토케 명언등록"
+
+if (msg.includes('명언등록') || msg.includes('명언 등록')){
+    msg = msg.replace('명언등록',''); msg = msg.replace('명언 등록',''); msg = msg.trim();
+    msg = msg.split(" ");
+    var quoteName = msg[0]; var quoteQuote = "";
+    for (var i=1; i < msg.length; i++ ) {
+        quoteQuote = quoteQuote + " " + msg[i];
+    }
+    quoteQuote = quoteQuote.trim();
 }
 
-function response(room, msg, sender, isGroupChat, replier, imageDB) {
+console.log(quoteName);
+console.log(quoteQuote);
 
-    if (msg=="도리야 방 정보"){
-        replier.reply("Room : " + room);
-        replier.reply("Sender : " + sender);
-        replier.reply("isGroupChat : " + isGroupChat);
-    }
-    
-
-    if (msg=='도리야' || msg=='도리' || msg=='도리!'){
-        replier.reply("네! 부르셨나요?")
-    }
-    
-    if (msg=='브링 테스트'){
-        replier.reply(bringTest(1));
-    }
-}
