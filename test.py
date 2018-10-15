@@ -22,6 +22,7 @@ def crawl_pokemonInfo(number):
     bigTable = soup.select('table.table-stats > tr > td')
     statTable = str(bigTable).split('<td>')
     skills = soup.select('table.moveset > tr > td > a')
+    rank = str(soup.select('div.rank')).split('</em>')[0].split('<em>')[1]
 
     attack = statTable[1].split('<')[0]
     defense = statTable[3].split('<')[0]
@@ -33,6 +34,13 @@ def crawl_pokemonInfo(number):
     lv30 = (statTable[8].split('<')[0]).strip()
     lv35 = (statTable[11].split('<')[0]).strip()
     lv40 = (statTable[9].split('<')[0]).strip()
+    
+    lv15 = lv15.replace(',','')
+    lv20 = lv20.replace(',','')
+    lv25 = lv25.replace(',','')
+    lv30 = lv30.replace(',','')
+    lv35 = lv35.replace(',','')
+    lv40 = lv40.replace(',','')
 
     catchRate = (statTable[15].split('<')[0]).strip()
     escapeRate = (statTable[17].split('<')[0]).strip()
@@ -43,10 +51,32 @@ def crawl_pokemonInfo(number):
     defense_FAST = str(skills).split('</a>')[2].split('>')[1]
     defense_CHARGE = str(skills).split('</a>')[3].split('>')[1]
     
-    #return pokemonName
+    #return rank
     print (pokedexNumber)
     second.write(pokemonName + ',')
-    f.write('\n' + pokemonName + ',' + pokedexNumber + ',' + type1 + ',' + type2 + ',' + attack + ',' + defense + ',' + stamina + ',' + lv15 + ',' + lv20 + ',' + lv25 + ',' + lv30 + ',' + lv35 + ',' + lv40 + ',' + catchRate + ',' + escapeRate + ',' + walkDistance + ',' + attack_FAST + ',' + attack_CHARGE + ',' + defense_FAST + ',' + defense_CHARGE)
+    #pokedexNumber pokemonName type1 type2 attack defense stamina rank lv15 lv20 lv25 lv30 lv35 lv40 walkDistance catchRate escapeRate attack_FAST attack_CHARGE defense_FAST defense_CHARGE
+    f.write('\n' + 
+            pokedexNumber + ',' + 
+            pokemonName + ',' + 
+            type1 + ',' + 
+            type2 + ',' + 
+            attack + ',' + 
+            defense + ',' + 
+            stamina + ',' + 
+            rank + ',' + 
+            lv15 + ',' + 
+            lv20 + ',' + 
+            lv25 + ',' + 
+            lv30 + ',' + 
+            lv35 + ',' + 
+            lv40 + ',' + 
+            walkDistance + ',' + 
+            catchRate + ',' + 
+            escapeRate + ',' + 
+            attack_FAST + ',' + 
+            attack_CHARGE + ',' + 
+            defense_FAST + ',' + 
+            defense_CHARGE)
 
 
 for count in range(1,387):
@@ -55,8 +85,11 @@ for count in range(1,387):
 
 #print (crawl_pokemonInfo(251));
 
+#crawl_pokemonInfo(248)
 
 print ("끝났다")
 
 f.close()
+
+
 

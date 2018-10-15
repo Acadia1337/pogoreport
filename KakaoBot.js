@@ -5,33 +5,6 @@ const sdcard = android.os.Environment.getExternalStorageDirectory().getAbsoluteP
 const DoriDB = {}; const preChat = {}; const lastSender = {}; const botOn = {}; const basicDB = "basic";
 var currentTime = new Date(); var currentHour = currentTime.getHours(); var currentMinute = currentTime.getMinutes();
 
-/*Pokemon 객체*/
-Utils.getPokemonData = function(pokemonName) { //포켓몬을 가져와보자
-    try {
-        var data = Utils.getTextFromWeb("https://pokemon.gameinfo.io/ko/pokemon/" + pokemonName);
-        //var pokemonName = data.slice(data.indexOf("<title>"),data.indexOf("<title>")+10);
-        //data = data.split('<body>');
-        //data = data[1].split("</p>");
-        
-        return "https://pokemon.gameinfo.io/ko/pokemon/" + pokemonName;
-        /*
-        data = data.split("미세먼지</strong>")[1].split("예측영상")[0].replace(/(<([^>]+)>)/g, "");
-        data = data.split("단위")[0].trim().split("   ");
-        for (var n = 0; n < data.length; n++) {
-            var cc = data[n].trim().split(" ");
-            data[n] = cc[0] + " : " + Utils.dustLevel(Number(cc[1])) + " (" + cc[1] + "μg/m³)";
-        }
-        var data2 = data.shift();
-        data.sort();
-        data.unshift(data2);
-        return data.join("\n");
-        */
-    } catch (e) {
-        Log.debug("포켓몬 정보 실패\n오류: " + e + "\n위치: " + e.lineNumber);
-        return "포켓몬 정보 실패\n오류: " + e;
-    }
-};
-
 /*DoriDB 객체*/
 DoriDB.createDir = function() { //배운 채팅들이 저장될 폴더를 만드는 함수
     var folder = new java.io.File(sdcard + "/Dori/"); //File 인스턴스 생성
@@ -72,8 +45,9 @@ DoriDB.readData = function(name) { //파일에 저장된 내용을 불러오는 
 /*Utils 객체 확장*/
 Utils.getDustData = function() { //전국 미세먼지 정보 가져오는 함수
     try {
+        //https://m.search.naver.com/search.naver?where=m&sm=mtb_etc&mra=blQ3&query=%EC%84%9C%EC%9A%B8%20%EC%B4%88%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80
         //var data = Utils.getTextFromWeb("https://m.search.naver.com/search.naver?query=미세먼지");
-        var data = Utils.getTextFromWeb("https://m.search.naver.com/search.naver?query=서울%20미세먼지");
+        var data = Utils.getTextFromWeb("https://m.search.naver.com/search.naver?where=m&sm=mtb_etc&mra=blQ3&query=%EC%84%9C%EC%9A%B8%20%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80");
         data = data.split("미세먼지</strong>")[1].split("예측영상")[0].replace(/(<([^>]+)>)/g, "");
         data = data.split("단위")[0].trim().split("   ");
         for (var n = 0; n < data.length; n++) {
@@ -87,6 +61,40 @@ Utils.getDustData = function() { //전국 미세먼지 정보 가져오는 함�
     } catch (e) {
         Log.debug("미세먼지 정보 불러오기 실패\n오류: " + e + "\n위치: " + e.lineNumber);
         return "미세먼지 정보 불러오기 실패\n오류: " + e;
+    }
+};
+Utils.getFineDustData = function() { //전국 초미세먼지 정보 가져오는 함수
+    try {
+        //var data = Utils.getTextFromWeb("https://m.search.naver.com/search.naver?query=미세먼지");
+        var data = Utils.getTextFromWeb("https://m.search.naver.com/search.naver?where=m&sm=mtb_etc&mra=blQ3&query=%EC%84%9C%EC%9A%B8%20%EC%B4%88%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80");
+        data = data.split("초미세먼지</strong>")[1].split("예측영상")[0].replace(/(<([^>]+)>)/g, "");
+        data = data.split("단위")[0].trim().split("   ");
+        for (var n = 0; n < data.length; n++) {
+            var cc = data[n].trim().split(" ");
+            data[n] = cc[0] + " : " + Utils.dustLevel(Number(cc[1])) + " (" + cc[1] + "μg/m³)";
+        }
+        var data2 = data.shift();
+        data.sort();
+        data.unshift(data2);
+        return data.join("\n");
+    } catch (e) {
+        Log.debug("초미세먼지 정보 불러오기 실패\n오류: " + e + "\n위치: " + e.lineNumber);
+        return "초미세먼지 정보 불러오기 실패\n오류: " + e;
+    }
+};
+Utils.getWeather = function() { //강남구 날씨 정보 가져오는 함수
+    try {
+        var data = Utils.getTextFromWeb("https://m.search.naver.com/search.naver?query=%EA%B0%95%EB%82%A8%EA%B5%AC+%EB%82%A0%EC%94%A8&sm=mtb_hty.top&where=m&oquery=%EC%84%9C%EC%9A%B8+%EB%82%A0%EC%94%A8&tqi=T8f2wdpVupossZ16ktRssssssCo-130430");
+        var temperature = data.split('현재온도</span><em class="figure degree_code">')[1].split('</em></strong> <span class="chill_temp"><span>')[0].replace(/(<([^>]+)>)/g, "");
+        var feelsLike = data.split('체감온도</span><em class="figure degree_code">')[1].split('</em></span> </div> </div> ')[0].replace(/(<([^>]+)>)/g, "");
+        var weatherInSentence = data.split('<div class="wt_summary"> <p>')[1].split('<em class="figure degree_code">')[0].replace(/(<([^>]+)>)/g, "");
+        var weatherInSentence2 = data.split('어제보다<em class="figure degree_code">')[1].split('</p> <a href="?">')[0].replace("</em>", "도 ");
+        weatherInSentence2 = weatherInSentence2.split('<')[0];
+
+        return "현재 온도는 " + temperature + "도,\n체감 온도는 " + feelsLike + "도 에요!\n전반적으로 " + weatherInSentence + " " + weatherInSentence2 + "!";
+    } catch (e) {
+        Log.debug("날씨 정보 불러오기 실패\n오류: " + e + "\n위치: " + e.lineNumber);
+        return "날씨 정보 불러오기 실패\n오류: " + e;
     }
 };
 Utils.dustLevel = function(value) {
@@ -293,6 +301,53 @@ function keyToText (textKey, dbName){
 
 }
 
+function pokemonInfoReturn (pokemon){
+    var dbToUse = DoriDB.readData("pokemonINFO");
+    var keyNumber;
+    var divideCategory = dbToUse.split("\n"); //첫 줄 빼기용
+    var keySelect = divideCategory[0].split(",");
+    if (divideCategory[0].includes(pokemon)){
+        keyNumber = keySelect.indexOf(pokemon);
+    } else {return pokemon + "에 대한 정보는 모르는 것 같아요ㅠㅠ";}
+    
+    dbToUse = divideCategory[keyNumber];
+    var dividePokemonInfo = dbToUse.split(","); //줄에서 쓸말을 각각 나눔
+//여기 아래부터 지정 시작
+//pokedexNumber pokemonName type1 type2 attack defense stamina rank lv15 lv20 lv25 lv30 lv35 lv40 walkDistance catchRate escapeRate attack_FAST attack_CHARGE defense_FAST defense_CHARGE
+    var pokedexNumber = dividePokemonInfo[0];
+    var pokemonName = dividePokemonInfo[1];
+    var type1 = dividePokemonInfo[2];
+    var type2 = dividePokemonInfo[3];
+    var attack = dividePokemonInfo[4];
+    var defense = dividePokemonInfo[5];
+    var stamina = dividePokemonInfo[6];
+    var rank = dividePokemonInfo[7];
+    var lv15 = dividePokemonInfo[8];
+    var lv20 = dividePokemonInfo[9];
+    var lv25 = dividePokemonInfo[10];
+    var lv30 = dividePokemonInfo[11];
+    var lv35 = dividePokemonInfo[12];
+    var lv40 = dividePokemonInfo[13];
+    var walkDistance = dividePokemonInfo[14];
+    var catchRate = dividePokemonInfo[15];
+    var escapeRate = dividePokemonInfo[16];
+    var attack_FAST = dividePokemonInfo[17];
+    var attack_CHARGE = dividePokemonInfo[18];
+    var defense_FAST = dividePokemonInfo[19];
+    var defense_CHARGE = dividePokemonInfo[20];
+    
+    if (type2 != 'NONE'){
+        type1 = type1 + '/' + type2;
+    }
+    
+    
+    if (pokemonName == pokemon){
+        return pokemonName + " (도감 #" + pokedexNumber + ")\n타입 - " + type1 + "\n공격 " + attack + " / 방어 " + defense + " / 체력 " + stamina + "\n파트너 사탕거리 : " + walkDistance + "\n포획률 : " + catchRate + " / 도주율 : " + escapeRate + " \n\nCP (순위 #" + rank + ")\nLV15 : " + lv15 + "    LV20 : " + lv20 + "\nLV25 : " + lv25 + "    LV30 : " + lv30 + "\nLV35 : " + lv35 + "    LV40 : " + lv40 + "\n\n최고 공격 조합 : " + attack_FAST + " / " + attack_CHARGE + "\n최고 방어 조합 : " + defense_FAST + " / " + defense_CHARGE;
+    } else {return "something went wrong"}
+
+    
+}
+
 function reportDelete (raidInfo, delReport){
     if (raidInfo.includes(delReport)){
         var i; var reportSplit = raidInfo.split('\n');
@@ -409,8 +464,14 @@ function response(room, msg, sender, isGroupChat, replier) {
     var useReport = "report"; var useResearch = 'research';
     if (room.includes("고려대학교")){useReport = "korReport"; useResearch = "korResearch"}
     
+    if (msg.includes("퍄퍄드립") || msg.includes("퍄퍄 드립")){
+        replier.reply(msg);
+    } else if (msg.includes("고ㅑ고ㅑ") || msg.includes("고ㅑ고ㅑ")){
+        replier.reply(msg);
+    }
+    
     if (msg.includes("도리")){ // 도리야 _____ 명령어
-        msg = msg.replace("도리야",""); msg = msg.replace("도리",""); msg = msg.trim(); //문장에서 도리 제거
+        msg = msg.replace("도리야?",""); msg = msg.replace("도리야",""); msg = msg.replace("도리",""); msg = msg.trim(); //문장에서 도리 제거
         if (msg.includes("띠꾸") && Math.floor(Math.random() * 3) != 0) {
             replier.reply("띠꾸혀엉");
             if (Math.floor(Math.random() * 3) == 0) {
@@ -451,12 +512,14 @@ function response(room, msg, sender, isGroupChat, replier) {
         }
         
         if (msg.includes("정보") || msg.includes("개체")){
-            msg = msg.replace("정보",""); msg = msg.replace("개체",""); msg = msg.trim();
-            replier.reply("도감 정보는 빠른 시일안에 준비해올게요!ㅠㅠ일단은 링크를 통해 봐주세요!")
-            returnText = Utils.getPokemonData(msg);
+            msg = msg.replace("정보",""); msg = msg.replace("백개체",""); msg = msg.replace("개체",""); msg = msg.trim();
+            returnText = pokemonInfoReturn(msg);
         }
-        
-        if (msg.includes("미세먼지")) {
+        if (msg.includes("날씨")){
+            returnText = Utils.getWeather();
+        } else if (msg.includes("초미세먼지")) {
+            returnText = "[초미세먼지 정보]\n" + Utils.getFineDustData();
+        } else if (msg.includes("미세먼지")) {
             returnText = "[미세먼지 정보]\n" + Utils.getDustData();
         }
         if (msg.includes("주사위")) {
@@ -497,8 +560,12 @@ function response(room, msg, sender, isGroupChat, replier) {
             returnText = keyToText(msg,"quote");
         }
         
-        if((msg.includes('비밀번호') || (msg.includes('비번'))) && room.includes("도곡")){returnText = "현재 도곡방 입장 비밀번호는 2018이에요! 가끔 새로 바뀐답니다!";} else if(room.includes("고려대학교")){
-            returnText = "방 번호는 그렇게 쉽게 알려줄 수 없지 후후";
+        if((msg.includes('비밀번호') || (msg.includes('비번'))) && room.includes("도곡")){
+            if(room.includes("고려대학교")){
+                returnText = "방 번호는 그렇게 쉽게 알려줄 수 없지 후후";
+            } else {
+                returnText = "현재 도곡방 입장 비밀번호는 2018이에요! 가끔 새로 바뀐답니다!";
+            }
         }
         if (msg.includes("트레이너") && msg.includes("코드")){
             if (room.includes("도곡")){
