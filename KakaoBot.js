@@ -6,10 +6,15 @@ const DoriDB = {}; const preChat = {}; const lastSender = {}; const botOn = {}; 
 var currentTime = new Date(); var currentHour = currentTime.getHours(); var currentMinute = currentTime.getMinutes();
 
 /*Pokemon 객체*/
-/*
-Pokemon.getDustData = function() { //전국 미세먼지 정보 가져오는 함수
+Utils.getPokemonData = function(pokemonName) { //포켓몬을 가져와보자
     try {
-        var data = Utils.getTextFromWeb("https://m.search.naver.com/search.naver?query=미세먼지");
+        var data = Utils.getTextFromWeb("https://pokemon.gameinfo.io/ko/pokemon/" + pokemonName);
+        //var pokemonName = data.slice(data.indexOf("<title>"),data.indexOf("<title>")+10);
+        //data = data.split('<body>');
+        //data = data[1].split("</p>");
+        
+        return "https://pokemon.gameinfo.io/ko/pokemon/" + pokemonName;
+        /*
         data = data.split("미세먼지</strong>")[1].split("예측영상")[0].replace(/(<([^>]+)>)/g, "");
         data = data.split("단위")[0].trim().split("   ");
         for (var n = 0; n < data.length; n++) {
@@ -20,41 +25,12 @@ Pokemon.getDustData = function() { //전국 미세먼지 정보 가져오는 함
         data.sort();
         data.unshift(data2);
         return data.join("\n");
+        */
     } catch (e) {
-        Log.debug("미세먼지 정보 불러오기 실패\n오류: " + e + "\n위치: " + e.lineNumber);
-        return "미세먼지 정보 불러오기 실패\n오류: " + e;
+        Log.debug("포켓몬 정보 실패\n오류: " + e + "\n위치: " + e.lineNumber);
+        return "포켓몬 정보 실패\n오류: " + e;
     }
 };
-Pokemon.dustLevel = function(value) {
-    if (value <= 30) return "좋음";
-    if (value <= 80) return "보통";
-    if (value <= 150) return "나쁨";
-    return "매우나쁨";
-};
-Pokemon.getTextFromWeb = function(url) {
-    try {
-        var url = new java.net.URL(url);
-        var con = url.openConnection();
-        if (con != null) {
-            con.setConnectTimeout(5000);
-            con.setUseCaches(false);
-            var isr = new java.io.InputStreamReader(con.getInputStream());
-            var br = new java.io.BufferedReader(isr);
-            var str = br.readLine();
-            var line = "";
-            while ((line = br.readLine()) != null) {
-                str += "\n" + line;
-            }
-            isr.close();
-            br.close();
-            con.disconnect();
-        }
-        return str.toString();
-    } catch (e) {
-        Log.debug(e);
-    }
-};
-*/
 
 /*DoriDB 객체*/
 DoriDB.createDir = function() { //배운 채팅들이 저장될 폴더를 만드는 함수
@@ -473,6 +449,13 @@ function response(room, msg, sender, isGroupChat, replier) {
                 returnText = keyToText(null,"instinctAppraise");
             }
         }
+        
+        if (msg.includes("정보") || msg.includes("개체")){
+            msg = msg.replace("정보",""); msg = msg.replace("개체",""); msg = msg.trim();
+            replier.reply("도감 정보는 빠른 시일안에 준비해올게요!ㅠㅠ일단은 링크를 통해 봐주세요!")
+            returnText = Utils.getPokemonData(msg);
+        }
+        
         if (msg.includes("미세먼지")) {
             returnText = "[미세먼지 정보]\n" + Utils.getDustData();
         }
