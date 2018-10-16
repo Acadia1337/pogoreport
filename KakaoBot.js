@@ -448,7 +448,7 @@ function response(room, msg, sender, isGroupChat, replier) {
     var noReply = [".", "사진", "동영상", "음성메시지", "카카오톡 프로필", "(이모티콘)", "카카오링크 이미지"]; // 반응 안함
     for (var n = 0; n < noReply.length; n++) {if (msg == noReply[n]) return;}
     
-    if (["도리", "도리야", "도리야!", "도리야아", "Dori"].indexOf(msg) != -1) { //도리에 반응
+    if (["도리", "도리야", "도리야!", "도리야아", "Dori", "도리야?", "도리야!", "도리야??"].indexOf(msg) != -1) { //도리에 반응
         switch (Math.floor(Math.random() * 7)) {
             case 0:
             case 1:
@@ -566,6 +566,14 @@ function response(room, msg, sender, isGroupChat, replier) {
         } else if (msg.includes('명언')){
             msg = msg.replace('명언',''); msg = msg.trim();
             returnText = keyToText(msg,"quote");
+        } else if (msg.includes('에쇼하우스') && msg.includes('메뉴') && msg.includes('추가')){
+            msg = msg.replace('에쇼하우스',''); msg = msg.replace('메뉴',''); msg = msg.replace('추가','');
+            msg = msg.trim(); msg = msg.split(" ");
+            returnText = quoteRegister("에쇼하우스", msg);
+            msg = "none";
+            if (returnText.includes("에쇼하우스")){
+                returnText = "메뉴가 추가 되었습니다.";
+            }
         } else if (msg.includes('에쇼') && msg.includes('하우스') && msg.includes('메뉴')){
             returnText = keyToText("에쇼하우스","quote");
         }
