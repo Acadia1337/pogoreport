@@ -85,11 +85,19 @@ Utils.getFineDustData = function() { //전국 초미세먼지 정보 가져오�
 Utils.getWeather = function() { //강남구 날씨 정보 가져오는 함수
     try {
         var data = Utils.getTextFromWeb("https://m.search.naver.com/search.naver?query=%EA%B0%95%EB%82%A8%EA%B5%AC+%EB%82%A0%EC%94%A8&sm=mtb_hty.top&where=m&oquery=%EC%84%9C%EC%9A%B8+%EB%82%A0%EC%94%A8&tqi=T8f2wdpVupossZ16ktRssssssCo-130430");
-        var temperature = data.split('현재온도</span><em class="figure degree_code">')[1].split('</em></strong> <span class="chill_temp"><span>')[0].replace(/(<([^>]+)>)/g, "");
-        var feelsLike = data.split('체감온도</span><em class="figure degree_code">')[1].split('</em></span> </div> </div> ')[0].replace(/(<([^>]+)>)/g, "");
-        var weatherInSentence = data.split('<div class="wt_summary"> <p>')[1].split('<em class="figure degree_code">')[0].replace(/(<([^>]+)>)/g, "");
-        var weatherInSentence2 = data.split('어제보다<em class="figure degree_code">')[1].split('</p> <a href="?">')[0].replace("</em>", "도 ");
-        weatherInSentence2 = weatherInSentence2.split('<')[0];
+        var temperature = data.split('현재온도</span><em class="figure degree_code">')[1].split('</em></strong> <span class="chill_temp"><span>')[0];
+        var feelsLike = data.split('체감온도</span><em class="figure degree_code">')[1].split('</em></span> </div> </div> ')[0];
+        var weatherInSentence = data.split('<div class="wt_summary"> <p>')[1].split('</p> <a href="')[0];
+        if (weatherInSentence.includes("같아요")){
+            var weatherInSentence2 = ""
+        } else {
+            weatherInSentence = weatherInSentence.split('<em class="fi')[0];
+            var weatherInSentence2 = data.split('어제보다<em class="figure degree_code">')[1].split('</p> <a href="?">')[0].replace("</em>", "도 ");    
+            weatherInSentence2 = weatherInSentence2.split('<')[0];
+        }
+        
+        var tomorrow = data.split('주간날씨')[1];
+        
 
         return "현재 온도는 " + temperature + "도,\n체감 온도는 " + feelsLike + "도 에요!\n전반적으로 " + weatherInSentence + " " + weatherInSentence2 + "!";
     } catch (e) {
@@ -464,7 +472,7 @@ function response(room, msg, sender, isGroupChat, replier) {
     var useReport = "report"; var useResearch = 'research';
     if (room.includes("고려대학교")){useReport = "korReport"; useResearch = "korResearch"}
     
-    if (msg.includes("퍄퍄드립") || msg.includes("퍄퍄 드립")){
+    if (msg.includes("퍄퍄드립") || msg.includes("퍄퍄 드립") || msg.includes("퍄퍄합")){
         replier.reply(msg);
     } else if (msg.includes("고ㅑ고ㅑ") || msg.includes("고ㅑ고ㅑ")){
         replier.reply(msg);
@@ -480,7 +488,7 @@ function response(room, msg, sender, isGroupChat, replier) {
             }
         }
         
-        if (msg == "사용법"){
+        if (msg == "사용법" || (msg.includes("누구야?") && msg.includes("넌"))){
             returnText = keyToText(null,"doriguide");
         } else if (msg.includes("둥지")){
             returnText = keyToText(null,"nest")
@@ -558,6 +566,8 @@ function response(room, msg, sender, isGroupChat, replier) {
         } else if (msg.includes('명언')){
             msg = msg.replace('명언',''); msg = msg.trim();
             returnText = keyToText(msg,"quote");
+        } else if (msg.includes('에쇼') && msg.includes('하우스') && msg.includes('메뉴')){
+            returnText = keyToText("에쇼하우스","quote");
         }
         
         if((msg.includes('비밀번호') || (msg.includes('비번'))) && room.includes("도곡")){
