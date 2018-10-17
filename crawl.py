@@ -1,44 +1,106 @@
 import requests
 from bs4 import BeautifulSoup
+f = open("pokemonInfo.txt", 'w')
+second = open("pokedexNumbers.txt", 'w')
 
-req = requests.get("https://pokemon.gameinfo.io/ko/pokemon/마기라스") #connection
-#req = requests.get("http://datalab.naver.com/keyword/realtimeList.naver?where=main")
-html =  req.text # naver에서 소스를 받아오기
+def crawl_pokemonInfo(number):
+    req = requests.get("https://pokemon.gameinfo.io/ko/pokemon/" + str(number)) #connection
+    html =  req.text
+    soup = BeautifulSoup(html, 'html.parser')
 
-# BeautifulSoup로 html 소스를 python 객체로 변경할 수 있다.
-#  첫 인자에는 html 소스코드를 가져온다. 두번째 인자에는 어떤 parser를 이용할지 정해준다.
+    pokemonName = (str(soup.select('h1.mobile-only.mobile-title')).split('>'))[1].split('(Pok')[0].strip()
+    
+    if '의 모습' in pokemonName:
+        pokemonName = str(pokemonName.split('-')[0]).strip()
+    
+    pokedexNumber = (str(soup.select('div.togglable > p > a.button')).split('-')[0]).split('/')[-1]
+    type1 = soup.select('div.large-type')
+    type2 = 'NONE'
+    if "subtype" in str(type1):
+        type2 = (str(type1).split('">')[3]).split('</')[0]
+    type1 = (str(type1).split('">')[2]).split('</')[0]
+    bigTable = soup.select('table.table-stats > tr > td')
+    statTable = str(bigTable).split('<td>')
+    skills = soup.select('table.moveset > tr > td > a')
+    dps = soup.select('table.moveset > tr > td')
+    rank = str(soup.select('div.rank')).split('</em>')[0].split('<em>')[1]
 
-#---------------------------------------------------------#
-#python 내장 함수 html.parser
-soup = BeautifulSoup(html, 'html.parser')
-skills = soup.select('div.moves.compact > table > tr > td > a')
-#name = soup.select('script')
+    attack = statTable[1].split('<')[0]
+    defense = statTable[3].split('<')[0]
+    stamina = statTable[5].split('<')[0]
 
-#sillsigan = soup.select('div.ah_roll.PM_CL_realtimeKeyword_rolling_base > div > ul > li')
-# 실시간 검색어 부분 copy select
+    lv15 = (statTable[6].split('<')[0]).strip()
+    lv20 = (statTable[7].split('<')[0]).strip()
+    lv25 = (statTable[10].split('<')[0]).strip()
+    lv30 = (statTable[8].split('<')[0]).strip()
+    lv35 = (statTable[11].split('<')[0]).strip()
+    lv40 = (statTable[9].split('<')[0]).strip()
+    
+    lv15 = lv15.replace(',','')
+    lv20 = lv20.replace(',','')
+    lv25 = lv25.replace(',','')
+    lv30 = lv30.replace(',','')
+    lv35 = lv35.replace(',','')
+    lv40 = lv40.replace(',','')
 
-b = []
-for skill in skills:
-    b.append(skill.text) #tag내 문자열을 b리스트에 추가
+    catchRate = (statTable[15].split('<')[0]).strip()
+    escapeRate = (statTable[17].split('<')[0]).strip()
+    walkDistance = (statTable[19].split('<')[0]).strip()
 
-k = 1;
-list_skills = []
-#print("="*30 + '\n' + ' '* 7 + "NAVER RANK LIST\n" + '='*30 )
+    attack_FAST = str(skills).split('</a>')[0].split('>')[1]
+    attack_FAST_DPS = str(dps).split('<td>')[2].split('<sub')[0].strip()
+    attack_CHARGE = str(skills).split('</a>')[1].split('>')[1]
+    attack_CHARGE_DPS = str(dps).split('<td>')[4].split('<sub')[0].strip()
+    
+    defense_FAST = str(skills).split('</a>')[2].split('>')[1]
+    defense_FAST_DPS = str(dps).split('<td>')[6].split('<sub')[0].strip()
+    defense_CHARGE = str(skills).split('</a>')[3].split('>')[1]
+    defense_CHARGE_DPS = str(dps).split('<td>')[8].split('<sub')[0].strip()
+    
+    #return rank
+    #print (attack_CHARGE_DPS)
+    second.write(pokemonName + ',')
+    #pokedexNumber pokemonName type1 type2 attack defense stamina rank lv15 lv20 lv25 lv30 lv35 lv40 walkDistance catchRate escapeRate attack_FAST attack_FAST_DPS attack_CHARGE attack_CHARGE_DPS defense_FAST defense_FAST_DPS defense_CHARGE defense_CHARGE_DPS
+    f.write('\n' + 
+            pokedexNumber + ',' + 
+            pokemonName + ',' + 
+            type1 + ',' + 
+            type2 + ',' + 
+            attack + ',' + 
+            defense + ',' + 
+            stamina + ',' + 
+            rank + ',' + 
+            lv15 + ',' + 
+            lv20 + ',' + 
+            lv25 + ',' + 
+            lv30 + ',' + 
+            lv35 + ',' + 
+            lv40 + ',' + 
+            walkDistance + ',' + 
+            catchRate + ',' + 
+            escapeRate + ',' + 
+            attack_FAST + ',' + 
+            attack_FAST_DPS + ',' + 
+            attack_CHARGE + ',' + 
+            attack_CHARGE_DPS + ',' + 
+            defense_FAST + ',' + 
+            defense_FAST_DPS + ',' + 
+            defense_CHARGE + ',' + 
+            defense_CHARGE_DPS)
+    
 
 
-'''
-for i in b : #문자열에서 핵심 문자열만 list_sillsigan 리스트에 추가
-    if k > 9 :
-        list_skills.append(i[5: -2])
-    else :
-        list_skills.append(i[4: -2])
-    k += 1
+for count in range(1,387):
+    if count != 151:
+        crawl_pokemonInfo(count)
 
-for s, list in enumerate(list_skills):
-#eumerate를 이용하면 s는 갯수를 셀수 있고 list는 목록 요소에 접근이 가능하다.
-    print(list) # 출력하기
-'''
+print (crawl_pokemonInfo(251));
 
-for s, list in enumerate(skills):
-    print ((str(list).split('>')[1]).split('<')[0])
+#crawl_pokemonInfo(248)
+
+print ("끝났다")
+
+f.close()
+
+
 

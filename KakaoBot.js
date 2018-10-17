@@ -3,7 +3,7 @@ const sdcard = android.os.Environment.getExternalStorageDirectory().getAbsoluteP
 
 /*상수 (객체) 선언*/
 const DoriDB = {}; const preChat = {}; const lastSender = {}; const botOn = {}; const basicDB = "basic";
-var currentTime = new Date(); var currentHour = currentTime.getHours(); var currentMinute = currentTime.getMinutes();
+var currentTime = new Date(); var currentHour = currentTime.getHours(); var currentMinute = currentTime.getMinutes(); var todayDate = (currentTime.getMonth()+1) + "월 " + currentTime.getDate() + "일"
 
 /*DoriDB 객체*/
 DoriDB.createDir = function() { //배운 채팅들이 저장될 폴더를 만드는 함수
@@ -50,14 +50,22 @@ Utils.getDustData = function() { //전국 미세먼지 정보 가져오는 함�
         var data = Utils.getTextFromWeb("https://m.search.naver.com/search.naver?where=m&sm=mtb_etc&mra=blQ3&query=%EC%84%9C%EC%9A%B8%20%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80");
         data = data.split("미세먼지</strong>")[1].split("예측영상")[0].replace(/(<([^>]+)>)/g, "");
         data = data.split("단위")[0].trim().split("   ");
+        var returnDust = "";
         for (var n = 0; n < data.length; n++) {
             var cc = data[n].trim().split(" ");
-            data[n] = cc[0] + " : " + Utils.dustLevel(Number(cc[1])) + " (" + cc[1] + "μg/m³)";
+            //종로 강남 서초 성북 송파 영등포 용산 동대문
+            if (cc[0].includes("종로") || cc[0].includes("강남") || cc[0].includes("서초") || cc[0].includes("성북") || cc[0].includes("송파") || cc[0].includes("영등포") || cc[0].includes("용산") || cc[0].includes("동대문")){
+                data[n] = cc[0] + " : " + Utils.dustLevel(Number(cc[1])) + " (" + cc[1] + "μg/m³)";
+                returnDust = returnDust + cc[0] + " : " + Utils.dustLevel(Number(cc[1])) + " (" + cc[1] + "μg/m³)\n";
+            } else {
+                data[n] = ''
+            }
         }
         var data2 = data.shift();
         data.sort();
         data.unshift(data2);
-        return data.join("\n");
+        //return data.join("\n");
+        return returnDust;
     } catch (e) {
         Log.debug("미세먼지 정보 불러오기 실패\n오류: " + e + "\n위치: " + e.lineNumber);
         return "미세먼지 정보 불러오기 실패\n오류: " + e;
@@ -69,14 +77,21 @@ Utils.getFineDustData = function() { //전국 초미세먼지 정보 가져오�
         var data = Utils.getTextFromWeb("https://m.search.naver.com/search.naver?where=m&sm=mtb_etc&mra=blQ3&query=%EC%84%9C%EC%9A%B8%20%EC%B4%88%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80");
         data = data.split("초미세먼지</strong>")[1].split("예측영상")[0].replace(/(<([^>]+)>)/g, "");
         data = data.split("단위")[0].trim().split("   ");
+        var returnDust = "";
         for (var n = 0; n < data.length; n++) {
             var cc = data[n].trim().split(" ");
-            data[n] = cc[0] + " : " + Utils.dustLevel(Number(cc[1])) + " (" + cc[1] + "μg/m³)";
+            if (cc[0].includes("종로") || cc[0].includes("강남") || cc[0].includes("서초") || cc[0].includes("성북") || cc[0].includes("송파") || cc[0].includes("영등포") || cc[0].includes("용산") || cc[0].includes("동대문")){
+                data[n] = cc[0] + " : " + Utils.dustLevel(Number(cc[1])) + " (" + cc[1] + "μg/m³)";
+                returnDust = returnDust + cc[0] + " : " + Utils.dustLevel(Number(cc[1])) + " (" + cc[1] + "μg/m³)\n";
+            } else {
+                data[n] = ''
+            }
         }
         var data2 = data.shift();
         data.sort();
         data.unshift(data2);
-        return data.join("\n");
+        //return data.join("\n");
+        return returnDust;
     } catch (e) {
         Log.debug("초미세먼지 정보 불러오기 실패\n오류: " + e + "\n위치: " + e.lineNumber);
         return "초미세먼지 정보 불러오기 실패\n오류: " + e;
@@ -275,6 +290,9 @@ function timeCheck (reportDum){
             } else if ((endHour < currentHour) && (currentHour!=12)) {
                 deleteThis = reportSplit[i];
                 reportSplitDummy.splice(reportSplitDummy.indexOf(deleteThis),1);
+            } else if ((endHour == 11) && (currentHour==12)){
+                dustLevel = reportSplit[i];
+                reportSplitDummy.splice(reportSplitDummy.indexOf(deleteThis),1);
             }
         }
     }
@@ -310,6 +328,7 @@ function keyToText (textKey, dbName){
 }
 
 function pokemonInfoReturn (pokemon){
+    if (pokemon.includes(" "))
     var dbToUse = DoriDB.readData("pokemonINFO");
     var keyNumber;
     var divideCategory = dbToUse.split("\n"); //첫 줄 빼기용
@@ -340,17 +359,35 @@ function pokemonInfoReturn (pokemon){
     var catchRate = dividePokemonInfo[15];
     var escapeRate = dividePokemonInfo[16];
     var attack_FAST = dividePokemonInfo[17];
-    var attack_CHARGE = dividePokemonInfo[18];
-    var defense_FAST = dividePokemonInfo[19];
-    var defense_CHARGE = dividePokemonInfo[20];
+    var attack_FAST_DPS = dividePokemonInfo[18];
+    var attack_CHARGE = dividePokemonInfo[19];
+    var attack_CHARGE_DPS = dividePokemonInfo[20]
+    var defense_FAST = dividePokemonInfo[21];
+    var defense_FAST_DPS = dividePokemonInfo[22];
+    var defense_CHARGE = dividePokemonInfo[23];
+    var defense_CHARGE_DPS = dividePokemonInfo[24];
     
     if (type2 != 'NONE'){
         type1 = type1 + '/' + type2;
     }
     
-    
+    /*
     if (pokemonName == pokemon){
         return pokemonName + " (도감 #" + pokedexNumber + ")\n타입 - " + type1 + "\n공격 " + attack + " / 방어 " + defense + " / 체력 " + stamina + "\n파트너 사탕거리 : " + walkDistance + "\n포획률 : " + catchRate + " / 도주율 : " + escapeRate + " \n\nCP (순위 #" + rank + ")\nLV15 : " + lv15 + "    LV20 : " + lv20 + "\nLV25 : " + lv25 + "    LV30 : " + lv30 + "\nLV35 : " + lv35 + "    LV40 : " + lv40 + "\n\n최고 공격 조합 : " + attack_FAST + " / " + attack_CHARGE + "\n최고 방어 조합 : " + defense_FAST + " / " + defense_CHARGE;
+    } */
+    if (pokemonName == pokemon){
+        return pokemonName + " (도감 #" + pokedexNumber + 
+            ")\n타입 - " + type1 + 
+            "\n공격 " + attack + " / 방어 " + defense + " / 체력 " + stamina + 
+            "\n파트너 사탕거리 : " + walkDistance + 
+            "\n포획률 : " + catchRate + " / 도주율 : " + escapeRate + 
+            "\n\nCP (순위 #" + rank + 
+            ")\nLV15 : " + lv15 + "    LV20 : " + lv20 + 
+            "\nLV25 : " + lv25 + "    LV30 : " + lv30 + 
+            "\nLV35 : " + lv35 + "    LV40 : " + lv40 + 
+            "\n\n최고 스킬 조합(DPS):\n공격: " + 
+            attack_FAST + "(" + attack_FAST_DPS + ") / " + attack_CHARGE + "(" + attack_CHARGE_DPS + 
+            ")\n방어: " + defense_FAST + "(" + defense_FAST_DPS + ") / " + defense_CHARGE + "(" + defense_CHARGE_DPS + ")";
     } else {return "something went wrong"}
 
     
@@ -414,7 +451,7 @@ function raidReportReturn (dbName, newReport, delReport){
         } else {
             DoriDB.saveData(dbName, "리서치 목록"); //제보 리셋
         }
-        raidInfo = "제보가 리셋되었습니다."
+        return raidInfo = "제보가 리셋되었습니다."
     } else if(delReport != null){
         raidInfo = reportDelete(raidInfo,delReport);
         DoriDB.saveData(dbName, raidInfo); //삭제된 리스트 새로 등록
@@ -476,6 +513,8 @@ function response(room, msg, sender, isGroupChat, replier) {
         replier.reply(msg);
     } else if (msg.includes("고ㅑ고ㅑ") || msg.includes("고ㅑ고ㅑ")){
         replier.reply(msg);
+    } else if (msg.includes("가즈아")){
+        replier.reply("가즈아ㅏㅏㅏㅏ");
     }
     
     if (msg.includes("도리")){ // 도리야 _____ 명령어
@@ -505,6 +544,10 @@ function response(room, msg, sender, isGroupChat, replier) {
             returnText = keyToText(null,"experience");
         } else if(msg.includes('지역락') && msg.includes('포켓몬')){
             returnText = keyToText(null,"regionLock");
+        } else if(msg.includes('가이드') && room.includes('고려대')){
+            returnText = "고려대학교 지역 레이드 가이드:\nhttps://sites.google.com/site/koreapogoguide/home"
+        } else if (msg == "나가" || msg == "꺼져"){
+            returnText = "왜요ㅠㅠ";
         }
         
         if(msg.includes('평가')){
@@ -524,11 +567,11 @@ function response(room, msg, sender, isGroupChat, replier) {
             returnText = pokemonInfoReturn(msg);
         }
         if (msg.includes("날씨")){
-            returnText = Utils.getWeather();
+            returnText = "[" + todayDate + " 날씨 정보]\n" + Utils.getWeather() + "\n트레이너분들 건강하세요~!";
         } else if (msg.includes("초미세먼지")) {
-            returnText = "[초미세먼지 정보]\n" + Utils.getFineDustData();
+            returnText = "[" + todayDate + " 초미세먼지 정보]\n\n" + Utils.getFineDustData() + "\n트레이너분들 건강하세요~!";
         } else if (msg.includes("미세먼지")) {
-            returnText = "[미세먼지 정보]\n" + Utils.getDustData();
+            returnText = "[" + todayDate + " 미세먼지 정보]\n\n" + Utils.getDustData() + "\n트레이너분들 건강하세요~!";
         }
         if (msg.includes("주사위")) {
             var icon = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
@@ -576,12 +619,12 @@ function response(room, msg, sender, isGroupChat, replier) {
             }
         } else if (msg.includes('에쇼') && msg.includes('하우스') && msg.includes('메뉴')){
             returnText = keyToText("에쇼하우스","quote");
-        }
+        } // else if XXXXX 정보 -> 사람 한마디
         
-        if((msg.includes('비밀번호') || (msg.includes('비번'))) && room.includes("도곡")){
+        if(msg.includes('비밀번호') || (msg.includes('비번'))){
             if(room.includes("고려대학교")){
-                returnText = "방 번호는 그렇게 쉽게 알려줄 수 없지 후후";
-            } else {
+                returnText = "연대는 1885, 우리는!";
+            } else if (room.includes('도곡')) {
                 returnText = "현재 도곡방 입장 비밀번호는 2018이에요! 가끔 새로 바뀐답니다!";
             }
         }
@@ -623,13 +666,13 @@ function response(room, msg, sender, isGroupChat, replier) {
         returnText = raidReportReturn(useReport, null, "DELETE ALL");
     } else if (msg =="리서치 리셋" || msg == "리서치 리셋해줘"){
         returnText = raidReportReturn(useResearch, null, "DELETE ALL");
-    } else if ((msg.includes('삭제') || msg.includes('오보') || msg.includes("끝났어") || msg.includes("만료")) && !msg.includes("리서치")){
+    } else if ((msg.includes('삭제해줘') || msg.includes('삭제 해줘') || msg.includes('오보') || msg.includes("끝났어") || msg.includes("만료")) && !msg.includes("리서치")){
         msg = msg.replace('시간만료',''); msg = msg.replace('끝났어',''); msg = msg.replace('만료','');
-        msg = msg.replace('삭제해줘',''); msg = msg.replace('삭제',''); msg = msg.replace('오보',''); msg = msg.trim();
+        msg = msg.replace('삭제해줘',''); msg = msg.replace('오보',''); msg = msg.trim();
         returnText = raidReportReturn(useReport,null,msg);
         replier.reply(msg + " 제보가 삭제 되었습니다.");        
-    } else if ((msg.includes("리서치") && (msg.includes("삭제") || msg.includes("제거")))){
-        msg = msg.replace('끝났어',''); msg = msg.replace('삭제해줘',''); msg = msg.replace('삭제','');
+    } else if ((msg.includes("리서치") && (msg.includes("삭제해줘") || msg.includes("제거")))){
+        msg = msg.replace('끝났어',''); msg = msg.replace('삭제해줘',''); msg = msg.replace('삭제 해줘','');
         msg = msg.replace('오보',''); msg = msg.trim();
         returnText = raidReportReturn(useResearch,null,msg);
     }
