@@ -545,7 +545,7 @@ function response(room, msg, sender, isGroupChat, replier) {
         } else if(msg.includes('지역락') && msg.includes('포켓몬')){
             returnText = keyToText(null,"regionLock");
         } else if(msg.includes('가이드') && room.includes('고려대')){
-            returnText = "고려대학교 지역 레이드 가이드:\nhttps://sites.google.com/site/koreapogoguide/home"
+            returnText = "고려대학교 지역 레이드 가이드:\nhttps://goo.gl/PKrEX8"
         } else if (msg == "나가" || msg == "꺼져"){
             returnText = "왜요ㅠㅠ";
         }
@@ -578,11 +578,18 @@ function response(room, msg, sender, isGroupChat, replier) {
             returnText = icon[Math.floor(Math.random() * 6)];
         }
 
-        
+        if (msg.includes('한테') && msg.includes('인사')){
+            msg = msg.replace('님',''); msg = msg.split('한테')[0]; msg = msg.trim();
+            if (msg.includes(' ')){
+                msg = msg.split(' '); msg = msg[msg.length - 1];
+            }   
+            returnText = "안녕하세요 " + msg + "님! 반가워요!!😆😆😆";
+        }
         if (msg.includes('잘자') || msg.includes('굿밤') || msg.includes('굿나잇') || msg.includes('좋은밤') || msg.includes('좋은 밤')){
-            returnText = keyToText("GOODBYE","hello");
+            if (sender.includes("/")){sender = sender.split('/')[0];}
+            returnText = sender + "님 " + keyToText("GOODBYE","hello");
         } else if (msg.includes('좋은 아침') || msg.includes('굿모닝') || msg.includes('좋은아침') || msg.includes('잘잤어?')){
-            returnText = keyToText("GOODMORNING","hello");
+            returnText = sender + "님 " + keyToText("GOODMORNING","hello");
         } else if (msg.includes('잘했어') || msg.includes('최고') || msg.includes('짱') || msg.includes('수고') || msg.includes('고마')){
             returnText = keyToText("GOODJOB","hello");
         }
@@ -637,17 +644,18 @@ function response(room, msg, sender, isGroupChat, replier) {
         if(msg.includes('바보') || msg.includes('멍청이')){returnText = '아니에요ㅡㅡ매일매일 진화하고 있는걸요!';}
         if(msg.includes('이쁜짓') || msg.includes('애교')){returnText = '(심각)';}
         if(msg.includes('안녕')){
+            if (sender.includes("/")){sender = sender.split('/')[0];}
             var nowHour = currentTime.getHours();
             if (nowHour > 11 && nowHour < 18){
-                returnText = "네 안녕하세요 트레이너님! 오늘도 좋은 하루 되세요😊😊😊";
+                returnText = "네 안녕하세요 " + sender + "님! 오늘도 좋은 하루 되세요😊😊😊";
             } else if (nowHour > 17 && nowHour < 20) {
                 returnText = "네 트레이너님! 좋은 저녁이에요ㅎㅎ 저녁 맛있게 드세요~!😋😋😋";
             } else if (nowHour > 19 || nowHour < 2){
-                returnText = "네 트레이너님! 좋은 밤 되세요~!!😴😴😴";
+                returnText = "네 " + sender + "님! 좋은 밤 되세요~!!😴😴😴";
             } else if (nowHour > 1 && nowHour < 5){
-                returnText = "헉 트레이너님! 안주무세요!?!? 어서 주무세요!!😱😱😱";
+                returnText = "헉 " + sender + "님! 안주무세요!?!? 어서 주무세요!!😱😱😱";
             } else if (nowHour < 11){
-                returnText = "안녕하세요 트레이너님! 좋은 아침이에요😊😊😊";
+                returnText = "안녕하세요 " + sender + "님! 좋은 아침이에요😊😊😊";
             } else {
                 returnText = "안녕하세요 트레이너님!☺️";
             }
