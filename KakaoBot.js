@@ -508,7 +508,7 @@ function response(room, msg, sender, isGroupChat, replier) {
     var useReport = "report"; var useResearch = 'research';
     if (room.includes("고려대학교")){useReport = "korReport"; useResearch = "korResearch"}
     
-    if (msg.includes("퍄퍄드립") || msg.includes("퍄퍄 드립") || msg.includes("퍄퍄합")){
+    if (msg.includes("퍄퍄드립") || msg.includes("퍄퍄 드립") || msg.includes("퍄퍄합") || msg.includes("퍄퍄!")){
         replier.reply(msg);
     } else if (msg.includes("고ㅑ고ㅑ") || msg.includes("고ㅑ고ㅑ")){
         replier.reply(msg);
@@ -517,7 +517,13 @@ function response(room, msg, sender, isGroupChat, replier) {
     }
     
     if (msg.includes("도리")){ // 도리야 _____ 명령어
-        msg = msg.replace("도리야?",""); msg = msg.replace("도리야",""); msg = msg.replace("도리",""); msg = msg.trim(); //문장에서 도리 제거
+        if((msg == "도리야 팽도리 정보") || msg == "도리야 팽도리 개체" || msg == "도리 팽도리 개체" || msg == "도리 팽도리 정보"){
+            msg = "팽도리 정보"
+        } else {
+            msg = msg.replace("도리야?",""); msg = msg.replace("도리야",""); msg = msg.replace("도리",""); //문장에서 도리 제거
+        }
+        msg = msg.trim(); 
+        
         if (msg.includes("띠꾸") && Math.floor(Math.random() * 3) != 0) {
             replier.reply("띠꾸혀엉");
             if (Math.floor(Math.random() * 3) == 0) {
@@ -526,7 +532,7 @@ function response(room, msg, sender, isGroupChat, replier) {
             }
         }
         
-        if (msg == "사용법" || (msg.includes("누구야?") && msg.includes("넌"))){
+        if (msg == "사용법" || ((msg.includes("누구야?") && msg.includes("넌") || msg.includes("자기소개")))){
             returnText = keyToText(null,"doriguide");
         } else if (msg.includes("둥지")){
             returnText = keyToText(null,"nest")
@@ -546,19 +552,13 @@ function response(room, msg, sender, isGroupChat, replier) {
         } else if(msg.includes('가이드') && room.includes('고려대')){
             returnText = "고려대학교 지역 레이드 가이드:\nhttps://goo.gl/PKrEX8"
         } else if (msg == "나가" || msg == "꺼져"){
-            returnText = "왜요ㅠㅠ";
+            returnText = "더 잘할게요...ㅠㅠ내쫓지 말아주세요ㅠㅠ";
         }
         
         if(msg.includes('평가')){
-            if(msg.includes('발러')){
-                returnText = keyToText(null,"valorAppraise");
-            }
-            if(msg.includes('미스틱')){
-               returnText = keyToText(null,"mysticAppraise");
-            }
-            if(msg.includes('인스')){
-                returnText = keyToText(null,"instinctAppraise");
-            }
+            if(msg.includes('발러')){returnText = keyToText(null,"valorAppraise");}
+            if(msg.includes('미스틱')){returnText = keyToText(null,"mysticAppraise");}
+            if(msg.includes('인스')){returnText = keyToText(null,"instinctAppraise");}
         }
         
         if (msg.includes("정보") || msg.includes("개체")){
@@ -644,7 +644,7 @@ function response(room, msg, sender, isGroupChat, replier) {
         if(msg.includes('이쁜짓') || msg.includes('애교')){returnText = '(심각)';}
         if(msg.includes('안녕')){
             if (sender.includes("/")){sender = sender.split('/')[0];}
-            var nowHour = currentTime.getHours();
+            var nowHour = new Date().getHours();
             if (nowHour > 11 && nowHour < 18){
                 returnText = "네 안녕하세요 " + sender + "님! 오늘도 좋은 하루 되세요😊😊😊";
             } else if (nowHour > 17 && nowHour < 20) {
