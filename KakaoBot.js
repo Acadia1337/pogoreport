@@ -328,7 +328,6 @@ function keyToText (textKey, dbName){
 }
 
 function pokemonInfoReturn (pokemon){
-    if (pokemon.includes(" "))
     var dbToUse = DoriDB.readData("pokemonINFO");
     var keyNumber;
     var divideCategory = dbToUse.split("\n"); //첫 줄 빼기용
@@ -578,8 +577,8 @@ function response(room, msg, sender, isGroupChat, replier) {
             returnText = icon[Math.floor(Math.random() * 6)];
         }
 
-        if (msg.includes('한테') && msg.includes('인사')){
-            msg = msg.replace('님',''); msg = msg.split('한테')[0]; msg = msg.trim();
+        if ((msg.includes('한테') || msg.includes('께')) && msg.includes('인사')){
+            msg = msg.replace("께",""); msg = msg.replace('님',''); msg = msg.split('한테')[0]; msg = msg.trim();
             if (msg.includes(' ')){
                 msg = msg.split(' '); msg = msg[msg.length - 1];
             }   
@@ -635,7 +634,7 @@ function response(room, msg, sender, isGroupChat, replier) {
                 returnText = "현재 도곡방 입장 비밀번호는 2018이에요! 가끔 새로 바뀐답니다!";
             }
         }
-        if (msg.includes("트레이너") && msg.includes("코드")){
+        if (msg.includes("트레이너") && (msg.includes("코드") || msg.includes("목록"))){
             if (room.includes("도곡")){
                 returnText = "도곡방 트레이너코드 : https://goo.gl/z7ib37\n\n친구 필요하시면 방장님꺼 등록하세요!!\n하입 부캐 : 0293 2668 5480\n하입 부부캐 : 1255 9840 5201";
             } else if (room.includes("고려대")){returnText = "고대방 트레이너코드 : https://goo.gl/dHSwSW";}
