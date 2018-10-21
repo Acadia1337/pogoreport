@@ -553,6 +553,8 @@ function response(room, msg, sender, isGroupChat, replier) {
             returnText = "고려대학교 지역 레이드 가이드:\nhttps://goo.gl/PKrEX8"
         } else if (msg == "나가" || msg == "꺼져"){
             returnText = "더 잘할게요...ㅠㅠ내쫓지 말아주세요ㅠㅠ";
+        } else if (msg.includes("메탕") && (msg.includes('CP') || msg.includes('씨피') || msg.includes('cp') || msg.includes('시피'))){
+            returnText = keyToText(null,'metang');
         }
         
         if(msg.includes('평가')){
