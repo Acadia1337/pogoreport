@@ -580,7 +580,7 @@ function response(room, msg, sender, isGroupChat, replier) {
         }
 
         if ((msg.includes('한테') || msg.includes('께')) && msg.includes('인사')){
-            msg = msg.replace("께",""); msg = msg.replace('님',''); msg = msg.split('한테')[0]; msg = msg.trim();
+            msg = msg.replace("께","한테"); msg = msg.replace('님',''); msg = msg.split('한테')[0]; msg = msg.trim();
             if (msg.includes(' ')){
                 msg = msg.split(' '); msg = msg[msg.length - 1];
             }   
