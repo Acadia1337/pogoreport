@@ -705,3 +705,4 @@ function response(room, msg, sender, isGroupChat, replier) {
     
     if (returnText != "none"){replier.reply(returnText);}
 }
+//backup 708
