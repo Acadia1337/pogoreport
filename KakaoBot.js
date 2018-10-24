@@ -358,12 +358,8 @@ function pokemonInfoReturn (pokemon){
     if (type2 != 'NONE'){
         type1 = type1 + '/' + type2;
     }
-    
-    /*
-    if (pokemonName == pokemon){
-        return pokemonName + " (도감 #" + pokedexNumber + ")\n타입 - " + type1 + "\n공격 " + attack + " / 방어 " + defense + " / 체력 " + stamina + "\n파트너 사탕거리 : " + walkDistance + "\n포획률 : " + catchRate + " / 도주율 : " + escapeRate + " \n\nCP (순위 #" + rank + ")\nLV15 : " + lv15 + "    LV20 : " + lv20 + "\nLV25 : " + lv25 + "    LV30 : " + lv30 + "\nLV35 : " + lv35 + "    LV40 : " + lv40 + "\n\n최고 공격 조합 : " + attack_FAST + " / " + attack_CHARGE + "\n최고 방어 조합 : " + defense_FAST + " / " + defense_CHARGE;
-    } */
-    if (pokemonName == pokemon){
+
+    if (pokemonName.split('[')[0] == pokemon){
         return pokemonName + " (도감 #" + pokedexNumber + 
             ")\n타입 - " + type1 + 
             "\n공격 " + attack + " / 방어 " + defense + " / 체력 " + stamina + 
@@ -437,7 +433,7 @@ function raidReportReturn (dbName, newReport, delReport){
         if (nonReport==0){
             DoriDB.saveData(dbName, "레이드 제보"); //제보 리셋
         } else {
-            DoriDB.saveData(dbName, "리서치 목록"); //제보 리셋
+            DoriDB.saveData(dbName, todayDate + " 리서치 목록"); //제보 리셋
         }
         return raidInfo = "제보가 리셋되었습니다."
     } else if(delReport != null){
@@ -446,6 +442,50 @@ function raidReportReturn (dbName, newReport, delReport){
     }
     if (nonReport==0){raidInfo = timeCheck(raidInfo); raidInfo = timeCheck(raidInfo); raidInfo = timeCheck(raidInfo);}
     return raidInfo;
+}
+
+function researchReturn (dbName, newReport){
+    var currentReport = DoriDB.readData(dbName); // 현재 방의 리서치 목록
+    var researchInfo = DoriDB.readData('researchDivide'); // 리서치 찾을 사전
+    var researchInput = newReport.split(' ')[newReport.split(' ').length-1] + ''; // 마지막 단어. 보통 미뇽
+    var researchInput2 = newReport.split(' ')[newReport.split(' ').length-2] + ''; // 마지막에서 두번째 단어. 보통 장소
+    var researchFind = researchInfo.split('\n');
+    var researchPokemonName = researchFind[0].split(',');
+    var researchToPut = ''; var researchTitle = '';
+    for (var i = 0; i < 23; i++){
+        if (researchFind[i].includes(researchInput)){
+            researchToPut = newReport.replace(researchInput, ''); researchTitle = researchFind[i].split(',')[0] + ""; break;
+        } else if(researchFind[i].includes(researchInput2)){
+            researchToPut = newReport.replace(researchInput2, ''); researchTitle = researchFind[i].split(',')[0] + ""; break;
+        }
+    } // 리서치를 사전에서 찾는 것
+
+    var researchBreakDown = currentReport.split('\n'); // 현재 리포트를 나눠서 뽑음
+    researchTitle = researchTitle.trim(); researchToPut = researchToPut.trim();
+    if (currentReport.includes(researchTitle)){
+        for (var i = 0; i < researchBreakDown.length; i++){
+            if (researchBreakDown[i].includes(researchTitle)){
+                researchBreakDown.splice(i+1,0,researchToPut);
+                currentReport = todayDate + ' 리서치 목록';
+                break;
+            }
+        }
+    } else {
+        researchBreakDown = researchBreakDown.concat(['[' + researchTitle + ']',researchToPut]);
+        currentReport = todayDate + ' 리서치 목록';
+    }
+    // 리서치 끼워넣기
+    for (var i = 1; i < researchBreakDown.length; i++){
+        if (researchBreakDown[i].includes('[') && i > 2 && researchBreakDown[i-1]!=''){
+            currentReport = currentReport + "\n\n" + researchBreakDown[i];
+        } else {
+            currentReport = currentReport + "\n" + researchBreakDown[i];
+        }
+        
+    } // 리서치 저장 할 준비
+
+    DoriDB.saveData(dbName, currentReport); //리서치 저장
+    return currentReport;
 }
 
 function procCmd(room, cmd, sender, replier) {
@@ -523,12 +563,14 @@ function response(room, msg, sender, isGroupChat, replier) {
         
         if (msg == "사용법" || ((msg.includes("누구야?") && msg.includes("넌") || msg.includes("자기소개")))){
             returnText = keyToText(null,"doriguide");
-        } else if(msg.includes("뉴비 가이드")){
+        } else if(msg.includes("뉴비 가이드") && room.includes('고려대')){
             returnText = keyToText(null,"newbie");
         } else if (msg.includes("둥지")){
             returnText = keyToText(null,"nest")
-        } else if ((msg.includes('이벤트')) || (msg.includes('글로벌 챌린지'))) {
+        } else if (((msg.includes('이벤트')) || (msg.includes('글로벌 챌린지'))) && !msg.includes('할로윈')) {
             returnText = keyToText(null,"event");
+        } else if (msg.includes('할로윈') && msg.includes('이벤트')){
+            returnText = keyToText(null,"halloween");
         } else if(msg.includes('커뮤니티') || msg.includes('커뮤데이')){
             returnText = keyToText(null,"community");
         } else if(msg.includes('성공') && msg.includes('조건')){
@@ -547,13 +589,14 @@ function response(room, msg, sender, isGroupChat, replier) {
             returnText = "고려대학교 지역 레이드 가이드:\nhttps://goo.gl/PKrEX8"
         } else if (msg == "나가" || msg == "꺼져"){
             returnText = "더 잘할게요...ㅠㅠ내쫓지 말아주세요ㅠㅠ";
-<<<<<<< HEAD
         } else if ((msg.includes('보스') || msg.includes('레이드')) && (msg.includes('목록') || msg.includes('리스트'))){
             returnText = keyToText(null,"raidBossList2");
-=======
         } else if (msg.includes("메탕") && (msg.includes('CP') || msg.includes('씨피') || msg.includes('cp') || msg.includes('시피'))){
             returnText = keyToText(null,'metang');
->>>>>>> eb8e60f346eebaeb884fa9e08652a73bd57ab44a
+        } else if (msg.includes('화강돌') && msg.includes('리서치')){
+            returnText = keyToText(null,'spiritombResearch'); msg = '화강돌';
+        } else if (msg.includes('출석부')){
+            returnText = keyToText(null,'roster');
         }
         
         if(msg.includes('평가')){
@@ -700,7 +743,7 @@ function response(room, msg, sender, isGroupChat, replier) {
         returnText = raidReportReturn(useReport, raidReport(msg), null);
     } else if (msg.includes("리서치") && msg.includes("제보")){
         msg = msg.replace("제보", ""); msg = msg.replace("리서치",""); msg = msg.trim();
-        returnText = raidReportReturn(useResearch, msg, null);
+        returnText = researchReturn(useResearch, msg);
     }
     
     if (returnText != "none"){replier.reply(returnText);}

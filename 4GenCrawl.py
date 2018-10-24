@@ -10,7 +10,7 @@ def crawl_pokemonInfo(number):
 
     pokemonName = (str(soup.select('h1.mobile-only.mobile-title')).split('>'))[1].split('(Pok')[0].strip()
     
-    if '의 모습' in pokemonName:
+    if '-' in pokemonName:
         pokemonName = str(pokemonName.split('-')[0]).strip()
     
     pokedexNumber = (str(soup.select('div.togglable > p > a.button')).split('-')[0]).split('/')[-1]
@@ -19,6 +19,84 @@ def crawl_pokemonInfo(number):
     if "subtype" in str(type1):
         type2 = (str(type1).split('">')[3]).split('</')[0]
     type1 = (str(type1).split('">')[2]).split('</')[0]
+    
+    if type1 == "Normal":
+        type1 = "노말"
+    elif type1 == "Fighting":
+        type1 = "격투"
+    elif type1 == "Flying":
+        type1 = "비행"
+    elif type1 == "Poison":
+        type1 = "독"
+    elif type1 == "Ground":
+        type1 = "땅"
+    elif type1 == "Rock":
+        type1 = "바위"
+    elif type1 == "Bug":
+        type1 = "벌레"
+    elif type1 == "Ghost":
+        type1 = "고스트"
+    elif type1 == "Steel":
+        type1 = "강철"
+    elif type1 == "Fire":
+        type1 = "불꽃"
+    elif type1 == "Water":
+        type1 = "물"
+    elif type1 == "Grass":
+        type1 = "풀"
+    elif type1 == "Electric":
+        type1 = "전기"
+    elif type1 == "Psychic":
+        type1 = "에스퍼"
+    elif type1 == "Ice":
+        type1 = "얼음"
+    elif type1 == "Dragon":
+        type1 = "드래곤"
+    elif type1 == "Dark":
+        type1 = "악"
+    elif type1 == "Fairy":
+        type1 = "페어리"
+    
+    
+    if type2 == "Normal":
+        type2 = "노말"
+    elif type2 == "Fighting":
+        type2 = "격투"
+    elif type2 == "Flying":
+        type2 = "비행"
+    elif type2 == "Poison":
+        type2 = "독"
+    elif type2 == "Ground":
+        type2 = "땅"
+    elif type2 == "Rock":
+        type2 = "바위"
+    elif type2 == "Bug":
+        type2 = "벌레"
+    elif type2 == "Ghost":
+        type2 = "고스트"
+    elif type2 == "Steel":
+        type2 = "강철"
+    elif type2 == "Fire":
+        type2 = "불꽃"
+    elif type2 == "Water":
+        type2 = "물"
+    elif type2 == "Grass":
+        type2 = "풀"
+    elif type2 == "Electric":
+        type2 = "전기"
+    elif type2 == "Psychic":
+        type2 = "에스퍼"
+    elif type2 == "Ice":
+        type2 = "얼음"
+    elif type2 == "Dragon":
+        type2 = "드래곤"
+    elif type2 == "Dark":
+        type2 = "악"
+    elif type2 == "Fairy":
+        type2 = "페어리"
+    
+    
+    
     bigTable = soup.select('table.table-stats > tr > td')
     statTable = str(bigTable).split('<td>')
     skills = soup.select('table.moveset > tr > td > a')
@@ -89,7 +167,7 @@ def crawl_pokemonInfo(number):
             defense_CHARGE_DPS)
     
 
-"""
+
 for count in range(1,494):
     if count != 151:
         crawl_pokemonInfo(count)
@@ -100,13 +178,15 @@ crawl_pokemonInfo("351/sunny")
 crawl_pokemonInfo("351/rainy")
 crawl_pokemonInfo("351/snowy")
 
-
+"""
 
 #crawl_pokemonInfo(248)
 
 print ("끝났다")
 
 f.close()
+
+#151,뮤,Psychic,NONE,210,210,200,25,1324,1766,2207,2649,2870,3090,20 km,10000%,0%,섀도크루,12.9,솔라빔,36.7,볼트체인지,8.7,솔라빔,36.7
 
 '''
 351,캐스퐁,Normal,NONE,139,139,140,285,636,849,1061,1273,1379,1486,5 km,30%,10%,몸통박치기,12,폭풍,40.7,병상첨병,8.3,에너지볼,23.1
