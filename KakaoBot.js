@@ -433,6 +433,7 @@ function raidReportReturn (dbName, newReport, delReport){
         if (nonReport==0){
             DoriDB.saveData(dbName, "레이드 제보"); //제보 리셋
         } else {
+            timeRenew();
             DoriDB.saveData(dbName, todayDate + " 리서치 목록"); //제보 리셋
         }
         return raidInfo = "제보가 리셋되었습니다."
@@ -452,7 +453,7 @@ function researchReturn (dbName, newReport){
     var researchFind = researchInfo.split('\n');
     var researchPokemonName = researchFind[0].split(',');
     var researchToPut = ''; var researchTitle = '';
-    for (var i = 0; i < 23; i++){
+    for (var i = 0; i < 24; i++){
         if (researchFind[i].includes(researchInput)){
             researchToPut = newReport.replace(researchInput, ''); researchTitle = researchFind[i].split(',')[0] + ""; break;
         } else if(researchFind[i].includes(researchInput2)){
