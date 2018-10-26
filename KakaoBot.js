@@ -9,8 +9,7 @@ var currentTime = new Date(); var currentHour = currentTime.getHours(); var curr
 DoriDB.createDir = function() { //배운 채팅들이 저장될 폴더를 만드는 함수
     var folder = new java.io.File(sdcard + "/Dori/"); //File 인스턴스 생성
     folder.mkdirs(); //폴더 생성
-};
-DoriDB.saveData = function(name, msg) { //파일에 내용을 저장하는 함수
+}; DoriDB.saveData = function(name, msg) { //파일에 내용을 저장하는 함수
     try {
         var file = new java.io.File(sdcard + "/Dori/" + name + ".txt");
         var fos = new java.io.FileOutputStream(file);
@@ -20,8 +19,7 @@ DoriDB.saveData = function(name, msg) { //파일에 내용을 저장하는 함�
     } catch (e) {
         Log.debug(e + ", " + e.lineNumber);
     }
-};
-DoriDB.readData = function(name) { //파일에 저장된 내용을 불러오는 함수
+}; DoriDB.readData = function(name) { //파일에 저장된 내용을 불러오는 함수
     try {
         var file = new java.io.File(sdcard + "/Dori/" + name + ".txt");
         if (!file.exists()) return null;
@@ -70,8 +68,7 @@ Utils.getDustData = function() { //전국 미세먼지 정보 가져오는 함�
         Log.debug("미세먼지 정보 불러오기 실패\n오류: " + e + "\n위치: " + e.lineNumber);
         return "미세먼지 정보 불러오기 실패\n오류: " + e;
     }
-};
-Utils.getFineDustData = function() { //전국 초미세먼지 정보 가져오는 함수
+}; Utils.getFineDustData = function() { //전국 초미세먼지 정보 가져오는 함수
     try {
         //var data = Utils.getTextFromWeb("https://m.search.naver.com/search.naver?query=미세먼지");
         var data = Utils.getTextFromWeb("https://m.search.naver.com/search.naver?where=m&sm=mtb_etc&mra=blQ3&query=%EC%84%9C%EC%9A%B8%20%EC%B4%88%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80");
@@ -96,8 +93,7 @@ Utils.getFineDustData = function() { //전국 초미세먼지 정보 가져오�
         Log.debug("초미세먼지 정보 불러오기 실패\n오류: " + e + "\n위치: " + e.lineNumber);
         return "초미세먼지 정보 불러오기 실패\n오류: " + e;
     }
-};
-Utils.getWeather = function() { //강남구 날씨 정보 가져오는 함수
+}; Utils.getWeather = function() { //강남구 날씨 정보 가져오는 함수
     try {
         var data = Utils.getTextFromWeb("https://m.search.naver.com/search.naver?query=%EA%B0%95%EB%82%A8%EA%B5%AC+%EB%82%A0%EC%94%A8&sm=mtb_hty.top&where=m&oquery=%EC%84%9C%EC%9A%B8+%EB%82%A0%EC%94%A8&tqi=T8f2wdpVupossZ16ktRssssssCo-130430");
         var temperature = data.split('현재온도</span><em class="figure degree_code">')[1].split('</em></strong> <span class="chill_temp"><span>')[0];
@@ -125,8 +121,7 @@ Utils.dustLevel = function(value) {
     if (value <= 80) return "보통";
     if (value <= 150) return "나쁨";
     return "매우나쁨";
-};
-Utils.getTextFromWeb = function(url) {
+}; Utils.getTextFromWeb = function(url) {
     try {
         var url = new java.net.URL(url);
         var con = url.openConnection();
@@ -598,6 +593,8 @@ function response(room, msg, sender, isGroupChat, replier) {
             returnText = keyToText(null,'spiritombResearch'); msg = '화강돌';
         } else if (msg.includes('출석부')){
             returnText = keyToText(null,'roster');
+        } else if (msg.includes('이로치')){
+            returnText = keyToText(null,'shiny');
         }
         
         if(msg.includes('평가')){
@@ -635,6 +632,13 @@ function response(room, msg, sender, isGroupChat, replier) {
             } else {
                 returnText = "정말 잘하셨어요!! " + tempMsg + " 칭찬해 😉😉😉";
             }
+        } else if (msg.includes('위로')){
+            var tempMsg = msg.split(' ')[0]; tempMsg.replace('님','')
+            if (tempMsg == '나' || tempMsg.includes('위로')){
+                returnText = "아쉽네요ㅠㅠ " + sender + " 위로해 😢😢😢";
+            } else {
+                returnText = "아쉽네요ㅠㅠ " + tempMsg + " 위로해 😢😢😢";
+            } 
         }
         if (msg.includes('잘자') || msg.includes('굿밤') || msg.includes('굿나잇') || msg.includes('좋은밤') || msg.includes('좋은 밤')){
             if (sender.includes("/")){sender = sender.split('/')[0];}
