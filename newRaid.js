@@ -1,5 +1,5 @@
 var currentTime = new Date();
-var raidList = "레이드 목록\n13,45,14,30,작은분수\n13,50,14,35,군인공제 5성\n14,00,14,45,타팰 사과 5성"
+var raidList = "레이드 목록\n12,20,13,05,서울교회\n13,45,14,30,작은분수\n13,50,14,35,군인공제 5성\n14,00,14,45,타팰 사과 5성\n15,30,16,15,대치711"
 //11:50
 //11시50분
 //11시50
@@ -55,19 +55,20 @@ function timeSet (raidContent){
     var reportedTime = parseInt(endHR + '' + endMIN);
 
     var timeSort = raidList.split('\n');
-    var compareTime; var reportIndex = 1;
+    var compareTime; var reportIndex = 100;
     for (var i = 1; i < timeSort.length; i++){
         compareTime = parseInt(timeSort[i].split(',')[2] + timeSort[i].split(',')[3]);
-        if (reportedTime < compareTime){ // RT가 11시, CT가 12시면
+        if (reportedTime <= compareTime){ // RT가 11시, CT가 12시면
             reportIndex = i; break;
         }
     }
-    
-    // 끝나는 시간이 1시를 넘으면 그때 문제다
-    
-    //raidList = raidList + "\n" + startHR + "," + startMIN + "," + endHR + "," + endMIN + "," + raidContent;
-    
-    return reportIndex;
+    if (reportIndex == 100){ // 안돌았으니 제일 늦은시간대인거임
+        raidList = raidList + "\n" + startHR + "," + startMIN + "," + endHR + "," + endMIN + "," + raidContent;
+    } else { //아니면 해당 시간에 넣기
+        timeSort.splice(i,0,startHR + "," + startMIN + "," + endHR + "," + endMIN + "," + raidContent);
+        raidList = timeSort.join('\n');
+    }
+    return raidList;
 }
 
 function delReport (toDel){
@@ -87,5 +88,39 @@ function delReport (toDel){
     return raidList;
 }
 
+function printReport (raidList){
+    var listInTwelve = raidList.split('\n');
+    var listForSending = "레이드 제보";
+    for (var i = 1; i < listInTwelve.length-1; i++){
+        var tempStartHR = parseInt(listInTwelve[i].split(',')[0]);
+        var tempStartMIN = parseInt(listInTwelve[i].split(',')[1]);
+        var tempEndHR = parseInt(listInTwelve[i].split(',')[2]);
+        var tempEndMIN = parseInt(listInTwelve[i].split(',')[3]);
+        //시간 지나면 자동 삭제 하기
+        if ((currentTime.getHours() > tempEndHR) || ((currentTime.getHours() == tempEndHR) && currentTime.getTime() > tempEndMIN)){ // 시간이 더 크거나, 시간이 같지만 분이 더 클떄
+            delReport(listInTwelve[i].split(',')[4]);
+        } else {
+            if (tempStartHR > 12){
+                tempStartHR = tempStartHR - 12;
+            }
+            if (tempEndHR > 12){
+                tempEndHR = tempEndHR - 12;
+            }
+            if (tempStartMIN == 0){
+                tempStartMIN = "00";
+            }
+            if (tempEndMIN == 0){
+                tempEndMIN = "00;"
+            }
+            listForSending = listForSending + '\n' + tempStartHR + ':' + tempStartMIN + '~' + tempEndHR + ':' + tempEndMIN + ' ' + listInTwelve[i].split(',')[4];
+        }
+    }
+    return listForSending;
+}
+
+
+
 //console.log(timeSet("11시 30분 711 제보"));
-console.log(timeSet('3시 57분 가라가라 제보'));
+//console.log(timeSet('1시 50분 가라가라 제보'));
+//console.log(delReport('군인공제 삭제해줘'));
+console.log(printReport(raidList));
