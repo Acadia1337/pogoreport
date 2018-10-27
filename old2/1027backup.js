@@ -151,6 +151,156 @@ function timeRenew(){
     currentTime = new Date(); currentHour = currentTime.getHours(); currentMinute = currentTime.getMinutes();
 }
 
+function isInt(value) {
+  return !isNaN(value) && parseInt(Number(value)) == value && !isNaN(parseInt(value, 10));
+}
+
+function raidReport(msgTwo) {
+    currentTime = new Date(); var i;
+    var splitMessage = msgTwo.split(' '); var dummySplit=msgTwo.split(' ');
+    var msgTime = ''; var msgTime2; var msgHour; var msgMin; var endHour;
+    var endMin; var raidTime; var raidSentence; var cutOutRaid; var cutCheck=0;
+
+    for (i=0; i<splitMessage.length; i++){
+        if (splitMessage[i].includes("제보")){
+            splitMessage.splice(i,1);
+        }
+    }
+
+    for (i=0; i<splitMessage.length; i++){
+        if (splitMessage[i].includes("시") && (splitMessage[i].slice(-1)!='시')){
+            msgTime = splitMessage[i];
+            var twoCheck = 0;
+            if (msgTime.slice(-1)=='분'){
+                msgTime = msgTime.replace('분','');
+                twoCheck++;
+            }
+            msgTime = msgTime.replace('시',':');
+            if (twoCheck!=0){
+                splitMessage.splice(i,1)
+            } else if(twoCheck==0){
+                splitMessage.splice(i,1);
+            }
+            splitMessage.push(msgTime);
+        } else if (splitMessage[i].includes("시") && !(splitMessage[i].includes("분"))){
+            splitMessage.push(msgTime);
+            if ((splitMessage[i+1].includes("분")) || (isInt(parseInt(splitMessage[i+1])))){
+                msgTime = splitMessage[i]+splitMessage[i+1];
+            } else {
+                msgTime = splitMessage[i]+"0"; cutCheck=1; cutOutRaid = splitMessage[i+1];
+            }
+            msgTime = msgTime.replace('시',':');
+            msgTime = msgTime.replace('분','');
+            splitMessage.splice(i,2);
+            splitMessage.push(msgTime);
+        } else if(splitMessage[i].includes(":")){
+            msgTime=splitMessage[i]
+            if (msgTime.includes("분")){ //시간 에러나면 이 줄임
+                msgTime.replace("분","");
+            }
+            splitMessage.splice(i,1);
+            splitMessage.push(msgTime);
+        }
+    }
+
+    msgTime2 = splitMessage.splice(-1)[0];
+    msgHour = msgTime2.slice(0,msgTime.indexOf(':'));
+    msgMin = msgTime2.slice(msgTime.indexOf(':')+1,5)
+
+    if (!isInt(msgHour) || !isInt(msgMin)){
+        return "none";
+    }
+    
+    
+    if (msgHour > 12){
+        msgHour = parseInt(msgHour) - 12;
+    }
+
+    if (msgHour == 12){ // 12시
+        if (msgMin > 14){ // 12시15분 ~ 59분
+            endHour = 1;
+            endMin = parseInt(msgMin)-15;
+            if (endMin<10){
+                endMin = '0' + endMin;
+            }
+        } else if (msgMin < 15){
+            endHour = msgHour;
+            endMin = parseInt(msgMin)+45;
+        }
+    } else {
+        if (msgMin > 14){
+            endHour = parseInt(msgHour) + 1;
+            endMin = parseInt(msgMin)-15;
+            if (endMin<10){
+                endMin = '0' + endMin;
+            }
+        } else {
+            endHour = msgHour;
+            endMin = parseInt(msgMin) + 45;
+        }
+    }
+    
+    if (parseInt(msgMin) < 10){
+        msgMin = '0' + parseInt(msgMin);
+    }
+    raidTime = msgHour+':'+msgMin+'~'+endHour+':'+endMin;
+    raidSentence = raidTime + ' ' + splitMessage.splice(0);
+    if (cutCheck!=0) {raidSentence = raidSentence + cutOutRaid;}
+    raidSentence = raidSentence.replace(',',' ');
+    raidSentence = raidSentence.replace(',',' ');
+    return raidSentence;
+
+    
+}
+
+function timeCheck (reportDum){
+    timeRenew();
+    var reportSplit = reportDum.split('\n');
+    var currentMinuteFix; var endTime; var endHour; var endMinute; var i;
+    var reportSplitDummy = reportSplit;
+    
+    if (currentMinute < 10) {currentMinuteFix = '0' + currentMinute;} else{currentMinuteFix = currentMinute;}
+    if (currentHour > 12){currentHour = currentHour-12;}
+
+    for (i=1;i<reportSplit.length;i++){
+        var deleteThis=0;
+        if (reportSplit[i].includes(":")){
+            var temporalTimeSplit = reportSplit[i].split("~");
+            var temporalTimeSplit2 = temporalTimeSplit[1];
+            var temporalTimeSplit3 = temporalTimeSplit2.split(" ");
+            endTime = temporalTimeSplit3[0];
+            var temporalTimeSplit4 = endTime.split(":");
+            endHour = parseInt(temporalTimeSplit4[0]);
+            endMinute = parseInt(temporalTimeSplit4[1]);
+            endTime = endHour + '' + temporalTimeSplit4[1];
+
+            if (endHour==currentHour && endMinute<currentMinute){
+                deleteThis = reportSplit[i];
+                reportSplitDummy.splice(reportSplitDummy.indexOf(deleteThis),1);
+            } else if (endHour==1 && currentHour==12){
+                deleteThis = reportSplit[i]; //but it doesnt get deleted
+            } else if (endHour==12 && currentHour==1) {//12:59 1:00
+                deleteThis = reportSplit[i];
+                reportSplitDummy.splice(reportSplitDummy.indexOf(deleteThis),1);
+            } else if ((endHour < currentHour) && (currentHour!=12)) {
+                deleteThis = reportSplit[i];
+                reportSplitDummy.splice(reportSplitDummy.indexOf(deleteThis),1);
+            } else if ((endHour == 11) && (currentHour==12)){
+                deleteThis = reportSplit[i];
+                reportSplitDummy.splice(reportSplitDummy.indexOf(deleteThis),1);
+            }
+        }
+    }
+
+    reportDum = reportSplitDummy[0];
+
+    for (i=1;i<reportSplitDummy.length;i++){
+        reportDum = reportDum + '\n' + reportSplitDummy[i];
+    }
+
+    return (reportDum)
+}
+
 function keyToText (textKey, dbName){
     var dbToUse = DoriDB.readData(dbName);
     if (textKey == null){
@@ -222,134 +372,70 @@ function pokemonInfoReturn (pokemon){
     
 }
 
-function timeSet (dbName,raidContent){
-    var listToUse = DoriDB.readData(dbName);
-    raidContent = raidContent.replace("제보",""); raidContent = raidContent.trim();
-    var startHR; var startMIN='0'; var endHR; var endMIN; var timeDivide = raidContent.split(" ");
-
-    for (var i = 0; i < timeDivide.length; i++){ //시작 시와 분 구하기
-        if (timeDivide[i].includes('시') && timeDivide[i].includes('분')){ //11시50분
-            startHR = timeDivide[i].split('시')[0]; startMIN = timeDivide[i].split('시')[1].split('분')[0];
-            raidContent = raidContent.replace(timeDivide[i],"");
-        } else if (timeDivide[i].includes('시')){
-            startHR = timeDivide[i].split('시')[0];
-            if (Number.isInteger(parseInt(timeDivide[i].split('시')[1]))){ //11시50
-                startMIN = timeDivide[i].split('시')[1];
-            } else if (timeDivide[i+1].includes('분') && (Number.isInteger(parseInt(timeDivide[i+1].split('분')[0].trim())))){ //11시 50분
-                raidContent = raidContent.replace(timeDivide[i+1],"");
-                startMIN = timeDivide[i+1].split('분')[0];
-            } else { //11시
-                startMIN = '0';
+function reportDelete (raidInfo, delReport){
+    if (raidInfo.includes(delReport)){
+        var i; var reportSplit = raidInfo.split('\n');
+        for (i=0;i<reportSplit.length;i++){
+            if(reportSplit[i].includes(delReport)){
+                reportSplit.splice(i,1)
+                var j;
+                raidInfo = reportSplit[0];
+                for (j=1;j<reportSplit.length;j++){
+                    raidInfo = raidInfo + '\n' + reportSplit[j];
+                }
+                raidInfo.replace('\n','')
+                break;
             }
-            raidContent = raidContent.replace(timeDivide[i],"");
-        } else if (timeDivide[i].includes(':')){ //11:50
-            startHR = timeDivide[i].split(':')[0]; startMIN = timeDivide[i].split(':')[1];
-            raidContent = raidContent.replace(timeDivide[i],"");
         }
     }
-    startHR = startHR.trim();
-    startMIN = startMIN.trim();
-    raidContent = raidContent.trim();
-    startHR = parseInt(startHR); startMIN = parseInt(startMIN);
-    if (currentTime.getHours() > 10 && startHR < 10){
-        startHR = startHR + 12;
-    }
-    if (startMIN < 15){ //끝나는 시, 분 구하기
-        endHR = startHR;
-        endMIN = startMIN + 45;
-    } else {
-        endHR = startHR + 1;
-        endMIN = startMIN - 15;
-    }
-    if (startMIN < 0){
-        startMIN = "0" + startMIN;
-    }
-    if (endMIN < 10){
-        endMIN = "0" + endMIN;
-    }
-    
-    var reportedTime = parseInt(endHR + '' + endMIN);
-    var timeSort = listToUse.split('\n');
-    var compareTime; var reportIndex = 100;
-    for (var i = 1; i < timeSort.length; i++){
-        compareTime = parseInt(timeSort[i].split(',')[2] + timeSort[i].split(',')[3]);
-        if (reportedTime <= compareTime){ // RT가 11시, CT가 12시면
-            reportIndex = i; break;
-        }
-    }
-    if (reportIndex == 100){ // 안돌았으니 제일 늦은시간대인거임
-        listToUse = listToUse + "\n" + startHR + "," + startMIN + "," + endHR + "," + endMIN + "," + raidContent;
-    } else { //아니면 해당 시간에 넣기
-        timeSort.splice(i,0,startHR + "," + startMIN + "," + endHR + "," + endMIN + "," + raidContent);
-        listToUse = timeSort.join('\n');
-    }
-    return listToUse;
+    return raidInfo;
 }
 
-function deleteThisReport (dbName,toDel){
-    var listToDeleteFrom = DoriDB.readData(dbName); var pickDelLine; var delList = listToDeleteFrom.split("\n");
-
-    for (var i = 0; i < delList.length; i++){
-        if (delList[i].includes(toDel)){
-            delList.splice(i,1); break;
-        }
+function quoteRegister (personName, newQuote){
+    var quoteInfo = DoriDB.readData("quote");
+    var keyNumber; var quoteToUse;
+    var divideCategory = quoteInfo.split("\n"); //첫 줄 빼기용
+    var keySelect = divideCategory[0].split(",");
+    if (divideCategory[0].includes(personName)){ //이미 명언에 사람이 등록되어있다면
+        keyNumber = keySelect.indexOf(personName);
+        divideCategory[keyNumber] = divideCategory[keyNumber] + "," + newQuote;
+    } else { // 등록되어있지 않다면 새로 등록
+        keySelect = keySelect + "," + personName;
+        quoteInfo = quoteInfo + "\n" + personName;
+        divideCategory.push(personName + "," + newQuote);
     }
-    listToDeleteFrom = '레이드 목록'
-    for (var i = 1; i < delList.length; i++){
-        listToDeleteFrom = listToDeleteFrom + '\n' + delList[i];
+    var newQuoteInfo = keySelect;
+    for (var i=1; i<divideCategory.length; i++){
+        newQuoteInfo = newQuoteInfo + "\n" + divideCategory[i];
     }
-    DoriDB.saveData(dbName, listToDeleteFrom); //제보 등록
-    return listToDeleteFrom;
-}
-
-function printReport (dbName,raidList){
-    var listInTwelve = raidList.split('\n');
-    var listForSending = "레이드 제보";
-    for (var i = 1; i < listInTwelve.length; i++){
-        var tempStartHR = parseInt(listInTwelve[i].split(',')[0]);
-        var tempStartMIN = parseInt(listInTwelve[i].split(',')[1]);
-        var tempEndHR = parseInt(listInTwelve[i].split(',')[2]);
-        var tempEndMIN = parseInt(listInTwelve[i].split(',')[3]);
-        //시간 지나면 자동 삭제 하기
-        currentTime = new Date();
-        if ((currentTime.getHours() > tempEndHR) || ((currentTime.getHours() == tempEndHR) && currentTime.getMinutes() > tempEndMIN)){ // 시간이 더 크거나, 시간이 같지만 분이 더 클떄
-            deleteThisReport(dbName,listInTwelve[i].split(',')[4]);
-        } else {
-            if (tempStartHR > 12){
-                tempStartHR = tempStartHR - 12;
-            }
-            if (tempEndHR > 12){
-                tempEndHR = tempEndHR - 12;
-            }
-            if (tempStartMIN < 10){
-                tempStartMIN = "0" + tempStartMIN;
-            }
-            if (tempEndMIN < 10){
-                tempEndMIN = "0" + tempEndMIN;
-            }
-            listForSending = listForSending + '\n' + tempStartHR + ':' + tempStartMIN + '~' + tempEndHR + ':' + tempEndMIN + ' ' + listInTwelve[i].split(',')[4];
-        }
-    }
-    return listForSending;
+    newQuoteInfo = newQuoteInfo.trim();
+    DoriDB.saveData("quote", newQuoteInfo);
+    return personName + "님의 명언이 등록되었습니다.";
 }
 
 function raidReportReturn (dbName, newReport, delReport){
-    var nonReport = 1; if (dbName.includes("eport")){nonReport = 0;}
-    if (newReport != null) {
-        DoriDB.saveData(dbName,timeSet(dbName,newReport));
+    var nonReport = 1;
+    if (dbName.includes("eport")){nonReport = 0;}
+    var raidInfo = DoriDB.readData(dbName);
+    if (nonReport==0){
+        raidInfo = timeCheck(raidInfo); raidInfo = timeCheck(raidInfo); raidInfo = timeCheck(raidInfo);
     }
+    if (newReport != null) {
+        DoriDB.saveData(dbName, raidInfo + "\n" + newReport); //제보 등록
+    }
+    raidInfo = DoriDB.readData(dbName);
     if (delReport == "DELETE ALL"){
         if (nonReport==0){
             DoriDB.saveData(dbName, "레이드 제보"); //제보 리셋
         } else {
             DoriDB.saveData(dbName, "리서치 목록"); //제보 리셋
         }
-        return "제보가 리셋되었습니다.";
+        return raidInfo = "제보가 리셋되었습니다."
     } else if(delReport != null){
-       deleteThisReport(dbName,delReport);
+        raidInfo = reportDelete(raidInfo,delReport);
+        DoriDB.saveData(dbName, raidInfo); //삭제된 리스트 새로 등록
     }
-    var raidInfo = printReport(dbName,DoriDB.readData(dbName));
-
+    if (nonReport==0){raidInfo = timeCheck(raidInfo); raidInfo = timeCheck(raidInfo); raidInfo = timeCheck(raidInfo);}
     return raidInfo;
 }
 
@@ -651,9 +737,14 @@ function response(room, msg, sender, isGroupChat, replier) {
         msg = msg.replace('삭제해줘',''); msg = msg.replace('오보',''); msg = msg.trim();
         returnText = raidReportReturn(useReport,null,msg);
         replier.reply(msg + " 제보가 삭제 되었습니다.");        
+    } else if ((msg.includes("리서치") && (msg.includes("삭제해줘") || msg.includes("제거")))){
+        msg = msg.replace('끝났어',''); msg = msg.replace('삭제해줘',''); msg = msg.replace('삭제 해줘','');
+        msg = msg.replace('오보',''); msg = msg.trim();
+        returnText = raidReportReturn(useResearch,null,msg);
     }
+
     if ((msg.includes("시") || msg.includes(":")) && msg.includes("제보") && !msg.includes("리서치")){        
-        returnText = raidReportReturn(useReport, msg, null);
+        returnText = raidReportReturn(useReport, raidReport(msg), null);
     } else if (msg.includes("리서치") && msg.includes("제보")){
         msg = msg.replace("제보", ""); msg = msg.replace("리서치",""); msg = msg.trim();
         returnText = researchReturn(useResearch, msg);

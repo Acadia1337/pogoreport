@@ -9,9 +9,7 @@ var raidList = "레이드 목록\n12,20,13,05,서울교회\n13,45,14,30,작은�
 
 function timeSet (raidContent){
     raidContent = raidContent.replace("제보",""); raidContent = raidContent.trim();
-    var startHR; var startMIN;
-    var endHR; var endMIN;
-    var timeDivide = raidContent.split(" ");
+    var startHR; var startMIN; var endHR; var endMIN; var timeDivide = raidContent.split(" ");
 
     for (var i = 0; i < timeDivide.length; i++){ //시작 시와 분 구하기
         if (timeDivide[i].includes('시') && timeDivide[i].includes('분')){ //11시50분
@@ -45,15 +43,14 @@ function timeSet (raidContent){
         endHR = startHR + 1;
         endMIN = startMIN - 15;
     }
-    if (startMIN == 0){
-        startMIN = "00"
+    if (startMIN < 0){
+        startMIN = "0" + startMIN;
     }
-    if (endMIN == 0){
-        endMIN = "00"
+    if (endMIN < 10){
+        endMIN = "0" + endMIN;
     }
     
     var reportedTime = parseInt(endHR + '' + endMIN);
-
     var timeSort = raidList.split('\n');
     var compareTime; var reportIndex = 100;
     for (var i = 1; i < timeSort.length; i++){
@@ -68,12 +65,11 @@ function timeSet (raidContent){
         timeSort.splice(i,0,startHR + "," + startMIN + "," + endHR + "," + endMIN + "," + raidContent);
         raidList = timeSort.join('\n');
     }
-    return raidList;
+    return printReport(raidList);
 }
 
-function delReport (toDel){
+function deleteThisReport (toDel){
     var pickDelLine;
-    toDel = toDel.replace('삭제해줘',''); toDel = toDel.replace('제거해줘',''); toDel = toDel.replace('끝났어',''); toDel = toDel.trim()
     var delList = raidList.split("\n");
 
     for (var i = 0; i < delList.length; i++){
@@ -98,7 +94,7 @@ function printReport (raidList){
         var tempEndMIN = parseInt(listInTwelve[i].split(',')[3]);
         //시간 지나면 자동 삭제 하기
         if ((currentTime.getHours() > tempEndHR) || ((currentTime.getHours() == tempEndHR) && currentTime.getTime() > tempEndMIN)){ // 시간이 더 크거나, 시간이 같지만 분이 더 클떄
-            delReport(listInTwelve[i].split(',')[4]);
+            deleteThisReport(listInTwelve[i].split(',')[4]);
         } else {
             if (tempStartHR > 12){
                 tempStartHR = tempStartHR - 12;
@@ -106,11 +102,11 @@ function printReport (raidList){
             if (tempEndHR > 12){
                 tempEndHR = tempEndHR - 12;
             }
-            if (tempStartMIN == 0){
-                tempStartMIN = "00";
+            if (tempStartMIN < 10){
+                tempStartMIN = "0" + tempStartMIN;
             }
-            if (tempEndMIN == 0){
-                tempEndMIN = "00;"
+            if (tempEndMIN < 10){
+                tempEndMIN = "0" + tempEndMIN;
             }
             listForSending = listForSending + '\n' + tempStartHR + ':' + tempStartMIN + '~' + tempEndHR + ':' + tempEndMIN + ' ' + listInTwelve[i].split(',')[4];
         }
@@ -123,4 +119,6 @@ function printReport (raidList){
 //console.log(timeSet("11시 30분 711 제보"));
 //console.log(timeSet('1시 50분 가라가라 제보'));
 //console.log(delReport('군인공제 삭제해줘'));
-console.log(printReport(raidList));
+//console.log(printReport(raidList));
+
+console.log(currentTime.getHours());
