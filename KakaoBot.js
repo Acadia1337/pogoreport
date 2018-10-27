@@ -428,8 +428,7 @@ function raidReportReturn (dbName, newReport, delReport){
         if (nonReport==0){
             DoriDB.saveData(dbName, "레이드 제보"); //제보 리셋
         } else {
-            timeRenew();
-            DoriDB.saveData(dbName, todayDate + " 리서치 목록"); //제보 리셋
+            DoriDB.saveData(dbName, "리서치 목록"); //제보 리셋
         }
         return raidInfo = "제보가 리셋되었습니다."
     } else if(delReport != null){
@@ -462,7 +461,7 @@ function researchReturn (dbName, newReport){
         for (var i = 0; i < researchBreakDown.length; i++){
             if (researchBreakDown[i].includes(researchTitle)){
                 researchBreakDown.splice(i+1,0,researchToPut);
-                currentReport = todayDate + ' 리서치 목록';
+                currentReport = "리서치 목록";
                 break;
             }
         }
@@ -638,7 +637,7 @@ function response(room, msg, sender, isGroupChat, replier) {
                 returnText = "아쉽네요ㅠㅠ " + sender + " 위로해 😢😢😢";
             } else {
                 returnText = "아쉽네요ㅠㅠ " + tempMsg + " 위로해 😢😢😢";
-            } 
+            }
         }
         if (msg.includes('잘자') || msg.includes('굿밤') || msg.includes('굿나잇') || msg.includes('좋은밤') || msg.includes('좋은 밤')){
             if (sender.includes("/")){sender = sender.split('/')[0];}
