@@ -349,9 +349,11 @@ function raidReportReturn (dbName, newReport, delReport){
     } else if(delReport != null){
        deleteThisReport(dbName,delReport);
     }
-    var raidInfo = printReport(dbName,DoriDB.readData(dbName));
-
-    return raidInfo;
+    if (nonReport == 0){
+        return printReport(dbName,DoriDB.readData(dbName));
+    } else {
+        return DoriDB.readData(dbName);
+    }
 }
 
 function researchReturn (dbName, newReport){
