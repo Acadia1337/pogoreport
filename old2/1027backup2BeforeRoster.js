@@ -337,6 +337,7 @@ function raidReportReturn (dbName, newReport, delReport){
     var nonReport = 1; if (dbName.includes("eport")){nonReport = 0;}
     if (newReport != null) {
         DoriDB.saveData(dbName,timeSet(dbName,newReport));
+        return printReport(dbName,DoriDB.readData(dbName));
     }
     if (delReport == "DELETE ALL"){
         if (nonReport==0){
@@ -348,9 +349,11 @@ function raidReportReturn (dbName, newReport, delReport){
     } else if(delReport != null){
        deleteThisReport(dbName,delReport);
     }
-    var raidInfo = printReport(dbName,DoriDB.readData(dbName));
-
-    return raidInfo;
+    if (nonReport == 0){
+        return printReport(dbName,DoriDB.readData(dbName));
+    } else {
+        return DoriDB.readData(dbName);
+    }
 }
 
 function researchReturn (dbName, newReport){
@@ -397,6 +400,303 @@ function researchReturn (dbName, newReport){
     return currentReport;
 }
 
+function createRoster(sender, rosterMSG){
+    var mysticNum=0; var valorNum=0; var instiNum=0; var etcNum=0;
+    rosterMSG = rosterMSG.replace('팟','');
+    rosterMSG = rosterMSG.replace('출석부',''); rosterMSG = rosterMSG.replace('생성',''); rosterMSG = rosterMSG.trim();
+    if (rosterMSG.includes("미스틱")){
+        mysticNum = parseInt(rosterMSG.split('미스틱')[1].split(' ')[0]);
+        rosterMSG = rosterMSG.slice(0,rosterMSG.indexOf('미스틱')) + rosterMSG.slice(rosterMSG.indexOf('미스틱')+4)    
+    }
+    if (rosterMSG.includes("발러")){
+        valorNum = parseInt(rosterMSG.split('발러')[1].split(' ')[0]);
+        rosterMSG = rosterMSG.slice(0,rosterMSG.indexOf('발러')) + rosterMSG.slice(rosterMSG.indexOf('발러')+3)    
+    }
+    if (rosterMSG.includes("인스")){
+        instiNum = parseInt(rosterMSG.split('인스')[1].split(' ')[0]);
+        rosterMSG = rosterMSG.slice(0,rosterMSG.indexOf('인스')) + rosterMSG.slice(rosterMSG.indexOf('인스')+3)    
+    }
+    rosterMSG = rosterMSG.trim();
+    var timeDivide = rosterMSG.split(' ');
+    var startHR; var startMIN; var raidContent = rosterMSG;
+
+    for (var i = 0; i < timeDivide.length; i++){ //시작 시와 분 구하기
+        if (timeDivide[i].includes('시') && timeDivide[i].includes('분')){ //11시50분
+            startHR = timeDivide[i].split('시')[0]; startMIN = timeDivide[i].split('시')[1].split('분')[0];
+            raidContent = raidContent.replace(timeDivide[i],"");
+        } else if (timeDivide[i].includes('시')){
+            startHR = timeDivide[i].split('시')[0];
+            if (Number.isInteger(parseInt(timeDivide[i].split('시')[1]))){ //11시50
+                startMIN = timeDivide[i].split('시')[1];
+            } else if (timeDivide[i+1].includes('분') && (Number.isInteger(parseInt(timeDivide[i+1].split('분')[0].trim())))){ //11시 50분
+                raidContent = raidContent.replace(timeDivide[i+1],"");
+                startMIN = timeDivide[i+1].split('분')[0];
+            } else { //11시
+                startMIN = '0';
+            }
+            raidContent = raidContent.replace(timeDivide[i],"");
+        } else if (timeDivide[i].includes(':')){ //11:50
+            startHR = timeDivide[i].split(':')[0]; startMIN = timeDivide[i].split(':')[1];
+            raidContent = raidContent.replace(timeDivide[i],"");
+        }
+    }    
+    startHR = startHR.trim(); startMIN = startMIN.trim(); raidContent = raidContent.trim();
+    if (parseInt(startMIN) < 10){
+        startMIN = '0' + parseInt(startMIN);
+    }
+    var accounts = '';
+    for (var i = 0; i < mysticNum; i++){
+        accounts = accounts + ',' + sender + ' [❄]'
+    }
+    for (var i = 0; i < valorNum; i++){
+        accounts = accounts + ',' + sender + ' [🔥]'
+    }
+    for (var i = 0; i < instiNum; i++){
+        accounts = accounts + ',' + sender + ' [⚡]'
+    }
+
+    if (mysticNum==0 && valorNum==0 && instiNum==0){
+        accounts = ',' + sender + '';
+    }
+    var initialRoster = sender + ',' + startHR + "," + startMIN + "," + raidContent + accounts;
+    var roster = DoriDB.readData('roster'); // 출석부 목록 불러오기
+    roster = roster + '\n' + initialRoster;
+    DoriDB.saveData('roster', roster); //출석부 저장
+
+    return readRoster(raidContent + '팟');
+}
+
+function changeRosterTime(sender, rosterMSG){
+    //도리야 작은분수 팟 8시 30분으로 시간변경
+    //도리야 작은분수 팟 시간변경 8시 30분
+    rosterMSG = rosterMSG.replace('팟',''); rosterMSG = rosterMSG.replace('시간변경',''); rosterMSG = rosterMSG.trim();
+    var timeDivide = rosterMSG.split(' ');
+    var startHR; var startMIN; var raidContent = rosterMSG;
+
+    for (var i = 0; i < timeDivide.length; i++){ //시작 시와 분 구하기
+        if (timeDivide[i].includes('시') && timeDivide[i].includes('분')){ //11시50분
+            startHR = timeDivide[i].split('시')[0]; startMIN = timeDivide[i].split('시')[1].split('분')[0];
+            raidContent = raidContent.replace(timeDivide[i],"");
+        } else if (timeDivide[i].includes('시')){
+            startHR = timeDivide[i].split('시')[0];
+            if (Number.isInteger(parseInt(timeDivide[i].split('시')[1]))){ //11시50
+                startMIN = timeDivide[i].split('시')[1];
+            } else if (timeDivide[i+1].includes('분') && (Number.isInteger(parseInt(timeDivide[i+1].split('분')[0].trim())))){ //11시 50분
+                raidContent = raidContent.replace(timeDivide[i+1],"");
+                startMIN = timeDivide[i+1].split('분')[0];
+            } else { //11시
+                startMIN = '0';
+            }
+            raidContent = raidContent.replace(timeDivide[i],"");
+        } else if (timeDivide[i].includes(':')){ //11:50
+            startHR = timeDivide[i].split(':')[0]; startMIN = timeDivide[i].split(':')[1];
+            raidContent = raidContent.replace(timeDivide[i],"");
+        }
+    }
+    startHR = startHR.trim(); startMIN = startMIN.trim(); raidContent = raidContent.trim();
+    var roster = DoriDB.readData('roster'); // 출석부 목록 불러오기
+    var divideRoster = roster.split('\n');
+    var i = 0
+    for (i = 0; i < divideRoster.length; i++){
+        if (divideRoster[i].includes(raidContent) && divideRoster[i].split(',')[0] == sender){
+            var timeChangedRoster = divideRoster[i].split(',');
+            timeChangedRoster[1] = startHR;
+            timeChangedRoster[2] = startMIN;
+            timeChangedRoster = timeChangedRoster.join(',')
+            divideRoster.splice(i,1,timeChangedRoster);
+
+            roster = divideRoster.join('\n')
+            DoriDB.saveData('roster', roster); //출석부 저장
+            return readRoster(raidContent);;
+        }
+    }
+    return sender + "님이 만드신 팟이 맞나요??\n팟을 만드신 분만 변경 가능해요!";
+}
+
+function changeRosterContent(sender, rosterMSG){
+    //711 4성 내용변경: 711 마기라스
+    rosterMSG = rosterMSG.replace('팟',''); rosterMSG = rosterMSG.replace('내용변경',''); rosterMSG = rosterMSG.trim();
+    var raidContent = rosterMSG.split(':')[1].trim();
+    var previousContent = rosterMSG.split(':')[0].trim();
+    var roster = DoriDB.readData('roster'); // 출석부 목록 불러오기
+    var divideRoster = roster.split('\n');
+    var i = 0
+    for (i = 0; i < divideRoster.length; i++){
+        if (divideRoster[i].includes(previousContent) && divideRoster[i].split(',')[0] == sender){
+            var contentChangedRoster = divideRoster[i].split(',');
+            contentChangedRoster[3] = raidContent;
+            contentChangedRoster = contentChangedRoster.join(',')
+            divideRoster.splice(i,1,contentChangedRoster);
+
+            roster = divideRoster.join('\n')
+            DoriDB.saveData('roster', roster); //출석부 저장
+            return readRoster(raidContent);;
+        }
+    }
+    return sender + "님이 만드신 팟이 맞나요??\n팟을 만드신 분만 변경 가능해요!";
+
+}
+
+function deleteRoster(sender, rosterMSG){
+    // 작은분수 팟 펑
+    // 작은분수 팟 펑합니다
+    rosterMSG = rosterMSG.replace('합니다',''); rosterMSG = rosterMSG.replace('팟 펑','');
+    var raidContent = rosterMSG.trim();
+    var roster = DoriDB.readData('roster'); // 출석부 목록 불러오기
+    var divideRoster = roster.split('\n');
+    var i = 0
+    for (i = 0; i < divideRoster.length; i++){
+        if (divideRoster[i].includes(raidContent) && divideRoster[i].split(',')[0] == sender){
+            divideRoster.splice(i,1);
+            roster = divideRoster.join('\n')
+            if (roster==null){
+                roster = '';
+            }
+            DoriDB.saveData('roster', roster); //출석부 저장
+            return raidContent + " 팟이 취소되었습니다.";
+            break;
+        }
+    }
+    return sender + "님이 만드신 팟이 맞나요??\n팟을 만드신 분만 취소 가능해요!";
+
+
+}
+
+function participateRoster(sender, rosterMSG){
+    // 작은분수 팟 참석할게
+    // 작은분수 미스틱1 인스1 참여
+    var mysticNum=0; var valorNum=0; var instiNum=0; var etcNum=0;
+    rosterMSG = rosterMSG.replace('할게',''); rosterMSG = rosterMSG.replace('팟','');
+    rosterMSG = rosterMSG.replace('참석',''); rosterMSG = rosterMSG.replace('참여',''); rosterMSG = rosterMSG.trim();
+    if (rosterMSG.includes("미스틱")){
+        mysticNum = parseInt(rosterMSG.split('미스틱')[1].split(' ')[0]);
+        if (!Number.isInteger(mysticNum)){
+            mysticNum = 1;
+        }
+        rosterMSG = rosterMSG.slice(0,rosterMSG.indexOf('미스틱')) + rosterMSG.slice(rosterMSG.indexOf('미스틱')+4)    
+    }
+    if (rosterMSG.includes("발러")){
+        valorNum = parseInt(rosterMSG.split('발러')[1].split(' ')[0]);
+        if (!Number.isInteger(valorNum)){
+            valorNum = 1;
+        }
+        rosterMSG = rosterMSG.slice(0,rosterMSG.indexOf('발러')) + rosterMSG.slice(rosterMSG.indexOf('발러')+3)    
+    }
+    if (rosterMSG.includes("인스")){
+        instiNum = parseInt(rosterMSG.split('인스')[1].split(' ')[0]);
+        if (!Number.isInteger(instiNum)){
+            instiNum = 1;
+        }
+        rosterMSG = rosterMSG.slice(0,rosterMSG.indexOf('인스')) + rosterMSG.slice(rosterMSG.indexOf('인스')+3)    
+    }
+    rosterMSG = rosterMSG.trim();
+    
+    var accounts = '';
+    for (var i = 0; i < mysticNum; i++){
+        accounts = accounts + ',' + sender + ' [❄]'
+    }
+    for (var i = 0; i < valorNum; i++){
+        accounts = accounts + ',' + sender + ' [🔥]'
+    }
+    for (var i = 0; i < instiNum; i++){
+        accounts = accounts + ',' + sender + ' [⚡]'
+    }
+
+    if (mysticNum==0 && valorNum==0 && instiNum==0){
+        accounts = ',' + sender + ''
+    }
+    var roster = DoriDB.readData('roster'); // 출석부 목록 불러오기
+    var divideRoster = roster.split('\n');
+    var i = 0
+    for (i = 0; i < divideRoster.length; i++){
+        if (divideRoster[i].includes(rosterMSG)){
+            var rosterToAdd = divideRoster[i] + accounts;
+            divideRoster.splice(i,1,rosterToAdd);
+            roster = divideRoster.join('\n')
+            DoriDB.saveData('roster', roster); //출석부 저장
+            return readRoster(rosterMSG);
+        }
+    }
+    return '앗 팟이 있는게 맞나요? 있다면 다시 말씀 해주시고, 없는 팟이라면 만드시는게 어떨까요?\n\n팟을 만드시려면\n몇시 몇분 어디 몇성 출석부 생성 이라고 말씀해주세요!';
+}
+
+function readRoster(rosterMSG){
+    //작은분수 팟
+    rosterMSG = rosterMSG.split('팟')[0].trim();
+    var roster = DoriDB.readData('roster'); // 출석부 목록 불러오기
+    var divideRoster = roster.split('\n');
+    var i = 0
+    for (i = 0; i < divideRoster.length; i++){
+        if (divideRoster[i].includes(rosterMSG)){
+            var rosterToUse = divideRoster[i].split(',');
+            var printOutRoster = rosterToUse[1] + ':' + rosterToUse[2] + ' ' + rosterToUse[3] + '\n';
+            var mysticRoster = '';
+            var valorRoster = '';
+            var instinctRoster = '';
+            var etcRoster = '';
+
+            for (var j = 4; j < rosterToUse.length; j++){
+                if (rosterToUse[j].includes('❄')){
+                    mysticRoster = mysticRoster + ',' + rosterToUse[j];
+                } else if (rosterToUse[j].includes('🔥')){
+                    valorRoster = valorRoster + ',' + rosterToUse[j];
+                } else if (rosterToUse[j].includes('⚡')){
+                    instinctRoster = instinctRoster + ',' + rosterToUse[j];
+                } else {
+                    etcRoster = etcRoster + ',' + rosterToUse[j];
+                }
+                //printOutRoster = printOutRoster + (i-2) + '. ' + divideRoster[i] + '\n';
+            }
+
+            var allTeamRoster = mysticRoster + valorRoster + instinctRoster + etcRoster;
+            if (allTeamRoster[0]==','){
+                allTeamRoster = allTeamRoster.slice(1);
+            }
+
+            allTeamRoster = allTeamRoster.split(',');
+
+            for (var j = 0; j < allTeamRoster.length; j++){
+                printOutRoster = printOutRoster + (j+1) + '. ' + allTeamRoster[j] + '\n';
+            }
+
+            return printOutRoster;
+
+        }
+    }
+    
+    
+    return "그런 팟은 없다"
+}
+
+function getOutFromRoster(sender, rosterMSG){
+    // 작은분수 빠질게
+    // 작은분수 빠지겠습니다
+    rosterMSG = rosterMSG.split(' ')[0].trim();
+    var roster = DoriDB.readData('roster'); // 출석부 목록 불러오기
+    var divideRoster = roster.split('\n');
+    var i = 0
+    for (i = 0; i < divideRoster.length; i++){
+        if (divideRoster[i].includes(rosterMSG)){
+            var initialRoster = divideRoster[i].split(',');
+            var reWriteRoster = initialRoster[0] + ',' + initialRoster[1] + ',' + initialRoster[2] + ',' + initialRoster[3];
+            for (var j = 4; j < initialRoster.length; j++){
+                if (!initialRoster[j].includes(sender)){
+                    reWriteRoster = reWriteRoster + ',' + initialRoster[j];
+                }
+            }            
+            divideRoster.splice(i,1,reWriteRoster);
+            roster = divideRoster.join('\n')
+            DoriDB.saveData('roster', roster); //출석부 저장
+            return readRoster(rosterMSG);
+        }
+    }
+    return '빠질 팟이 없는데?';
+}
+
+function rosterReset(){ //출석비 리셋
+    DoriDB.saveData('roster', ''); return '모든 출석부가 삭제되었습니다.';
+}
+
 function procCmd(room, cmd, sender, replier) {
     if (cmd == "/on") { //봇을 켜는 명령어는 꺼진 상태에서도 작동
         replier.reply("도리 활성화");
@@ -441,6 +741,13 @@ function response(room, msg, sender, isGroupChat, replier) {
     }
     lastSender[room] = sender;
     
+    if (sender.includes('/')){
+        sender = sender.split('/')[0];
+    }
+    if (sender.includes(' ')){
+        sender = sender.split(' ')[0];
+    }
+    
     //이 아래부터는 기본 정보 주는 곳
     var returnText = "none"; //마지막 답장
     var useReport = "report"; var useResearch = 'research';
@@ -472,8 +779,11 @@ function response(room, msg, sender, isGroupChat, replier) {
         
         if (msg == "사용법" || ((msg.includes("누구야?") && msg.includes("넌") || msg.includes("자기소개")))){
             returnText = keyToText(null,"doriguide");
-        } else if(msg.includes("뉴비 가이드") && room.includes('고려대')){
-            returnText = keyToText(null,"newbie");
+        } else if (msg.includes("명령어 리스트")){
+            returnText = keyToText(null,"commandList");
+        } else if((msg.includes("입장 인사") || msg.includes("입장인사"))&& room.includes('고려대')){
+            var tempMsg = msg.split("님")[0]; msg = 'none';
+            returnText = tempMsg + keyToText(null,"newbie");
         } else if (msg.includes("둥지")){
             returnText = keyToText(null,"nest")
         } else if (((msg.includes('이벤트')) || (msg.includes('글로벌 챌린지'))) && !msg.includes('할로윈')) {
@@ -504,8 +814,6 @@ function response(room, msg, sender, isGroupChat, replier) {
             returnText = keyToText(null,'metang');
         } else if (msg.includes('화강돌') && msg.includes('리서치')){
             returnText = keyToText(null,'spiritombResearch'); msg = '화강돌';
-        } else if (msg.includes('출석부')){
-            returnText = keyToText(null,'rosterSample');
         } else if (msg.includes('이로치')){
             returnText = keyToText(null,'shiny');
         }
@@ -632,9 +940,45 @@ function response(room, msg, sender, isGroupChat, replier) {
                 returnText = "안녕하세요 트레이너님!☺️";
             }
         }
-
+        if (msg == '출석부 리셋'){
+            returnText = rosterReset();
+        } else if (msg.includes('출석부 생성') || msg.includes('팟 생성')){ //출석부 (테스트X)
+            returnText = createRoster(sender, msg);
+        } else if (msg.includes('출석부')){
+            returnText = keyToText(null,'rosterSample');
+        } else if (msg.includes('시간변경') || msg.includes('시간 변경')){
+            returnText = changeRosterTime(sender, msg);
+        } else if (msg.includes('내용변경') || msg.includes('내용 변경')){
+            returnText = changeRosterContent(sender, msg);
+        } else if (msg.includes('참여') || msg.includes('참석')){
+            returnText = participateRoster(sender, msg);
+        } else if (msg.includes('팟 펑')){
+            returnText = deleteRoster(sender, msg);
+        } else if (msg.includes('빠질게') || msg.includes('빠지겠습니다')){
+            returnText = getOutFromRoster(sender, msg);
+        } 
     } else {
         msg = msg.replace("도리야",""); msg = msg.replace("도리",""); msg = msg.trim()
+    }
+    if (msg.includes('팟 현황')){
+        var roster = DoriDB.readData('roster'); // 출석부 목록 불러오기
+        var dummyRoster = roster + ' ';
+        if (!dummyRoster.includes(',')){
+            returnText = '현재 팟이 없네요! 팟을 직접 만드시는건 어떨까요!?\n\n예시)\n도리야 4시 45분 작은분수 팟 생성\n도리야 3시 사과 미스틱2 인스1 출석부 생성';
+        } else {
+            var divideRoster = roster.split('\n');
+            var i = 0
+            for (i = 0; i < divideRoster.length; i++){
+                if (divideRoster[i].split(',')[3] != undefined){
+                    replier.reply(readRoster(divideRoster[i].split(',')[3] + ' 팟'));
+                }
+            }
+            returnText = 'none';
+        }
+
+        msg = msg.replace('현황','');
+    } else if (msg == '출석부 리셋'){
+        returnText = rosterReset();
     }
     //제보/삭제/만료/현황 구현 완료. 리서치 구현 나름 함 (테스트 X)
     if (msg.includes("현황")){

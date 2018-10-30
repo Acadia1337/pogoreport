@@ -308,7 +308,7 @@ function raidReportChange(dbName, changeReport){
             
             currentReport = currentReportDivide.join('\n');
             DoriDB.saveData(dbName,currentReport);
-            return printReport(currentReport);
+            return printReport(dbName,DoriDB.readData(dbName));
             break;
         }
     }
@@ -585,7 +585,7 @@ function deleteRoster(sender, rosterMSG){
             break;
         }
     }
-    return "헉" + raidContent + " 팟 취소안됨;;";
+    return "헉 " + raidContent + " 팟 취소안됨;;";
 
 
 }
@@ -846,7 +846,9 @@ function response(room, msg, sender, isGroupChat, replier) {
             returnText = keyToText(null,'shiny');
         } else if (msg == '출석부'){
             returnText = keyToText(null,'rosterSample');
-        } 
+        } else if (msg == '출석부 사용법'){
+            returnText = keyToText(null,'rosterManual');
+        }
         
         if(msg.includes('평가')){
             if(msg.includes('발러')){returnText = keyToText(null,"valorAppraise");}
@@ -974,7 +976,7 @@ function response(room, msg, sender, isGroupChat, replier) {
         var roster = DoriDB.readData('roster'); // 출석부 목록 불러오기
         var dummyRoster = roster + ' ';
         if (!dummyRoster.includes(',')){
-            returnText = '현재 팟이 없네요! 팟을 직접 만드시는건 어떨까요!?\n\n예시)\4시 45분 작은분수 출석부 생성\3시 사과 미스틱2 인스1 팟 생성';
+            returnText = '현재 팟이 없네요! 팟을 직접 만드시는건 어떨까요!?\n\n예시)\n4시 45분 작은분수 출석부 생성\n3시 사과 미스틱2 인스1 팟 생성';
         } else {
             var divideRoster = roster.split('\n');
             var i = 0
@@ -987,7 +989,7 @@ function response(room, msg, sender, isGroupChat, replier) {
         }
 
         msg = msg.replace('현황','');
-    } else if (msg == '출석부 리셋'){
+    } else if (msg == '출석부 리셋' || msg == '팟 리셋'){
         returnText = rosterReset();
     } else if (msg.includes('출석부 생성') || msg.includes('팟 생성')){ //출석부 (테스트X)
         returnText = createRoster(sender, msg);
@@ -1013,6 +1015,7 @@ function response(room, msg, sender, isGroupChat, replier) {
         returnText = raidReportReturn(useReport, null, "DELETE ALL");
     } else if (msg.includes("제보 변경") || msg.includes("제보변경")){
         returnText = raidReportChange(useReport,msg,null);
+        msg = msg.replace("제보","")
     } else if (msg =="리서치 리셋" || msg == "리서치 리셋해줘"){
         returnText = raidReportReturn(useResearch, null, "DELETE ALL");
     } else if ((msg.includes('삭제해줘') || msg.includes('삭제 해줘') || msg.includes('오보') || msg.includes("끝났어") || msg.includes("만료")) && !msg.includes("리서치")){
