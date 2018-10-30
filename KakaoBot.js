@@ -1011,6 +1011,8 @@ function response(room, msg, sender, isGroupChat, replier) {
         msg = "끝났어!";
     } else if (msg == "제보 리셋" || msg == "제보 리셋해줘"){
         returnText = raidReportReturn(useReport, null, "DELETE ALL");
+    } else if (msg.includes("제보 변경") || msg.includes("제보변경")){
+        returnText = raidReportChange(useReport,msg,null);
     } else if (msg =="리서치 리셋" || msg == "리서치 리셋해줘"){
         returnText = raidReportReturn(useResearch, null, "DELETE ALL");
     } else if ((msg.includes('삭제해줘') || msg.includes('삭제 해줘') || msg.includes('오보') || msg.includes("끝났어") || msg.includes("만료")) && !msg.includes("리서치")){
