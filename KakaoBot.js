@@ -267,6 +267,13 @@ function timeSet (dbName,raidContent){
     if (endMIN < 10){
         endMIN = "0" + endMIN;
     }
+    if (endMIN==NaN){
+        if (startMIN == 23){
+            endMIN = '08';
+        } else if (startMIN ==24){
+            endMIN = '09';
+        }
+    }
     
     var reportedTime = parseInt(endHR + '' + endMIN);
     var timeSort = listToUse.split('\n');
@@ -284,6 +291,28 @@ function timeSet (dbName,raidContent){
         listToUse = timeSort.join('\n');
     }
     return listToUse;
+}
+
+//여기 체크
+function raidReportChange(dbName, changeReport){
+    var currentReport = DoriDB.readData(dbName); // 현재 방의 리서치 목록
+    var previousReport = changeReport.split('제보')[0].trim();
+    var toBeReport = changeReport.split('변경')[1].trim(); toBeReport = toBeReport.replace(":","").trim();
+    var currentReportDivide = currentReport.split('\n');
+    for (var i = 1; i < currentReportDivide.length; i++){
+        if (currentReportDivide[i].includes(previousReport)){
+            var writeNewReport = currentReportDivide[i].split(',');
+            writeNewReport[4] = toBeReport;
+            writeNewReport = writeNewReport.join(',');
+            currentReportDivide.splice(i,1,writeNewReport);
+            
+            currentReport = currentReportDivide.join('\n');
+            DoriDB.saveData(dbName,currentReport);
+            return printReport(currentReport);
+            break;
+        }
+    }
+    return "제보 변경 안됐는데?"
 }
 
 function deleteThisReport (dbName,toDel){
@@ -364,7 +393,7 @@ function researchReturn (dbName, newReport){
     var researchFind = researchInfo.split('\n');
     var researchPokemonName = researchFind[0].split(',');
     var researchToPut = ''; var researchTitle = '';
-    for (var i = 0; i < 24; i++){
+    for (var i = 0; i < 25; i++){
         if (researchFind[i].includes(researchInput)){
             researchToPut = newReport.replace(researchInput, ''); researchTitle = researchFind[i].split(',')[0] + ""; break;
         } else if(researchFind[i].includes(researchInput2)){
@@ -498,19 +527,19 @@ function changeRosterTime(sender, rosterMSG){
     var divideRoster = roster.split('\n');
     var i = 0
     for (i = 0; i < divideRoster.length; i++){
-        if (divideRoster[i].includes(raidContent) && divideRoster[i].split(',')[0] == sender){
+        if (divideRoster[i].includes(raidContent) && divideRoster[i].includes(sender)){
             var timeChangedRoster = divideRoster[i].split(',');
             timeChangedRoster[1] = startHR;
             timeChangedRoster[2] = startMIN;
-            timeChangedRoster = timeChangedRoster.join(',')
+            timeChangedRoster = timeChangedRoster.join(',');
             divideRoster.splice(i,1,timeChangedRoster);
 
-            roster = divideRoster.join('\n')
+            roster = divideRoster.join('\n');
             DoriDB.saveData('roster', roster); //출석부 저장
-            return readRoster(raidContent);;
+            return readRoster(raidContent);
         }
     }
-    return sender + "님이 만드신 팟이 맞나요??\n팟을 만드신 분만 변경 가능해요!";
+    return sender + "참가하신 팟이 맞나요???\n팟에 참가하신 분만 변경 가능해요!";
 }
 
 function changeRosterContent(sender, rosterMSG){
@@ -522,19 +551,18 @@ function changeRosterContent(sender, rosterMSG){
     var divideRoster = roster.split('\n');
     var i = 0
     for (i = 0; i < divideRoster.length; i++){
-        if (divideRoster[i].includes(previousContent) && divideRoster[i].split(',')[0] == sender){
+        if (divideRoster[i].includes(previousContent) && divideRoster[i].includes(sender)){
             var contentChangedRoster = divideRoster[i].split(',');
             contentChangedRoster[3] = raidContent;
-            contentChangedRoster = contentChangedRoster.join(',')
+            contentChangedRoster = contentChangedRoster.join(',');
             divideRoster.splice(i,1,contentChangedRoster);
 
-            roster = divideRoster.join('\n')
+            roster = divideRoster.join('\n');
             DoriDB.saveData('roster', roster); //출석부 저장
-            return readRoster(raidContent);;
+            return readRoster(raidContent);
         }
     }
-    return sender + "님이 만드신 팟이 맞나요??\n팟을 만드신 분만 변경 가능해요!";
-
+    return sender + "참가하신 팟이 맞나요???\n팟에 참가하신 분만 변경 가능해요!";
 }
 
 function deleteRoster(sender, rosterMSG){
@@ -546,9 +574,9 @@ function deleteRoster(sender, rosterMSG){
     var divideRoster = roster.split('\n');
     var i = 0
     for (i = 0; i < divideRoster.length; i++){
-        if (divideRoster[i].includes(raidContent) && divideRoster[i].split(',')[0] == sender){
+        if (divideRoster[i].includes(raidContent)){
             divideRoster.splice(i,1);
-            roster = divideRoster.join('\n')
+            roster = divideRoster.join('\n');
             if (roster==null){
                 roster = '';
             }
@@ -557,7 +585,7 @@ function deleteRoster(sender, rosterMSG){
             break;
         }
     }
-    return sender + "님이 만드신 팟이 맞나요??\n팟을 만드신 분만 취소 가능해요!";
+    return "헉" + raidContent + " 팟 취소안됨;;";
 
 
 }
@@ -612,7 +640,7 @@ function participateRoster(sender, rosterMSG){
         if (divideRoster[i].includes(rosterMSG)){
             var rosterToAdd = divideRoster[i] + accounts;
             divideRoster.splice(i,1,rosterToAdd);
-            roster = divideRoster.join('\n')
+            roster = divideRoster.join('\n');
             DoriDB.saveData('roster', roster); //출석부 저장
             return readRoster(rosterMSG);
         }
@@ -816,7 +844,9 @@ function response(room, msg, sender, isGroupChat, replier) {
             returnText = keyToText(null,'spiritombResearch'); msg = '화강돌';
         } else if (msg.includes('이로치')){
             returnText = keyToText(null,'shiny');
-        }
+        } else if (msg == '출석부'){
+            returnText = keyToText(null,'rosterSample');
+        } 
         
         if(msg.includes('평가')){
             if(msg.includes('발러')){returnText = keyToText(null,"valorAppraise");}
@@ -904,9 +934,6 @@ function response(room, msg, sender, isGroupChat, replier) {
         } else if (msg.includes('에쇼') && msg.includes('하우스') && msg.includes('메뉴')){
             returnText = keyToText("에쇼하우스","quote");
         } // else if XXXXX 정보 -> 사람 한마디 */
-        if (msg.includes('명언')){
-            returnText = '명언은 잠시 오류가 나서 중지되었어요!'
-        }
         
         if(msg.includes('비밀번호') || (msg.includes('비번'))){
             if(room.includes("고려대학교")){
@@ -940,23 +967,6 @@ function response(room, msg, sender, isGroupChat, replier) {
                 returnText = "안녕하세요 트레이너님!☺️";
             }
         }
-        if (msg == '출석부 리셋'){
-            returnText = rosterReset();
-        } else if (msg.includes('출석부 생성') || msg.includes('팟 생성')){ //출석부 (테스트X)
-            returnText = createRoster(sender, msg);
-        } else if (msg.includes('출석부')){
-            returnText = keyToText(null,'rosterSample');
-        } else if (msg.includes('시간변경') || msg.includes('시간 변경')){
-            returnText = changeRosterTime(sender, msg);
-        } else if (msg.includes('내용변경') || msg.includes('내용 변경')){
-            returnText = changeRosterContent(sender, msg);
-        } else if (msg.includes('참여') || msg.includes('참석')){
-            returnText = participateRoster(sender, msg);
-        } else if (msg.includes('팟 펑')){
-            returnText = deleteRoster(sender, msg);
-        } else if (msg.includes('빠질게') || msg.includes('빠지겠습니다')){
-            returnText = getOutFromRoster(sender, msg);
-        } 
     } else {
         msg = msg.replace("도리야",""); msg = msg.replace("도리",""); msg = msg.trim()
     }
@@ -964,7 +974,7 @@ function response(room, msg, sender, isGroupChat, replier) {
         var roster = DoriDB.readData('roster'); // 출석부 목록 불러오기
         var dummyRoster = roster + ' ';
         if (!dummyRoster.includes(',')){
-            returnText = '현재 팟이 없네요! 팟을 직접 만드시는건 어떨까요!?\n\n예시)\n도리야 4시 45분 작은분수 팟 생성\n도리야 3시 사과 미스틱2 인스1 출석부 생성';
+            returnText = '현재 팟이 없네요! 팟을 직접 만드시는건 어떨까요!?\n\n예시)\4시 45분 작은분수 출석부 생성\3시 사과 미스틱2 인스1 팟 생성';
         } else {
             var divideRoster = roster.split('\n');
             var i = 0
@@ -979,7 +989,20 @@ function response(room, msg, sender, isGroupChat, replier) {
         msg = msg.replace('현황','');
     } else if (msg == '출석부 리셋'){
         returnText = rosterReset();
+    } else if (msg.includes('출석부 생성') || msg.includes('팟 생성')){ //출석부 (테스트X)
+        returnText = createRoster(sender, msg);
+    } else if (msg.includes('시간변경') || msg.includes('시간 변경')){
+        returnText = changeRosterTime(sender, msg);
+    } else if (msg.includes('내용변경') || msg.includes('내용 변경')){
+        returnText = changeRosterContent(sender, msg);
+    } else if (msg.includes('참여') || msg.includes('참석')){
+        returnText = participateRoster(sender, msg);
+    } else if (msg.includes('팟 펑')){
+        returnText = deleteRoster(sender, msg);
+    } else if (msg.includes('빠질게') || msg.includes('빠지겠습니다')){
+        returnText = getOutFromRoster(sender, msg);
     }
+    
     //제보/삭제/만료/현황 구현 완료. 리서치 구현 나름 함 (테스트 X)
     if (msg.includes("현황")){
         returnText = raidReportReturn(useReport, null, null);
@@ -1001,6 +1024,13 @@ function response(room, msg, sender, isGroupChat, replier) {
     } else if (msg.includes("리서치") && msg.includes("제보")){
         msg = msg.replace("제보", ""); msg = msg.replace("리서치",""); msg = msg.trim();
         returnText = researchReturn(useResearch, msg);
+    }
+    
+    if ((msg == '전부 리셋')){
+        returnText = raidReportReturn(useReport, null, "DELETE ALL");
+        returnText = raidReportReturn(useResearch, null, "DELETE ALL");
+        returnText = rosterReset();
+        returnText = '리서치 목록, 제보, 출석부가 전부 리셋되었습니다.';
     }
     
     if (returnText != "none"){replier.reply(returnText);}
