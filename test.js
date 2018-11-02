@@ -1,9 +1,4 @@
-var a = '08';
-var b;
+var msg = 'sdfiosdf siofsodf sfojisdiof sfsdifosd sjiosfd sfiosd fsji fsdiofjs dsdf djidfs dfdfdfdfdfdssssfdfdf';
+var msg2 = msg.split(' ');
 
-if (parseInt(a) < 10){
-    b = '0' + parseInt(a);
-}
-
-
-console.log(parseInt(a));
+console.log(msg2[0])
