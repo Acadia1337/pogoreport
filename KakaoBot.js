@@ -261,7 +261,7 @@ function timeSet (dbName,raidContent){
         endHR = startHR + 1;
         endMIN = startMIN - 15;
     }
-    if (startMIN < 0){
+    if (startMIN < 10){
         startMIN = "0" + startMIN;
     }
     if (endMIN < 10){
@@ -326,6 +326,7 @@ function deleteThisReport (dbName,toDel){
 
 function printReport (dbName,raidList){
     var listInTwelve = raidList.split('\n');
+    //listInTwelve = 3,30,4,15,작은분수
     var listForSending = "레이드 제보";
     for (var i = 1; i < listInTwelve.length; i++){
         var tempStartHR = parseInt(listInTwelve[i].split(',')[0]);
