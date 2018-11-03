@@ -676,10 +676,6 @@ function participateRoster(dbName, sender, rosterMSG){
     return '앗 팟이 있는게 맞나요? 있다면 다시 말씀 해주시고, 없는 팟이라면 만드시는게 어떨까요?\n\n팟을 만드시려면\n몇시 몇분 어디 몇성 출석부 생성 이라고 말씀해주세요!';
 }
 
-function changeMyRoster(dbName, sender, rosterMSG){
-    
-}
-
 function readRoster(dbName,rosterMSG){
     //작은분수 팟
     rosterMSG = rosterMSG.split('팟')[0].trim();
@@ -794,6 +790,46 @@ function vsDetermine(dbName,vsMSG){
     return newResult;
 }
 
+function rockPaperScissor (yourPick){
+    var myPick;
+    var resultNum = Math.floor(Math.random() * 3);
+    // 0은 이김, 1은 짐, 2는 비김
+    if (resultNum == 0){ // 이긴거
+        if (yourPick == '가위'){
+            myPick = '제가 이겼어요!! 전 바위를 냈답니다😆'
+        } else if (yourPick == '바위'){
+            myPick = '제가 이겼어요!! 전 보를 냈답니다😆'
+        } else if (yourPick == '보'){
+            myPick = '제가 이겼어요!! 전 가위를 냈답니다😆'
+        }
+    } else if (resultNum == 1){ // 진거
+        if (yourPick == '가위'){
+            myPick = '제가 졌네요! 전 보를 냈어요😅'
+        } else if (yourPick == '바위'){
+            myPick = '제가 졌네요! 전 가위를 냈어요😅'
+        } else if (yourPick == '보'){
+            myPick = '제가 졌네요! 전 바위를 냈어요😅'
+        }
+    } else {
+        myPick = '오옷 무승부에요!\n저도 ' + yourPick + '을 냈어요! 한판 더?😁'
+    }
+    return myPick;
+}
+
+function randomIVGen(){    
+    return '개체값 ' + (Math.floor(Math.random() * 5)+1) + (Math.floor(Math.random() * 5)+1) + (Math.floor(Math.random() * 5)+1) + '로 찍습니다😆';
+}
+
+function sayItToHype (from, thisMessage){
+    var messageStack = DoriDB.readData('toHype'); // 하입 목록 불러오기
+    DoriDB.saveData('toHype',messageStack + '\n' + from + ' : ' + thisMessage);
+}
+
+function recordDori (thisMessage){
+    var doriText = DoriDB.readData('doriTextStack'); // 도리 텍스트 목록 불러오기
+    DoriDB.saveData('doriTextStack',doriText + '\n' + thisMessage);
+}
+
 function procCmd(room, cmd, sender, replier) {
     if (cmd == "/on") { //봇을 켜는 명령어는 꺼진 상태에서도 작동
         replier.reply("도리 활성화");
@@ -809,6 +845,16 @@ function procCmd(room, cmd, sender, replier) {
 }
 
 function response(room, msg, sender, isGroupChat, replier) {
+    recordDori(msg);
+    if (msg.includes('전달') && (msg.includes('하입')) || msg.includes('띠꾸')){
+        sayItToHype(sender,msg);
+        replier.reply('요구사항이 수집되었습니다');
+    }
+    
+    if (msg.includes('자살')){
+        msg = ' ';
+    }
+    
     if (msg == "이건 테스트야"){replier.reply("테스트테스트");}
     msg = msg.trim();sender = sender.trim();room = room.trim();preChat[room] = msg;
     procCmd(room, msg, sender, replier); //명령어
@@ -937,6 +983,17 @@ function response(room, msg, sender, isGroupChat, replier) {
             returnText = keyToText(null,'rosterManual');
         } else if (msg == '패치노트'){
             returnText = keyToText(null,'patchNote');
+        } else if (msg.includes('가위바위보')) {
+            msg = msg.replace('가위바위보');
+            if (msg.includes('가위') || msg.includes('바위') || msg.includes('보')){
+                if (msg.includes('가위')){
+                    returnText = rockPaperScissor('가위')
+                } else if (msg.includes('바위')){
+                    returnText = rockPaperScissor('바위')
+                } else if (msg.includes('보')){
+                    returnText = rockPaperScissor('보')
+                }
+            }
         }
         
         if(msg.includes('평가')){
@@ -945,8 +1002,8 @@ function response(room, msg, sender, isGroupChat, replier) {
             if(msg.includes('인스')){returnText = keyToText(null,"instinctAppraise");}
         }
         
-        if (msg.includes("정보") || msg.includes("개체")){
-            msg = msg.replace("백개체","정보"); msg.replace("개체","정보"); msg = msg.split('정보')[0].trim();
+        if (msg.includes("정보") || msg.includes("개체") && !msg.includes('랜덤')){
+            msg = msg.replace('백개체','정보'); msg = msg.replace('개체','정보'); msg = msg.split('정보')[0].trim();
             returnText = pokemonInfoReturn(msg);
         }
         if (msg.includes("날씨")){
@@ -959,6 +1016,8 @@ function response(room, msg, sender, isGroupChat, replier) {
         if (msg.includes("주사위")) {
             var icon = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
             returnText = icon[Math.floor(Math.random() * 6)];
+        } else if (msg.includes('랜덤 개체값') || msg.includes('랜덤개체')){
+            returnText = randomIVGen();
         }
 
         if ((msg.includes('한테') || msg.includes('께')) && msg.includes('인사')){
@@ -1133,6 +1192,11 @@ function response(room, msg, sender, isGroupChat, replier) {
         returnText = rosterReset(useRoster);
         returnText = '리서치 목록, 제보, 출석부가 전부 리셋되었습니다.';
     }
+    
+    ///////////////////// 상관 없는 것
+    
+
+    
     
     if (returnText != "none"){replier.reply(returnText);}
 }
