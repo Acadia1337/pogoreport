@@ -404,7 +404,7 @@ function researchReturn (dbName, newReport){
     var researchPokemonName = researchFind[0].split(',');
     var researchToPut = ''; var researchTitle = '';
     var researchMission = '';
-    for (var i = 0; i < 31; i++){
+    for (var i = 0; i < 26; i++){
         if (researchFind[i].includes(researchInput)){
             researchToPut = newReport.replace(researchInput, ''); researchTitle = researchFind[i].split(',')[0] + "";
             researchMission = researchFind[i].split(',')[1] + ""; break;
@@ -846,7 +846,7 @@ function procCmd(room, cmd, sender, replier) {
 
 function response(room, msg, sender, isGroupChat, replier) {
     recordDori(msg);
-    if (msg.includes('전달') && (msg.includes('하입')) || msg.includes('띠꾸')){
+    if (msg.includes('전달') && (msg.includes('하입') || msg.includes('띠꾸'))){
         sayItToHype(sender,msg);
         replier.reply('요구사항이 수집되었습니다');
     }
