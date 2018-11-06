@@ -238,19 +238,33 @@ function timeSet (dbName,raidContent){
             } else if (timeDivide[i+1].includes('분') && (Number.isInteger(parseInt(timeDivide[i+1].split('분')[0].trim())))){ //11시 50분
                 raidContent = raidContent.replace(timeDivide[i+1],"");
                 startMIN = timeDivide[i+1].split('분')[0];
+            } else if (timeDivide[i+1].includes('분') && (timeDivide[i+1].split('분')[0]=='08')){
+                raidContent = raidContent.replace(timeDivide[i+1],"");
+                startMIN = 8;
+            } else if (timeDivide[i+1].includes('분') && (timeDivide[i+1].split('분')[0]=='09')){
+                raidContent = raidContent.replace(timeDivide[i+1],"");
+                startMIN = 9;
             } else { //11시
                 startMIN = '0';
             }
             raidContent = raidContent.replace(timeDivide[i],"");
         } else if (timeDivide[i].includes(':')){ //11:50
-            startHR = timeDivide[i].split(':')[0]; startMIN = timeDivide[i].split(':')[1];
+            startHR = timeDivide[i].split(':')[0];
+            if(timeDivide[i].split(':')[1] == '08'){
+                startMIN = '08';
+            } else if(timeDivide[i].split(':')[1] == '09'){
+                startMIN = '09';
+            } else {
+                startMIN = timeDivide[i].split(':')[1];
+            }                        
             raidContent = raidContent.replace(timeDivide[i],"");
         }
     }
     startHR = startHR.trim();
     startMIN = startMIN.trim();
     raidContent = raidContent.trim();
-    startHR = parseInt(startHR); startMIN = parseInt(startMIN);
+    startHR = parseInt(startHR); 
+    startMIN = parseInt(startMIN);
     if (currentTime.getHours() > 10 && startHR < 10){
         startHR = startHR + 12;
     }
@@ -488,12 +502,25 @@ function createRoster(dbName, sender, rosterMSG){
             } else if (timeDivide[i+1].includes('분') && (Number.isInteger(parseInt(timeDivide[i+1].split('분')[0].trim())))){ //11시 50분
                 raidContent = raidContent.replace(timeDivide[i+1],"");
                 startMIN = timeDivide[i+1].split('분')[0];
+            } else if (timeDivide[i+1].includes('분') && (timeDivide[i+1].split('분')[0]=='08')){
+                raidContent = raidContent.replace(timeDivide[i+1],"");
+                startMIN = '08';
+            } else if (timeDivide[i+1].includes('분') && (timeDivide[i+1].split('분')[0]=='09')){
+                raidContent = raidContent.replace(timeDivide[i+1],"");
+                startMIN = '09';
             } else { //11시
                 startMIN = '0';
             }
             raidContent = raidContent.replace(timeDivide[i],"");
         } else if (timeDivide[i].includes(':')){ //11:50
-            startHR = timeDivide[i].split(':')[0]; startMIN = timeDivide[i].split(':')[1];
+            startHR = timeDivide[i].split(':')[0];
+            if(timeDivide[i].split(':')[1] == '08'){
+                startMIN = '08';
+            } else if(timeDivide[i].split(':')[1] == '09'){
+                startMIN = '09';
+            } else {
+                startMIN = timeDivide[i].split(':')[1];
+            }
             raidContent = raidContent.replace(timeDivide[i],"");
         }
     }    
@@ -909,6 +936,8 @@ function response(room, msg, sender, isGroupChat, replier) {
         replier.reply(msg);
     } else if (msg.includes("가즈아")){
         replier.reply("가즈아ㅏㅏㅏㅏ");
+    } else if (msg.includes("끼요오")){
+        replier.reply("끼요오오옷ㅅㅅ")
     }
     
     if (msg.includes("도리")){ // 도리야 _____ 명령어
