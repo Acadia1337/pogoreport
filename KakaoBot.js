@@ -250,7 +250,15 @@ function timeSet (dbName,raidContent){
     startHR = startHR.trim();
     startMIN = startMIN.trim();
     raidContent = raidContent.trim();
-    startHR = parseInt(startHR); startMIN = parseInt(startMIN);
+    startHR = parseInt(startHR); 
+    startMIN = parseInt(startMIN);
+    if (startMIN == NaN){
+        if(timeDivide[i].split(':')[1] == '08'){
+            startMIN = 8;
+        } else if (timeDivide[i].split(':')[1] == '09'){
+            startMIN = 9;
+        }
+    }
     if (currentTime.getHours() > 10 && startHR < 10){
         startHR = startHR + 12;
     }
@@ -404,7 +412,7 @@ function researchReturn (dbName, newReport){
     var researchPokemonName = researchFind[0].split(',');
     var researchToPut = ''; var researchTitle = '';
     var researchMission = '';
-    for (var i = 0; i < 26; i++){
+    for (var i = 0; i < 30; i++){
         if (researchFind[i].includes(researchInput)){
             researchToPut = newReport.replace(researchInput, ''); researchTitle = researchFind[i].split(',')[0] + "";
             researchMission = researchFind[i].split(',')[1] + ""; break;
@@ -420,13 +428,13 @@ function researchReturn (dbName, newReport){
         for (var i = 0; i < researchBreakDown.length; i++){
             if (researchBreakDown[i].includes(researchTitle)){
                 researchBreakDown.splice(i+1,0,researchToPut);
-                currentReport = "리서치 목록";
+                currentReport = todayDate + " 📚리서치 목록📚";
                 break;
             }
         }
     } else {
         researchBreakDown = researchBreakDown.concat(['[' + researchTitle + '] ' + researchMission,researchToPut]);
-        currentReport = todayDate + ' 리서치 목록';
+        currentReport = todayDate + ' 📚리서치 목록📚';
     }
     // 리서치 끼워넣기
     for (var i = 1; i < researchBreakDown.length; i++){
@@ -437,7 +445,7 @@ function researchReturn (dbName, newReport){
         }
         
     } // 리서치 저장 할 준비
-
+    currentReport = currentReport.replace('\n\n\n','\n');
     DoriDB.saveData(dbName, currentReport); //리서치 저장
     return currentReport;
 }
@@ -497,7 +505,16 @@ function createRoster(dbName, sender, rosterMSG){
             raidContent = raidContent.replace(timeDivide[i],"");
         }
     }    
-    startHR = startHR.trim(); startMIN = startMIN.trim(); raidContent = raidContent.trim();
+    startHR = startHR.trim(); startMIN = startMIN.trim(); 
+    
+    if (startMIN == NaN){
+        if(timeDivide[i].split(':')[1] == '08'){
+            startMIN = 8;
+        } else if (timeDivide[i].split(':')[1] == '09'){
+            startMIN = 9;
+        }
+    }
+    raidContent = raidContent.trim();
     if (parseInt(startMIN) < 10){
         startMIN = '0' + parseInt(startMIN);
     }
@@ -753,6 +770,21 @@ function rosterReset(dbName){ //출석부 리셋
     DoriDB.saveData(dbName, ''); return '모든 출석부가 삭제되었습니다.';
 }
 
+function rosterCopyPaste(dbName, rosterMSG){
+    var roster = DoriDB.readData(dbName); // 출석부 목록 불러오기
+    var divideRoster = roster.split('\n');
+    var checkIfItsaRoster = rosterMSG.split('\n')
+    var i = 0
+    for (i = 0; i < divideRoster.length; i++){
+        if (divideRoster[i] == checkIfItsaRoster[0]){
+            for (var j = 0; j<checkIfItsaRoster.length; j++){
+                if (divideRoster[])
+            }
+        }
+    }
+    DoriDB.saveData(dbName, roster); //출석부 저장
+}
+
 function vsDetermine(dbName,vsMSG){
     var vsData = DoriDB.readData(dbName); // vs데이터
     //렌토,캐논,결과값,몇회
@@ -849,7 +881,9 @@ function response(room, msg, sender, isGroupChat, replier) {
     if (msg.includes('전달') && (msg.includes('하입') || msg.includes('띠꾸'))){
         sayItToHype(sender,msg);
         replier.reply('요구사항이 수집되었습니다');
-    }
+    } else if (isGroupChat == false && msg=='전달 내용 전부 알려줘'){
+        returnText = keyToText(null,'toHype');
+   }
     
     if (msg.includes('자살')){
         msg = ' ';
@@ -861,7 +895,7 @@ function response(room, msg, sender, isGroupChat, replier) {
 
     if (botOn[room] == undefined) {botOn[room] = true;} // 해당 채팅방의 on/off 여부가 결정되어있지 않으면 on으로 설정
     if (botOn[room] == false) {return;} // 봇이 꺼져있으면 응답 안함
-
+    
     var noReply = [".", "사진", "동영상", "음성메시지", "카카오톡 프로필", "(이모티콘)", "카카오링크 이미지"]; // 반응 안함
     for (var n = 0; n < noReply.length; n++) {if (msg == noReply[n]) return;}
     
@@ -909,6 +943,8 @@ function response(room, msg, sender, isGroupChat, replier) {
         replier.reply(msg);
     } else if (msg.includes("가즈아")){
         replier.reply("가즈아ㅏㅏㅏㅏ");
+    } else if (msg.includes("끼요오")){
+        replier.reply("끼요오오옷ㅅㅅ")
     }
     
     if (msg.includes("도리")){ // 도리야 _____ 명령어
@@ -945,7 +981,9 @@ function response(room, msg, sender, isGroupChat, replier) {
             } else {
                 returnText = tempMsg + keyToText(null,"newbie");
             }
-        } else if (msg.includes("둥지")){
+        } else if (msg.includes("둥지 추가") || msg.includes('둥지추가')){
+
+        } else if (msg.includes('둥지'){
             returnText = keyToText(null,"nest")
         } else if (((msg.includes('이벤트')) || (msg.includes('글로벌 챌린지'))) && !msg.includes('할로윈')) {
             returnText = keyToText(null,"event");
@@ -1156,6 +1194,8 @@ function response(room, msg, sender, isGroupChat, replier) {
         returnText = deleteRoster(useRoster,sender, msg);
     } else if (msg.includes('빠질게') || msg.includes('빠지겠습니다')){
         returnText = getOutFromRoster(useRoster, sender, msg);
+    } else if (msg.includes('인원추가:') || msg.includes('인원추가')){
+        returnText = participateRoster(useRoster, msg.split(':')[1].split(' ')[1], msg.split(':')[1].split(' ')[2]);
     }
     
     //제보/삭제/만료/현황 구현 완료. 리서치 구현 나름 함 (테스트 X)
@@ -1171,12 +1211,13 @@ function response(room, msg, sender, isGroupChat, replier) {
         msg = msg.replace("제보","")
     } else if (msg =="리서치 리셋" || msg == "리서치 리셋해줘"){
         returnText = raidReportReturn(useResearch, null, "DELETE ALL");
-    } else if ((msg.includes('삭제해줘') || msg.includes('삭제 해줘') || msg.includes('오보') || msg.includes("끝났어") || msg.includes("만료")) && !msg.includes("리서치")){
+    } else if ((msg.includes('삭제해줘') || msg.includes('제보삭제') || msg.includes('제보 삭제') || msg.includes('삭제 해줘') || msg.includes('오보') || msg.includes("끝났어") || msg.includes("만료")) && !msg.includes("리서치")){
+        msg = msg.replace('제보삭제',''); msg = msg.replace('제보 삭제','');
         msg = msg.replace('시간만료',''); msg = msg.replace('끝났어',''); msg = msg.replace('만료','');
         msg = msg.replace('삭제해줘',''); msg = msg.replace('오보',''); msg = msg.trim();
         returnText = raidReportReturn(useReport,null,msg);
         replier.reply(msg + " 제보가 삭제 되었습니다.");        
-    } else if (msg.includes('리서치') && (msg.includes('삭제해줘')) || msg.includes('오보') || msg.includes('삭제 해줘')){
+    } else if (msg.includes('리서치') && (msg.includes('삭제해줘')) || msg.includes('오보') || msg.includes('삭제 해줘') || msg.includes('리서치 삭제')){
         returnText = deleteResearch(useResearch,msg);
     }
     if ((msg.includes("시") || msg.includes(":")) && msg.includes("제보") && !msg.includes("리서치")){        
