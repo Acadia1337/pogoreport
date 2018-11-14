@@ -412,7 +412,7 @@ function researchReturn (dbName, newReport){
     var researchPokemonName = researchFind[0].split(',');
     var researchToPut = ''; var researchTitle = '';
     var researchMission = '';
-    for (var i = 0; i < 30; i++){
+    for (var i = 0; i < 31; i++){
         if (researchFind[i].includes(researchInput)){
             researchToPut = newReport.replace(researchInput, ''); researchTitle = researchFind[i].split(',')[0] + "";
             researchMission = researchFind[i].split(',')[1] + ""; break;
@@ -421,20 +421,21 @@ function researchReturn (dbName, newReport){
             researchMission = researchFind[i].split(',')[1] + ""; break;
         }
     } // 리서치를 사전에서 찾는 것
-
+    var researchMonth = new Date().getMonth()+1;
+    var researchDate = new Date().getDate();
     var researchBreakDown = currentReport.split('\n'); // 현재 리포트를 나눠서 뽑음
     researchTitle = researchTitle.trim(); researchToPut = researchToPut.trim();
     if (currentReport.includes(researchTitle)){
         for (var i = 0; i < researchBreakDown.length; i++){
             if (researchBreakDown[i].includes(researchTitle)){
                 researchBreakDown.splice(i+1,0,researchToPut);
-                currentReport = todayDate + " 📚리서치 목록📚";
+                currentReport = "📚리서치 목록 [" + researchMonth + '/' + researchDate + ']';
                 break;
             }
         }
     } else {
         researchBreakDown = researchBreakDown.concat(['[' + researchTitle + '] ' + researchMission,researchToPut]);
-        currentReport = todayDate + ' 📚리서치 목록📚';
+        currentReport = "📚리서치 목록 [" + researchMonth + '/' + researchDate + ']';
     }
     // 리서치 끼워넣기
     for (var i = 1; i < researchBreakDown.length; i++){
@@ -640,7 +641,9 @@ function participateRoster(dbName, sender, rosterMSG){
     // 작은분수 미스틱1 인스1 참여
     var mysticNum=0; var valorNum=0; var instiNum=0; var etcNum=0;
     rosterMSG = rosterMSG.replace('할게',''); rosterMSG = rosterMSG.replace('팟','');
-    rosterMSG = rosterMSG.replace('참석',''); rosterMSG = rosterMSG.replace('참여',''); rosterMSG = rosterMSG.trim();
+    rosterMSG = rosterMSG.replace('참석',''); rosterMSG = rosterMSG.replace('참여','');
+    rosterMSG = rosterMSG.replace('미스틱 ','미스틱'); rosterMSG = rosterMSG.replace('발러 ','발러');
+    rosterMSG = rosterMSG.replace('인스 ','인스'); rosterMSG = rosterMSG.trim();
     if (rosterMSG.includes("미스틱")){
         mysticNum = parseInt(rosterMSG.split('미스틱')[1].split(' ')[0]);
         if (!Number.isInteger(mysticNum)){
@@ -770,19 +773,16 @@ function rosterReset(dbName){ //출석부 리셋
     DoriDB.saveData(dbName, ''); return '모든 출석부가 삭제되었습니다.';
 }
 
-function rosterCopyPaste(dbName, rosterMSG){
-    var roster = DoriDB.readData(dbName); // 출석부 목록 불러오기
-    var divideRoster = roster.split('\n');
-    var checkIfItsaRoster = rosterMSG.split('\n')
-    var i = 0
-    for (i = 0; i < divideRoster.length; i++){
-        if (divideRoster[i] == checkIfItsaRoster[0]){
-            for (var j = 0; j<checkIfItsaRoster.length; j++){
-                if (divideRoster[])
-            }
-        }
-    }
-    DoriDB.saveData(dbName, roster); //출석부 저장
+function addNest(nestMSG){
+    //푸른수목원: 치코리타 둥지추가
+    nestMSG = nestMSG.replace('둥지 추가:'); nestMSG = nestMSG.replace('둥지추가:');
+    nestMSG = nestMSG.replace('둥지 추가'); nestMSG = nestMSG.replace('둥지추가');
+    nestMSG = nestMSG.trim();
+    var nestDB = DoriDB.readData('nest');
+    var monster = nestMSG.split(':')[1].replace(undefined,'');
+    var nestLoc = nestMSG.split(':')[0].replace(undefined,'');
+    DoriDB.saveData('nest', nestDB + '\n' + nestLoc + ": " + monster);
+    return '둥지정보가 추가 되었습니다';
 }
 
 function vsDetermine(dbName,vsMSG){
@@ -857,11 +857,6 @@ function sayItToHype (from, thisMessage){
     DoriDB.saveData('toHype',messageStack + '\n' + from + ' : ' + thisMessage);
 }
 
-function recordDori (thisMessage){
-    var doriText = DoriDB.readData('doriTextStack'); // 도리 텍스트 목록 불러오기
-    DoriDB.saveData('doriTextStack',doriText + '\n' + thisMessage);
-}
-
 function procCmd(room, cmd, sender, replier) {
     if (cmd == "/on") { //봇을 켜는 명령어는 꺼진 상태에서도 작동
         replier.reply("도리 활성화");
@@ -877,13 +872,12 @@ function procCmd(room, cmd, sender, replier) {
 }
 
 function response(room, msg, sender, isGroupChat, replier) {
-    recordDori(msg);
     if (msg.includes('전달') && (msg.includes('하입') || msg.includes('띠꾸'))){
         sayItToHype(sender,msg);
         replier.reply('요구사항이 수집되었습니다');
     } else if (isGroupChat == false && msg=='전달 내용 전부 알려줘'){
         returnText = keyToText(null,'toHype');
-   }
+    }
     
     if (msg.includes('자살')){
         msg = ' ';
@@ -982,8 +976,8 @@ function response(room, msg, sender, isGroupChat, replier) {
                 returnText = tempMsg + keyToText(null,"newbie");
             }
         } else if (msg.includes("둥지 추가") || msg.includes('둥지추가')){
-
-        } else if (msg.includes('둥지'){
+            replier.reply(addNest(msg));
+        } else if (msg.includes('둥지')){
             returnText = keyToText(null,"nest")
         } else if (((msg.includes('이벤트')) || (msg.includes('글로벌 챌린지'))) && !msg.includes('할로윈')) {
             returnText = keyToText(null,"event");
@@ -1194,8 +1188,16 @@ function response(room, msg, sender, isGroupChat, replier) {
         returnText = deleteRoster(useRoster,sender, msg);
     } else if (msg.includes('빠질게') || msg.includes('빠지겠습니다')){
         returnText = getOutFromRoster(useRoster, sender, msg);
-    } else if (msg.includes('인원추가:') || msg.includes('인원추가')){
-        returnText = participateRoster(useRoster, msg.split(':')[1].split(' ')[1], msg.split(':')[1].split(' ')[2]);
+    } else if (msg.includes('명단추가:') || msg.includes('명단 추가:')){
+        var rosterAddPerson = msg.split('명단')[0];
+        if (msg.split(':')[1].split(' ')[2] == undefined){
+            var dummyData = 0;
+        } else {
+            rosterAddPerson = rosterAddPerson + msg.split(':')[1].split(' ')[2];
+        }
+        returnText = participateRoster(useRoster, msg.split('추가:')[1].split(' ')[1], rosterAddPerson);
+    } else if (msg.includes('명단제거:') || msg.includes('명단 제거:')){
+        returnText = getOutFromRoster(useRoster, msg.split('제거:')[1].split(' ')[1], msg.split('명단')[0] + msg.split(':')[1].split(' ')[2]);
     }
     
     //제보/삭제/만료/현황 구현 완료. 리서치 구현 나름 함 (테스트 X)
